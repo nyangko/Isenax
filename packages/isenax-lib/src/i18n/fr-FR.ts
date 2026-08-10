@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "Effacer le canevas",
     clearCanvasConfirm: "Effacer le canevas ? Cette action est irréversible.",
     settings: "Paramètres",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "Basculer en vue plane",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "Flèches pour naviguer • Entrée pour sélectionner • Double-clic pour sélectionner et fermer",
       helpBrowsing: "Tapez pour rechercher • Cliquez sur une catégorie pour développer • Double-clic pour sélectionner et fermer"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

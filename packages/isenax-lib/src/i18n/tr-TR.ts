@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "Tuvali temizle",
     clearCanvasConfirm: "Tuval temizlensin mi? Bu işlem geri alınamaz.",
     settings: "Ayarlar",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "Düz görünüme geç",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "Gezinmek için ok tuşları • Seçmek için Enter • Seçip kapatmak için çift tıklama",
       helpBrowsing: "Aramak için yazın • Genişletmek için kategoriye tıklayın • Seçip kapatmak için çift tıklama"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

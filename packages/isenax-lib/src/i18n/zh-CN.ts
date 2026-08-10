@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "清空画布",
     clearCanvasConfirm: "确定要清空画布吗？此操作无法撤销。",
     settings: "设置",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "切换到平面视图",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "方向键导航 • Enter 选择 • 双击选择并关闭",
       helpBrowsing: "输入以搜索 • 点击分类展开 • 双击选择并关闭"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

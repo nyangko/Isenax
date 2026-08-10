@@ -7,7 +7,8 @@
     "exportFile": "Ekspor File",
     "quickSaveSession": "Simpan Cepat (Sesi)",
     "lockDiagram": "Kunci pengeditan",
-    "unlockDiagram": "Buka kunci pengeditan"
+    "unlockDiagram": "Buka kunci pengeditan",
+    "language": "Bahasa"
   },
   "status": {
     "current": "Saat Ini",

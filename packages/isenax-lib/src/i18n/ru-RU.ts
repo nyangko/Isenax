@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "Очистить холст",
     clearCanvasConfirm: "Очистить холст? Это действие нельзя отменить.",
     settings: "Настройки",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "Переключить на плоский вид",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "Стрелки для навигации • Enter для выбора • Двойной клик для выбора и закрытия",
       helpBrowsing: "Введите текст для поиска • Нажмите на категорию, чтобы развернуть • Двойной клик для выбора и закрытия"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

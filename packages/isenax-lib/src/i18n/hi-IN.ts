@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "कैनवास साफ़ करें",
     clearCanvasConfirm: "कैनवास साफ़ करें? इसे पूर्ववत नहीं किया जा सकता।",
     settings: "सेटिंग्स",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "फ़्लैट व्यू पर स्विच करें",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "नेविगेट करने के लिए एरो कीज़ • चुनने के लिए Enter • चुनकर बंद करने के लिए डबल-क्लिक",
       helpBrowsing: "खोजने के लिए टाइप करें • विस्तार के लिए श्रेणी पर क्लिक करें • चुनकर बंद करने के लिए डबल-क्लिक"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

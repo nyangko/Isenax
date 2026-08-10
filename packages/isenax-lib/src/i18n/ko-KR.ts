@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "캔버스 지우기",
     clearCanvasConfirm: "캔버스를 지울까요? 되돌릴 수 없습니다.",
     settings: "설정",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "레이어"
   },
   viewControls: {
     switchToFlatView: "평면 보기로 전환",
@@ -352,6 +353,18 @@ const locale: LocaleProps = {
       helpSearching: "방향키로 이동 • Enter로 선택 • 더블클릭으로 선택 후 닫기",
       helpBrowsing: "입력하여 검색 • 카테고리 클릭으로 펼치기 • 더블클릭으로 선택 후 닫기"
     }
+  },
+  layersPanel: {
+    title: "레이어",
+    tabLayers: "레이어",
+    tabEdit: "편집",
+    emptyDetail: "캔버스나 목록에서 항목을 선택하면 여기서 보거나 편집할 수 있습니다.",
+    emptyCanvas: "캔버스에 아직 아무것도 없습니다.",
+    groupNodes: "노드",
+    groupConnectors: "연결선",
+    groupRectangles: "영역",
+    groupTextBoxes: "텍스트박스",
+    rectangleFallbackName: "영역 {number}"
   }
 };
 

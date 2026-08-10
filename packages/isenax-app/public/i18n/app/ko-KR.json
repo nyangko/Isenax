@@ -7,7 +7,8 @@
     "exportFile": "파일 내보내기",
     "quickSaveSession": "빠른 저장 (세션)",
     "lockDiagram": "편집 잠그기",
-    "unlockDiagram": "잠금 해제"
+    "unlockDiagram": "잠금 해제",
+    "language": "언어"
   },
   "status": {
     "current": "현재",

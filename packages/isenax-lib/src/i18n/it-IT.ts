@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "Pulisci la tela",
     clearCanvasConfirm: "Pulire la tela? Questa azione non può essere annullata.",
     settings: "Impostazioni",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "Passa alla vista piatta",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "Frecce per navigare • Invio per selezionare • Doppio clic per selezionare e chiudere",
       helpBrowsing: "Digita per cercare • Clicca sulla categoria per espandere • Doppio clic per selezionare e chiudere"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

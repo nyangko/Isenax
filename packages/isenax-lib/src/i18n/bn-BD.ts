@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "ক্যানভাস পরিষ্কার করুন",
     clearCanvasConfirm: "ক্যানভাস পরিষ্কার করবেন? এটি পূর্বাবস্থায় ফেরানো যাবে না।",
     settings: "সেটিংস",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "ফ্ল্যাট ভিউতে স্যুইচ করুন",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "নেভিগেট করতে অ্যারো কী • নির্বাচন করতে Enter • নির্বাচন করে বন্ধ করতে ডাবল-ক্লিক",
       helpBrowsing: "খুঁজতে টাইপ করুন • প্রসারিত করতে বিভাগে ক্লিক করুন • নির্বাচন করে বন্ধ করতে ডাবল-ক্লিক"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "キャンバスを消去",
     clearCanvasConfirm: "キャンバスを消去しますか?元に戻せません。",
     settings: "設定",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "フラット表示に切り替え",
@@ -352,6 +353,18 @@ const locale: LocaleProps = {
       helpSearching: "矢印キーで移動 • Enterで選択 • ダブルクリックで選択して閉じる",
       helpBrowsing: "入力して検索 • カテゴリをクリックして展開 • ダブルクリックで選択して閉じる"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

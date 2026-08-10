@@ -7,7 +7,8 @@
     "exportFile": "ファイルをエクスポート",
     "quickSaveSession": "クイック保存 (セッション)",
     "lockDiagram": "編集をロック",
-    "unlockDiagram": "ロック解除"
+    "unlockDiagram": "ロック解除",
+    "language": "言語"
   },
   "status": {
     "current": "現在",

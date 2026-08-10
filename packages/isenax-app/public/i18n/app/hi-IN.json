@@ -7,7 +7,8 @@
     "exportFile": "फ़ाइल निर्यात करें",
     "quickSaveSession": "त्वरित सहेजें (सत्र)",
     "lockDiagram": "संपादन लॉक करें",
-    "unlockDiagram": "संपादन अनलॉक करें"
+    "unlockDiagram": "संपादन अनलॉक करें",
+    "language": "भाषा"
   },
   "status": {
     "current": "वर्तमान",

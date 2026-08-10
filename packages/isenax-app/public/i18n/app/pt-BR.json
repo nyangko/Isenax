@@ -7,7 +7,8 @@
     "exportFile": "Exportar arquivo",
     "quickSaveSession": "Salvamento rápido (Sessão)",
     "lockDiagram": "Bloquear edição",
-    "unlockDiagram": "Desbloquear edição"
+    "unlockDiagram": "Desbloquear edição",
+    "language": "Idioma"
   },
   "status": {
     "current": "Atual",

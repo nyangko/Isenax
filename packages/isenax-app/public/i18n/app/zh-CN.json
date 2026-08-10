@@ -7,7 +7,8 @@
     "exportFile": "导出文件",
     "quickSaveSession": "快速保存（会话）",
     "lockDiagram": "锁定编辑",
-    "unlockDiagram": "解除锁定"
+    "unlockDiagram": "解除锁定",
+    "language": "语言"
   },
   "status": {
     "current": "当前",

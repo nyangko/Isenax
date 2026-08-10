@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "Wyczyść obszar roboczy",
     clearCanvasConfirm: "Wyczyścić obszar roboczy? Tej czynności nie można cofnąć.",
     settings: "Ustawienia",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "Przełącz na widok płaski",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "Strzałki do nawigacji • Enter, aby wybrać • Podwójne kliknięcie, aby wybrać i zamknąć",
       helpBrowsing: "Wpisz, aby wyszukać • Kliknij kategorię, aby rozwinąć • Podwójne kliknięcie, aby wybrać i zamknąć"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 

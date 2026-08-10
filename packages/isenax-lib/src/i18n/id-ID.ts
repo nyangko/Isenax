@@ -22,7 +22,8 @@ const locale: LocaleProps = {
     clearCanvas: "Bersihkan kanvas",
     clearCanvasConfirm: "Bersihkan kanvas? Tindakan ini tidak dapat dibatalkan.",
     settings: "Pengaturan",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    layers: "Layers"
   },
   viewControls: {
     switchToFlatView: "Beralih ke tampilan datar",
@@ -353,6 +354,18 @@ const locale: LocaleProps = {
       helpSearching: "Tombol panah untuk navigasi • Enter untuk memilih • Klik dua kali untuk memilih dan menutup",
       helpBrowsing: "Ketik untuk mencari • Klik kategori untuk memperluas • Klik dua kali untuk memilih dan menutup"
     }
+  },
+  layersPanel: {
+    title: "Layers",
+    tabLayers: "Layers",
+    tabEdit: "Edit",
+    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
+    emptyCanvas: "Nothing on the canvas yet.",
+    groupNodes: "Nodes",
+    groupConnectors: "Connectors",
+    groupRectangles: "Areas",
+    groupTextBoxes: "Text Boxes",
+    rectangleFallbackName: "Area {number}"
   }
 };
 
