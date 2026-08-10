@@ -29,12 +29,15 @@ const CHANGELOG_KO: ChangelogGroup[] = [
     date: '업데이트 중',
     items: [
       ['Flowvia → Isenax', ' 리브랜딩 — 앱 이름, 로고, 배너 이미지 교체'],
-      ['압축 JSON 내보내기 / 이미지 내보내기 / 설정', '을 햄버거 메뉴에서 꺼내 상단 툴바 아이콘으로 분리'],
+      ['레이어 패널', ' 추가 — 캔버스의 노드/연결선/영역/텍스트를 오른쪽 목록에서 한눈에 보고 선택 가능, 항목을 고르면 같은 패널의 "편집" 탭에서 바로 수정 (기존처럼 별도 편집 창이 캔버스 위에 뜨지 않음)'],
+      ['압축 JSON 내보내기 / 이미지 내보내기 / 설정 / 레이어', '를 햄버거 메뉴에서 꺼내 상단 툴바 아이콘으로 분리'],
+      ['모바일 화면', ' 대응 — 레이어 패널이 아래에서 올라오는 시트로 바뀌고(캔버스 우측 하단 버튼으로 열기), 좁은 화면에서 넘치던 상단 툴바 아이콘들은 햄버거 메뉴 안으로 이동해 툴바가 한 줄에 유지됨'],
       ['햄버거 메뉴', ' 항목을 숨겼을 때 구분선이 겹치거나 빈 여백이 남던 문제 수정, "캔버스 지우기"를 맨 위로 이동'],
       ['상단 툴바의 모든 아이콘', '에 마우스를 올리면 아래쪽에 툴팁 표시 (스크린리더용 이름도 함께 추가)'],
       ['툴팁', ' 모양·표시 속도를 전체 통일하고, 뜨기까지 걸리는 시간을 0.4초 → 0.15초로 단축'],
-      ['다이어그램 잠금', ' 상태에서 편집 UI가 완전히 잠기도록 수정'],
-      ['불러오기 드롭다운', '을 열면 툴바와 메뉴가 통째로 사라지던 문제 수정']
+      ['다이어그램 잠금', ' 상태에서도 햄버거 메뉴/툴바/확대·축소 컨트롤이 그대로 보이도록 수정 (공유 링크로 여는 읽기 전용 모드와 구분)'],
+      ['불러오기 드롭다운', '을 열면 툴바와 메뉴가 통째로 사라지던 문제 수정'],
+      ['언어 선택 메뉴', '가 버튼을 다시 눌러도 닫히지 않던 문제 수정']
     ]
   },
   {
@@ -135,12 +138,15 @@ const CHANGELOG_EN: ChangelogGroup[] = [
     date: 'In progress',
     items: [
       ['Flowvia is now Isenax', ' — new name, logo and banner artwork'],
-      ['Export as compact JSON / Export as image / Settings', ' moved out of the hamburger menu into their own top-toolbar icons'],
+      ['Layers panel', ' added — a docked list of every node/connector/area/text box on the canvas; picking one opens it in the same panel’s "Edit" tab instead of a separate floating panel over the canvas'],
+      ['Export as compact JSON / Export as image / Settings / Layers', ' moved out of the hamburger menu into their own top-toolbar icons'],
+      ['Mobile layout', ' — the layers panel becomes a bottom sheet (opened from a button at the bottom-right of the canvas), and toolbar icons that no longer fit move into the hamburger menu so the toolbar stays one row'],
       ['Hamburger menu', ' fixed doubled-up dividers and dead space when entries are hidden; "Clear Canvas" moved to the top'],
       ['Every top-toolbar icon', ' now shows a tooltip underneath on hover (with screen-reader labels to match)'],
       ['Tooltips', ' unified in shape and timing across the app, and now appear after 0.15s instead of 0.4s'],
-      ['Locked diagrams', ' now fully lock the editing UI'],
-      ['Load dropdown', ' fixed hiding the whole toolbar and menu while open']
+      ['Locking your own diagram', ' now keeps the main menu, toolbar and zoom controls visible (unlike the read-only mode a shared link opens in)'],
+      ['Load dropdown', ' fixed hiding the whole toolbar and menu while open'],
+      ['Language menu', ' fixed not closing when its button was clicked a second time']
     ]
   },
   {
