@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Coords, EditorModeEnum, ProjectionModeEnum, MainMenuOptions } from './common';
 import { Icon } from './model';
 import { ItemReference } from './scene';
@@ -208,6 +209,10 @@ export interface UiState {
   exportCompactJsonButtonPortalTarget: HTMLElement | null;
   layersButtonPortalTarget: HTMLElement | null;
   layersPanelOpen: boolean;
+  // Render prop rather than a plain node so the host app can close the menu
+  // after its own item is clicked -- MainMenu owns isMainMenuOpen and no
+  // other mechanism lets an externally-supplied item reach it.
+  mainMenuExtraItems: ((closeMenu: () => void) => ReactNode) | null;
 }
 
 export interface UiStateActions {
@@ -236,6 +241,7 @@ export interface UiStateActions {
   setExportCompactJsonButtonPortalTarget: (el: HTMLElement | null) => void;
   setLayersButtonPortalTarget: (el: HTMLElement | null) => void;
   setLayersPanelOpen: (open: boolean) => void;
+  setMainMenuExtraItems: (items: ((closeMenu: () => void) => ReactNode) | null) => void;
   setHotkeyProfile: (profile: HotkeyProfile) => void;
   setPanSettings: (settings: PanSettings) => void;
   setZoomSettings: (settings: ZoomSettings) => void;

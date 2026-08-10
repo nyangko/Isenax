@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { IconX } from '@tabler/icons-react';
-import { Isoflow } from 'isenax';
+import { Isoflow, MainMenuItem } from 'isenax';
 import type { IsoflowProps } from 'isenax';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
@@ -59,6 +59,37 @@ const MAIN_MENU_OPTIONS: NonNullable<IsoflowProps['mainMenuOptions']> = [
   'VERSION'
 ];
 
+// Mobile hides the export-compact-json/export-image/settings toolbar icons
+// (see .mobile-hidden in App.css) since there's no room for them — their
+// actions come back via the library's own hamburger-menu entries instead.
+const MOBILE_MAIN_MENU_OPTIONS: NonNullable<IsoflowProps['mainMenuOptions']> = [
+  ...MAIN_MENU_OPTIONS,
+  'EXPORT.JSON_COMPACT',
+  'EXPORT.PNG',
+  'ACTION.SETTINGS'
+];
+
+const MOBILE_BREAKPOINT_QUERY = '(max-width: 599.95px)';
+
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(() => {
+    return window.matchMedia(MOBILE_BREAKPOINT_QUERY).matches;
+  });
+
+  useEffect(() => {
+    const mql = window.matchMedia(MOBILE_BREAKPOINT_QUERY);
+    const onChange = () => {
+      setIsMobile(mql.matches);
+    };
+    mql.addEventListener('change', onChange);
+    return () => {
+      mql.removeEventListener('change', onChange);
+    };
+  }, []);
+
+  return isMobile;
+};
+
 const hasUnreadHistory = () => {
   if (localStorage.getItem('isenax-history-seen-version') !== HISTORY_VERSION) {
     return true;
@@ -95,6 +126,7 @@ function App() {
 function EditorPage() {
   // Initialize icon pack manager with core icons
   const iconPackManager = useIconPackManager(coreIcons);
+  const isMobile = useIsMobile();
   const { readonlyDiagramId, editableDiagramId } = useParams<{
     readonlyDiagramId: string;
     editableDiagramId: string;
@@ -806,6 +838,67 @@ function EditorPage() {
     iconPackManager.togglePack
   ]);
 
+  // Mobile hides the New/Load/Export/History toolbar buttons (see
+  // .mobile-hidden in App.css) since there's no room for them in a single
+  // row — their actions come back as rows in the main menu instead, so
+  // there's still exactly one menu rather than a second overflow menu.
+  // ponytail: rebuilt inline each render rather than memoized, since
+  // newDiagram/loadFromFile aren't stable references either; upgrade both
+  // together with useCallback if this ever shows up as a real perf cost.
+  const renderMobileMenuExtras = (closeMenu: () => void) => {
+    return (
+      <>
+        <MainMenuItem
+          onClick={() => {
+            newDiagram();
+            closeMenu();
+          }}
+          Icon={<NewFileIcon />}
+        >
+          {t('nav.newDiagram')}
+        </MainMenuItem>
+        <MainMenuItem
+          onClick={() => {
+            setShowLoadDialog(true);
+            closeMenu();
+          }}
+          Icon={<FolderIcon />}
+        >
+          {t('nav.loadSessionOnly')}
+        </MainMenuItem>
+        <MainMenuItem
+          onClick={() => {
+            loadFromFile();
+            closeMenu();
+          }}
+          Icon={<UploadIcon />}
+        >
+          {t('nav.importFile')}
+        </MainMenuItem>
+        <MainMenuItem
+          onClick={() => {
+            setShowExportDialog(true);
+            closeMenu();
+          }}
+          Icon={<DownloadIcon />}
+        >
+          {t('nav.exportFile')}
+        </MainMenuItem>
+        <MainMenuItem
+          onClick={() => {
+            setShowHistoryPanel(true);
+            markHistoryAsRead();
+            setIsHistoryUnread(false);
+            closeMenu();
+          }}
+          Icon={<HistoryIcon />}
+        >
+          {t('history.title')}
+        </MainMenuItem>
+      </>
+    );
+  };
+
   return (
     <div className="App">
       <div className="icon-toolbar">
@@ -862,7 +955,7 @@ function EditorPage() {
             )}
             <div className="history-controls-slot" ref={setHistoryControlsSlot} />
             <button
-              className="icon-btn"
+              className="icon-btn mobile-hidden"
               onClick={newDiagram}
               aria-label={t('nav.newDiagram')}
               data-tooltip={t('nav.newDiagram')}
@@ -883,7 +976,7 @@ function EditorPage() {
             >
               <SaveIcon />
             </button>
-            <div className="load-menu-wrapper">
+            <div className="load-menu-wrapper mobile-hidden">
               <button
                 className="icon-btn"
                 onClick={() => {
@@ -923,7 +1016,7 @@ function EditorPage() {
               )}
             </div>
             <button
-              className="icon-btn"
+              className="icon-btn mobile-hidden"
               onClick={() => {
                 return setShowExportDialog(true);
               }}
@@ -943,7 +1036,7 @@ function EditorPage() {
           </span>
         )}
         <ChangeLanguage />
-        <div className="history-btn-wrapper">
+        <div className="history-btn-wrapper mobile-hidden">
           <button
             className="icon-btn"
             onClick={() => {
@@ -976,7 +1069,10 @@ function EditorPage() {
                   : 'EDITABLE'
           }
           locale={currentLocale}
-          mainMenuOptions={MAIN_MENU_OPTIONS}
+          mainMenuOptions={isMobile ? MOBILE_MAIN_MENU_OPTIONS : MAIN_MENU_OPTIONS}
+          mainMenuExtraItems={
+            isMobile && !isReadonlyUrl ? renderMobileMenuExtras : undefined
+          }
           mainMenuPortalTarget={mainMenuSlot}
           historyControlsPortalTarget={historyControlsSlot}
           helpButtonPortalTarget={helpButtonSlot}

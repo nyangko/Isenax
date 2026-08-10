@@ -94,6 +94,16 @@
   margin-left: auto;
 }
 
+/* Below 600px (matches isenax-lib's MUI breakpoint, see UiOverlay.tsx
+   isMobile), New/Load/Export/History move into the main menu dropdown
+   instead (see mainMenuExtraItems in App.tsx) so the toolbar keeps fitting
+   in one row. */
+@media (max-width: 599.95px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
 /* Isoflow's own tool row (undo/redo/select/shape tools) — re-centered horizontally
    instead of hugging the top-right corner */
 .ff-tool-menu-anchor {

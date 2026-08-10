@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Box, useTheme, Stack } from '@mui/material';
+import { Box, useTheme, useMediaQuery, Stack, SwipeableDrawer } from '@mui/material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
 import { SceneLayer } from 'src/components/SceneLayer/SceneLayer';
@@ -68,6 +68,7 @@ const getEditorModeMapping = (editorMode: keyof typeof EditorModeEnum) => {
 
 export const UiOverlay = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const contextMenuAnchorRef = useRef<HTMLDivElement>(null);
   const toolMenuRef = useRef<HTMLDivElement>(null);
   const { appPadding } = theme.customVars;
@@ -157,7 +158,7 @@ export const UiOverlay = () => {
           left: 0
         }}
       >
-        {availableTools.includes('ITEM_CONTROLS') && layersPanelOpen && (
+        {availableTools.includes('ITEM_CONTROLS') && !isMobile && layersPanelOpen && (
           <UiElement
             sx={{
               position: 'absolute',
@@ -175,6 +176,34 @@ export const UiOverlay = () => {
           >
             <LayersPanel />
           </UiElement>
+        )}
+
+        {/* Mobile: the 360px right-docked panel above can't shrink to fit a
+            narrow viewport, so it becomes a bottom sheet instead. Swipe-to-open
+            is disabled since the FAB below is the entry point and an edge-swipe
+            listener would fight canvas panning; swipe-to-close on the open
+            sheet still works. */}
+        {availableTools.includes('ITEM_CONTROLS') && isMobile && (
+          <SwipeableDrawer
+            anchor="bottom"
+            disableSwipeToOpen
+            open={layersPanelOpen}
+            onOpen={() => {
+              uiStateActions.setLayersPanelOpen(true);
+            }}
+            onClose={() => {
+              uiStateActions.setLayersPanelOpen(false);
+            }}
+            PaperProps={{
+              sx: {
+                height: '80vh',
+                borderTopLeftRadius: 3,
+                borderTopRightRadius: 3
+              }
+            }}
+          >
+            <LayersPanel />
+          </SwipeableDrawer>
         )}
 
         {availableTools.includes('TOOL_MENU') && (
@@ -237,16 +266,21 @@ export const UiOverlay = () => {
         {/* Unlike MainMenu/HistoryControls/HelpButton, these have no default
             floating position — MainMenu already covers the same actions from
             its dropdown, so they only render when a host app opts in with a
-            portal target of its own. */}
+            portal target of its own. Skipped on mobile even if a target is
+            given: MainMenu's own dropdown is the only entry point there, so a
+            standalone icon would just duplicate it. */}
         {availableTools.includes('MAIN_MENU') &&
+          !isMobile &&
           exportImageButtonPortalTarget &&
           createPortal(<ExportImageButton />, exportImageButtonPortalTarget)}
 
         {availableTools.includes('MAIN_MENU') &&
+          !isMobile &&
           settingsButtonPortalTarget &&
           createPortal(<SettingsButton />, settingsButtonPortalTarget)}
 
         {availableTools.includes('MAIN_MENU') &&
+          !isMobile &&
           exportCompactJsonButtonPortalTarget &&
           createPortal(<ExportCompactJsonButton />, exportCompactJsonButtonPortalTarget)}
 
@@ -255,8 +289,24 @@ export const UiOverlay = () => {
             have no other way to reach item detail now that it lives in here
             instead of the old left-docked panel. */}
         {availableTools.includes('ITEM_CONTROLS') &&
+          !isMobile &&
           layersButtonPortalTarget &&
           createPortal(<LayersButton />, layersButtonPortalTarget)}
+
+        {/* Mobile has no toolbar icon for this (see App.tsx) -- a single
+            floating button bottom-right of the canvas is the only entry point,
+            instead of duplicating it in both the toolbar and here. */}
+        {availableTools.includes('ITEM_CONTROLS') && isMobile && (
+          <Box
+            sx={{ position: 'absolute', transform: 'translateX(-100%)' }}
+            style={{
+              top: rendererSize.height - appPadding.y * 2,
+              left: rendererSize.width - appPadding.x
+            }}
+          >
+            <LayersButton />
+          </Box>
+        )}
 
         {enableDebugTools && (
           <UiElement

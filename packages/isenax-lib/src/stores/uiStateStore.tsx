@@ -57,6 +57,7 @@ const initialState = () => {
           exportCompactJsonButtonPortalTarget: null,
           layersButtonPortalTarget: null,
           layersPanelOpen: false,
+          mainMenuExtraItems: null,
 
           actions: {
             setView: (view) => {
@@ -146,6 +147,9 @@ const initialState = () => {
             },
             setLayersPanelOpen: (layersPanelOpen) => {
               set({ layersPanelOpen });
+            },
+            setMainMenuExtraItems: (mainMenuExtraItems) => {
+              set({ mainMenuExtraItems });
             },
             setRendererEl: (el: HTMLDivElement) => {
               set({ rendererEl: el });

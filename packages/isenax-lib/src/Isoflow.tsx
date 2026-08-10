@@ -34,6 +34,7 @@ const App = ({
   settingsButtonPortalTarget,
   exportCompactJsonButtonPortalTarget,
   layersButtonPortalTarget,
+  mainMenuExtraItems,
 }: IsoflowProps) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -103,6 +104,10 @@ const App = ({
   useEffect(() => {
     uiStateActions.setLayersButtonPortalTarget(layersButtonPortalTarget ?? null);
   }, [layersButtonPortalTarget, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setMainMenuExtraItems(mainMenuExtraItems ?? null);
+  }, [mainMenuExtraItems, uiStateActions]);
 
   useEffect(() => {
     if (renderer?.expandLabels !== undefined) {

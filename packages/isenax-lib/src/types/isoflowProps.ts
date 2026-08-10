@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { EditorModeEnum, ProjectionModeEnum, MainMenuOptions } from './common';
 import type { Model } from './model';
 import type { RendererProps } from './rendererProps';
@@ -382,4 +383,6 @@ export interface IsoflowProps {
   exportCompactJsonButtonPortalTarget?: HTMLElement | null;
   /** Renders a standalone layers-panel toggle button into this DOM node. Unlike the other portal targets, there's no default floating position — pass this only if you want the action available outside the main menu. */
   layersButtonPortalTarget?: HTMLElement | null;
+  /** Extra items rendered into the main menu's dropdown, above its own built-in items. Called with a closeMenu callback so host-supplied items can close the menu after acting, the same way MainMenu's own items do. */
+  mainMenuExtraItems?: (closeMenu: () => void) => ReactNode;
 }

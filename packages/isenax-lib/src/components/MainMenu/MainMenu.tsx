@@ -36,6 +36,9 @@ export const MainMenu = () => {
   const mainMenuOptions = useUiStateStore((state) => {
     return state.mainMenuOptions;
   });
+  const mainMenuExtraItems = useUiStateStore((state) => {
+    return state.mainMenuExtraItems;
+  });
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -137,15 +140,22 @@ export const MainMenu = () => {
     };
   }, [mainMenuOptions]);
 
-  if (mainMenuOptions.length === 0) {
+  if (mainMenuOptions.length === 0 && !mainMenuExtraItems) {
     return null;
   }
+
+  const closeMenu = () => {
+    uiStateActions.setIsMainMenuOpen(false);
+  };
 
   // Built as a list of present-or-absent sections (rather than a fixed chain of
   // <Divider />s) so a divider only ever sits between two sections that both
   // actually rendered -- otherwise excluding e.g. ACTION.SETTINGS via
   // mainMenuOptions leaves two dividers back to back with nothing between them.
   const sections = [
+    mainMenuExtraItems && (
+      <React.Fragment key="extra-items">{mainMenuExtraItems(closeMenu)}</React.Fragment>
+    ),
     mainMenuOptions.includes('ACTION.CLEAR_CANVAS') && (
       <MenuItem key="clear-canvas" onClick={onClearCanvas} Icon={<DeleteOutlineIcon size={20} />} danger>
         {t('clearCanvas')}
