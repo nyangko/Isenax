@@ -25,8 +25,21 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
-    version: 'v1.4.0 (현재)',
+    version: 'v1.5.0 (현재)',
     date: '업데이트 중',
+    items: [
+      ['Flowvia → Isenax', ' 리브랜딩 — 앱 이름, 로고, 배너 이미지 교체'],
+      ['압축 JSON 내보내기 / 이미지 내보내기 / 설정', '을 햄버거 메뉴에서 꺼내 상단 툴바 아이콘으로 분리'],
+      ['햄버거 메뉴', ' 항목을 숨겼을 때 구분선이 겹치거나 빈 여백이 남던 문제 수정, "캔버스 지우기"를 맨 위로 이동'],
+      ['상단 툴바의 모든 아이콘', '에 마우스를 올리면 아래쪽에 툴팁 표시 (스크린리더용 이름도 함께 추가)'],
+      ['툴팁', ' 모양·표시 속도를 전체 통일하고, 뜨기까지 걸리는 시간을 0.4초 → 0.15초로 단축'],
+      ['다이어그램 잠금', ' 상태에서 편집 UI가 완전히 잠기도록 수정'],
+      ['불러오기 드롭다운', '을 열면 툴바와 메뉴가 통째로 사라지던 문제 수정']
+    ]
+  },
+  {
+    version: 'v1.4.0',
+    date: '2026-08-04',
     items: [
       ['연결선 목록', '의 접힌 줄에도 두께·레이블 개수가 칩으로 표시됨'],
       ['겹침 방지가 섞인 연결선 그룹', '에서 중간 연결선이 제외된 연결선과 겹치던 문제 수정'],
@@ -118,8 +131,21 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 
 const CHANGELOG_EN: ChangelogGroup[] = [
   {
-    version: 'v1.4.0 (current)',
+    version: 'v1.5.0 (current)',
     date: 'In progress',
+    items: [
+      ['Flowvia is now Isenax', ' — new name, logo and banner artwork'],
+      ['Export as compact JSON / Export as image / Settings', ' moved out of the hamburger menu into their own top-toolbar icons'],
+      ['Hamburger menu', ' fixed doubled-up dividers and dead space when entries are hidden; "Clear Canvas" moved to the top'],
+      ['Every top-toolbar icon', ' now shows a tooltip underneath on hover (with screen-reader labels to match)'],
+      ['Tooltips', ' unified in shape and timing across the app, and now appear after 0.15s instead of 0.4s'],
+      ['Locked diagrams', ' now fully lock the editing UI'],
+      ['Load dropdown', ' fixed hiding the whole toolbar and menu while open']
+    ]
+  },
+  {
+    version: 'v1.4.0',
+    date: '2026-08-04',
     items: [
       ['Connector list', ' — collapsed rows now show thickness and label-count chips'],
       ['Connector groups with mixed overlap settings', ' fixed a middle connector overlapping the one it was trying to avoid'],

@@ -33,14 +33,7 @@ export const IconButton = ({
   }, [disabled, isActive]);
 
   return (
-    <Tooltip
-      title={name}
-      placement={tooltipPosition}
-      enterDelay={1000}
-      enterNextDelay={1000}
-      arrow
-      sx={{ bgcolor: 'primary.main' }}
-    >
+    <Tooltip title={name} placement={tooltipPosition}>
       <Button
         variant="text"
         onClick={onClick}

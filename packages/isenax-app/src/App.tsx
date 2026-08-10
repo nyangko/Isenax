@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { IconX } from '@tabler/icons-react';
 import { Isoflow } from 'isenax';
+import type { IsoflowProps } from 'isenax';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
 import { useTranslation } from 'react-i18next';
@@ -40,11 +41,22 @@ interface CurrentDiagramRef {
 
 // Bump this whenever the History panel's changelog content changes so returning
 // users see the "unread" dot again even if they already dismissed the tutorial hints.
-const HISTORY_VERSION = 'v1.2.0';
+const HISTORY_VERSION = 'v1.5.0';
 const TUTORIAL_HINT_KEYS = [
   'isenax_import_hint_dismissed',
   'isenax_connector_hint_dismissed',
   'isenax-lazy-loading-welcome-dismissed'
+];
+
+// The app's own toolbar already covers "open"/"export as JSON" (via the New/
+// Load/Download icons below) and gives "export as compact JSON"/"export as
+// image"/"settings" their own icons, so the library's hamburger menu only
+// needs to carry what's left: the GitHub/version links and clear canvas.
+const MAIN_MENU_OPTIONS: NonNullable<IsoflowProps['mainMenuOptions']> = [
+  'ACTION.CLEAR_CANVAS',
+  'LINK.DISCORD',
+  'LINK.GITHUB',
+  'VERSION'
 ];
 
 const hasUnreadHistory = () => {
@@ -102,6 +114,14 @@ function EditorPage() {
   const [historyControlsSlot, setHistoryControlsSlot] =
     useState<HTMLDivElement | null>(null);
   const [helpButtonSlot, setHelpButtonSlot] =
+    useState<HTMLDivElement | null>(null);
+  const [exportImageButtonSlot, setExportImageButtonSlot] =
+    useState<HTMLDivElement | null>(null);
+  const [settingsButtonSlot, setSettingsButtonSlot] =
+    useState<HTMLDivElement | null>(null);
+  const [exportCompactJsonButtonSlot, setExportCompactJsonButtonSlot] =
+    useState<HTMLDivElement | null>(null);
+  const [layersButtonSlot, setLayersButtonSlot] =
     useState<HTMLDivElement | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [showLoadMenu, setShowLoadMenu] = useState(false);
@@ -753,11 +773,15 @@ function EditorPage() {
   // While any app-level dialog/popup is open, the canvas underneath shouldn't
   // still respond to drags/clicks — flip the renderer fully non-interactive
   // rather than patching pointer checks into every interaction mode.
+  // showLoadMenu is excluded: it's a small anchored dropdown with its own
+  // full-screen backdrop (closes on outside click), not a modal blocking the
+  // canvas -- forcing editorMode to NON_INTERACTIVE for it also hid the main
+  // menu/toolbar/zoom controls (everything, since that mode's UI mapping is
+  // empty) just for opening the load dropdown.
   const isAnyDialogOpen =
     showSaveDialog ||
     showLoadDialog ||
     showExportDialog ||
-    showLoadMenu ||
     showHistoryPanel ||
     showStorageManager;
 
@@ -791,7 +815,8 @@ function EditorPage() {
             <button
               className={`icon-btn${isDiagramLocked ? ' icon-btn--active' : ''}`}
               onClick={toggleDiagramLock}
-              title={t(isDiagramLocked ? 'nav.unlockDiagram' : 'nav.lockDiagram')}
+              aria-label={t(isDiagramLocked ? 'nav.unlockDiagram' : 'nav.lockDiagram')}
+              data-tooltip={t(isDiagramLocked ? 'nav.unlockDiagram' : 'nav.lockDiagram')}
             >
               {isDiagramLocked ? <LockIcon /> : <UnlockIcon />}
             </button>
@@ -839,7 +864,8 @@ function EditorPage() {
             <button
               className="icon-btn"
               onClick={newDiagram}
-              title={t('nav.newDiagram')}
+              aria-label={t('nav.newDiagram')}
+              data-tooltip={t('nav.newDiagram')}
             >
               <NewFileIcon />
             </button>
@@ -852,7 +878,8 @@ function EditorPage() {
                   setShowSaveDialog(true);
                 }
               }}
-              title={t('nav.saveSessionOnly')}
+              aria-label={t('nav.saveSessionOnly')}
+              data-tooltip={t('nav.saveSessionOnly')}
             >
               <SaveIcon />
             </button>
@@ -864,7 +891,8 @@ function EditorPage() {
                     return !prev;
                   });
                 }}
-                title={t('nav.loadSessionOnly')}
+                aria-label={t('nav.loadSessionOnly')}
+                data-tooltip={t('nav.loadSessionOnly')}
               >
                 <FolderIcon />
               </button>
@@ -899,10 +927,15 @@ function EditorPage() {
               onClick={() => {
                 return setShowExportDialog(true);
               }}
-              title={t('nav.exportFile')}
+              aria-label={t('nav.exportFile')}
+              data-tooltip={t('nav.exportFile')}
             >
               <DownloadIcon />
             </button>
+            <div className="export-compact-json-button-slot" ref={setExportCompactJsonButtonSlot} />
+            <div className="export-image-button-slot" ref={setExportImageButtonSlot} />
+            <div className="settings-button-slot" ref={setSettingsButtonSlot} />
+            <div className="layers-button-slot" ref={setLayersButtonSlot} />
           </>
         ) : (
           <span className="diagram-badge" title={t('dialog.readOnly.mode')}>
@@ -918,7 +951,8 @@ function EditorPage() {
               markHistoryAsRead();
               setIsHistoryUnread(false);
             }}
-            title={t('history.title')}
+            aria-label={t('history.title')}
+            data-tooltip={t('history.title')}
           >
             <HistoryIcon />
           </button>
@@ -935,14 +969,21 @@ function EditorPage() {
           editorMode={
             isAnyDialogOpen
               ? 'NON_INTERACTIVE'
-              : isReadonlyUrl || isDiagramLocked
+              : isReadonlyUrl
                 ? 'EXPLORABLE_READONLY'
-                : 'EDITABLE'
+                : isDiagramLocked
+                  ? 'LOCKED'
+                  : 'EDITABLE'
           }
           locale={currentLocale}
+          mainMenuOptions={MAIN_MENU_OPTIONS}
           mainMenuPortalTarget={mainMenuSlot}
           historyControlsPortalTarget={historyControlsSlot}
           helpButtonPortalTarget={helpButtonSlot}
+          exportImageButtonPortalTarget={exportImageButtonSlot}
+          settingsButtonPortalTarget={settingsButtonSlot}
+          exportCompactJsonButtonPortalTarget={exportCompactJsonButtonSlot}
+          layersButtonPortalTarget={layersButtonSlot}
           iconPackManager={isoflowIconPackManager}
         />
       </div>

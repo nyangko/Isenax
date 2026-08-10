@@ -214,10 +214,12 @@ const ConnectorPickerRow = memo(function ConnectorPickerRow({
 
 interface Props {
   controls: ConnectorGroupControlsType;
+  embedded?: boolean;
 }
 
 export const ConnectorGroupControls = memo(function ConnectorGroupControls({
-  controls
+  controls,
+  embedded
 }: Props) {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -320,7 +322,32 @@ export const ConnectorGroupControls = memo(function ConnectorGroupControls({
   }, [controls, draggedId, dropTargetId, reorderConnectors, uiStateActions]);
 
   if (controls.ids.length === 1) {
-    return <ConnectorControls id={controls.ids[0]} />;
+    return <ConnectorControls id={controls.ids[0]} embedded={embedded} />;
+  }
+
+  const list = (
+    <List dense disablePadding>
+      {controls.ids.map((id, index) => (
+        <ConnectorPickerRow
+          key={id}
+          connectorId={id}
+          index={index}
+          isFocused={controls.focusedId === id}
+          isDragging={draggedId === id}
+          isDropTarget={dropTargetId === id}
+          isReadOnly={isReadOnly}
+          onToggleFocus={handleToggleFocus}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          registerRowEl={registerRowEl}
+        />
+      ))}
+    </List>
+  );
+
+  if (embedded) {
+    return list;
   }
 
   return (
@@ -352,24 +379,7 @@ export const ConnectorGroupControls = memo(function ConnectorGroupControls({
         </Box>
       }
     >
-      <List dense disablePadding>
-        {controls.ids.map((id, index) => (
-          <ConnectorPickerRow
-            key={id}
-            connectorId={id}
-            index={index}
-            isFocused={controls.focusedId === id}
-            isDragging={draggedId === id}
-            isDropTarget={dropTargetId === id}
-            isReadOnly={isReadOnly}
-            onToggleFocus={handleToggleFocus}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-            registerRowEl={registerRowEl}
-          />
-        ))}
-      </List>
+      {list}
     </ControlsContainer>
   );
 });

@@ -8,7 +8,11 @@ import { ConnectorGroupControls } from './ConnectorControls/ConnectorGroupContro
 import { TextBoxControls } from './TextBoxControls/TextBoxControls';
 import { RectangleControls } from './RectangleControls/RectangleControls';
 
-export const ItemControlsManager = () => {
+interface Props {
+  embedded?: boolean;
+}
+
+export const ItemControlsManager = ({ embedded }: Props) => {
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
@@ -16,21 +20,21 @@ export const ItemControlsManager = () => {
   const Controls = useMemo(() => {
     switch (itemControls?.type) {
       case 'ITEM':
-        return <NodeControls key={itemControls.id} id={itemControls.id} />;
+        return <NodeControls key={itemControls.id} id={itemControls.id} embedded={embedded} />;
       case 'CONNECTOR':
-        return <ConnectorControls key={itemControls.id} id={itemControls.id} />;
+        return <ConnectorControls key={itemControls.id} id={itemControls.id} embedded={embedded} />;
       case 'CONNECTOR_GROUP':
-        return <ConnectorGroupControls key={itemControls.ids.join(',')} controls={itemControls} />;
+        return <ConnectorGroupControls key={itemControls.ids.join(',')} controls={itemControls} embedded={embedded} />;
       case 'TEXTBOX':
-        return <TextBoxControls key={itemControls.id} id={itemControls.id} />;
+        return <TextBoxControls key={itemControls.id} id={itemControls.id} embedded={embedded} />;
       case 'RECTANGLE':
-        return <RectangleControls key={itemControls.id} id={itemControls.id} />;
+        return <RectangleControls key={itemControls.id} id={itemControls.id} embedded={embedded} />;
       case 'ADD_ITEM':
         return <IconSelectionControls />;
       default:
         return null;
     }
-  }, [itemControls]);
+  }, [itemControls, embedded]);
 
   return (
     <Box

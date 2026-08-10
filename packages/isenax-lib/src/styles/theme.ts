@@ -151,6 +151,27 @@ export const themeConfig: ThemeOptions = {
         }
       }
     },
+    MuiTooltip: {
+      defaultProps: {
+        // Matches isenax-app's own CSS-only toolbar tooltip (App.css
+        // [data-tooltip]) so the two tooltip systems -- MUI here for
+        // portaled Isoflow buttons, plain CSS there for the app's own
+        // buttons -- read as one system instead of two different ones.
+        arrow: false,
+        enterDelay: 150,
+        enterNextDelay: 150
+      },
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#23262b',
+          color: '#fff',
+          fontSize: 11,
+          fontWeight: 500,
+          padding: '4px 8px',
+          borderRadius: 6
+        }
+      }
+    },
     MuiSvgIcon: {
       defaultProps: {
         color: 'action'

@@ -1,22 +1,23 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Box, useTheme, Typography, Stack } from '@mui/material';
-import { IconChevronRight as ChevronRight } from '@tabler/icons-react';
+import { Box, useTheme, Stack } from '@mui/material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
 import { SceneLayer } from 'src/components/SceneLayer/SceneLayer';
 import { DragAndDrop } from 'src/components/DragAndDrop/DragAndDrop';
-import { ItemControlsManager } from 'src/components/ItemControls/ItemControlsManager';
 import { ToolMenu } from 'src/components/ToolMenu/ToolMenu';
 import { HistoryControls } from 'src/components/HistoryControls/HistoryControls';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { MainMenu } from 'src/components/MainMenu/MainMenu';
+import { ExportImageButton } from 'src/components/ExportImageButton/ExportImageButton';
+import { SettingsButton } from 'src/components/SettingsButton/SettingsButton';
+import { ExportCompactJsonButton } from 'src/components/ExportCompactJsonButton/ExportCompactJsonButton';
+import { LayersButton } from 'src/components/LayersButton/LayersButton';
+import { LayersPanel } from 'src/components/LayersPanel/LayersPanel';
 import { ZoomControls } from 'src/components/ZoomControls/ZoomControls';
 import { DebugUtils } from 'src/components/DebugUtils/DebugUtils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { ContextMenuManager } from 'src/components/ContextMenu/ContextMenuManager';
-import { useScene } from 'src/hooks/useScene';
-import { useModelStore } from 'src/stores/modelStore';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
@@ -30,8 +31,7 @@ const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
   ZOOM_CONTROLS: 'ZOOM_CONTROLS',
   TOOL_MENU: 'TOOL_MENU',
-  ITEM_CONTROLS: 'ITEM_CONTROLS',
-  VIEW_TITLE: 'VIEW_TITLE'
+  ITEM_CONTROLS: 'ITEM_CONTROLS'
 } as const;
 
 interface EditorModeMapping {
@@ -43,13 +43,20 @@ const EDITOR_MODE_MAPPING: EditorModeMapping = {
     'ITEM_CONTROLS',
     'ZOOM_CONTROLS',
     'TOOL_MENU',
-    'MAIN_MENU',
-    'VIEW_TITLE'
+    'MAIN_MENU'
   ],
   // ITEM_CONTROLS included: clicking a node/connector should still open its
   // (now read-only) panel to inspect -- see ConnectorControls/NodeSettings/
   // etc., which each disable their own inputs when editorMode isn't EDITABLE.
-  [EditorModeEnum.EXPLORABLE_READONLY]: ['ITEM_CONTROLS', 'ZOOM_CONTROLS', 'VIEW_TITLE'],
+  [EditorModeEnum.EXPLORABLE_READONLY]: ['ITEM_CONTROLS', 'ZOOM_CONTROLS'],
+  // Keeps MAIN_MENU/TOOL_MENU (hamburger menu, undo/redo) visible, unlike
+  // EXPLORABLE_READONLY -- this is a self-lock, not a public readonly link.
+  [EditorModeEnum.LOCKED]: [
+    'ITEM_CONTROLS',
+    'ZOOM_CONTROLS',
+    'TOOL_MENU',
+    'MAIN_MENU'
+  ],
   [EditorModeEnum.NON_INTERACTIVE]: []
 };
 
@@ -85,10 +92,6 @@ export const UiOverlay = () => {
   const dialog = useUiStateStore((state) => {
     return state.dialog;
   });
-  const itemControls = useUiStateStore((state) => {
-    return state.itemControls;
-  });
-  const { currentView } = useScene();
   const editorMode = useUiStateStore((state) => {
     return state.editorMode;
   });
@@ -97,9 +100,6 @@ export const UiOverlay = () => {
   }, [editorMode]);
   const rendererEl = useUiStateStore((state) => {
     return state.rendererEl;
-  });
-  const title = useModelStore((state) => {
-    return state.title;
   });
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
@@ -113,6 +113,34 @@ export const UiOverlay = () => {
   const historyControlsPortalTarget = useUiStateStore((state) => {
     return state.historyControlsPortalTarget;
   });
+  const exportImageButtonPortalTarget = useUiStateStore((state) => {
+    return state.exportImageButtonPortalTarget;
+  });
+  const settingsButtonPortalTarget = useUiStateStore((state) => {
+    return state.settingsButtonPortalTarget;
+  });
+  const exportCompactJsonButtonPortalTarget = useUiStateStore((state) => {
+    return state.exportCompactJsonButtonPortalTarget;
+  });
+  const layersButtonPortalTarget = useUiStateStore((state) => {
+    return state.layersButtonPortalTarget;
+  });
+  const layersPanelOpen = useUiStateStore((state) => {
+    return state.layersPanelOpen;
+  });
+  const itemControls = useUiStateStore((state) => {
+    return state.itemControls;
+  });
+
+  // LayersPanel itself is only mounted while open, so it can't be the thing
+  // that flips layersPanelOpen on -- that effect has to live somewhere always
+  // mounted. This is the only trigger now that item selection no longer opens
+  // a left-docked panel of its own.
+  useEffect(() => {
+    if (itemControls) {
+      uiStateActions.setLayersPanelOpen(true);
+    }
+  }, [itemControls, uiStateActions]);
   const isFlat = useUiStateStore((state) => {
     return state.projectionMode === 'FLAT';
   });
@@ -129,23 +157,23 @@ export const UiOverlay = () => {
           left: 0
         }}
       >
-        {availableTools.includes('ITEM_CONTROLS') && itemControls && (
+        {availableTools.includes('ITEM_CONTROLS') && layersPanelOpen && (
           <UiElement
             sx={{
               position: 'absolute',
               width: '360px',
-              overflowY: 'scroll',
-              '&::-webkit-scrollbar': {
-                display: 'none'
-              }
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
             }}
             style={{
-              left: appPadding.x,
+              transform: 'translateX(-100%)',
+              left: rendererSize.width - 8,
               top: appPadding.y * 2 + spacing(2),
-              maxHeight: rendererSize.height - appPadding.y * 6
+              height: rendererSize.height - appPadding.y * 3
             }}
           >
-            <ItemControlsManager />
+            <LayersPanel />
           </UiElement>
         )}
 
@@ -206,42 +234,29 @@ export const UiOverlay = () => {
           mainMenuPortalTarget &&
           createPortal(<MainMenu />, mainMenuPortalTarget)}
 
-        {availableTools.includes('VIEW_TITLE') && (
-          <Box
-            sx={{
-              position: 'absolute',
-              display: 'flex',
-              justifyContent: 'center',
-              transform: 'translateX(-50%)',
-              pointerEvents: 'none'
-            }}
-            style={{
-              left: rendererSize.width / 2,
-              top: rendererSize.height - appPadding.y * 2,
-              width: rendererSize.width - 500,
-              height: appPadding.y
-            }}
-          >
-            <UiElement
-              sx={{
-                display: 'inline-flex',
-                px: 2,
-                alignItems: 'center',
-                height: '100%'
-              }}
-            >
-              <Stack direction="row" alignItems="center">
-                <Typography fontWeight={600} color="text.secondary">
-                  {title}
-                </Typography>
-                <ChevronRight />
-                <Typography fontWeight={600} color="text.secondary">
-                  {currentView.name}
-                </Typography>
-              </Stack>
-            </UiElement>
-          </Box>
-        )}
+        {/* Unlike MainMenu/HistoryControls/HelpButton, these have no default
+            floating position — MainMenu already covers the same actions from
+            its dropdown, so they only render when a host app opts in with a
+            portal target of its own. */}
+        {availableTools.includes('MAIN_MENU') &&
+          exportImageButtonPortalTarget &&
+          createPortal(<ExportImageButton />, exportImageButtonPortalTarget)}
+
+        {availableTools.includes('MAIN_MENU') &&
+          settingsButtonPortalTarget &&
+          createPortal(<SettingsButton />, settingsButtonPortalTarget)}
+
+        {availableTools.includes('MAIN_MENU') &&
+          exportCompactJsonButtonPortalTarget &&
+          createPortal(<ExportCompactJsonButton />, exportCompactJsonButtonPortalTarget)}
+
+        {/* Gated on ITEM_CONTROLS (not MAIN_MENU like its siblings above) so the
+            toggle stays reachable in EXPLORABLE_READONLY too -- read-only viewers
+            have no other way to reach item detail now that it lives in here
+            instead of the old left-docked panel. */}
+        {availableTools.includes('ITEM_CONTROLS') &&
+          layersButtonPortalTarget &&
+          createPortal(<LayersButton />, layersButtonPortalTarget)}
 
         {enableDebugTools && (
           <UiElement

@@ -141,6 +141,68 @@ export const MainMenu = () => {
     return null;
   }
 
+  // Built as a list of present-or-absent sections (rather than a fixed chain of
+  // <Divider />s) so a divider only ever sits between two sections that both
+  // actually rendered -- otherwise excluding e.g. ACTION.SETTINGS via
+  // mainMenuOptions leaves two dividers back to back with nothing between them.
+  const sections = [
+    mainMenuOptions.includes('ACTION.CLEAR_CANVAS') && (
+      <MenuItem key="clear-canvas" onClick={onClearCanvas} Icon={<DeleteOutlineIcon size={20} />} danger>
+        {t('clearCanvas')}
+      </MenuItem>
+    ),
+    (mainMenuOptions.includes('ACTION.OPEN') ||
+      mainMenuOptions.includes('EXPORT.JSON') ||
+      mainMenuOptions.includes('EXPORT.JSON_COMPACT') ||
+      mainMenuOptions.includes('EXPORT.PNG')) && (
+      <React.Fragment key="file-actions">
+        {mainMenuOptions.includes('ACTION.OPEN') && (
+          <MenuItem onClick={onOpenModel} Icon={<FolderOpenIcon size={20} />}>
+            {t('open')}
+          </MenuItem>
+        )}
+        {mainMenuOptions.includes('EXPORT.JSON') && (
+          <MenuItem onClick={onExportAsJSON} Icon={<ExportJsonIcon size={20} />}>
+            {t('exportJson')}
+          </MenuItem>
+        )}
+        {mainMenuOptions.includes('EXPORT.JSON_COMPACT') && (
+          <MenuItem onClick={onExportAsCompactJSON} Icon={<ExportJsonIcon size={20} />}>
+            {t('exportCompactJson')}
+          </MenuItem>
+        )}
+        {mainMenuOptions.includes('EXPORT.PNG') && (
+          <MenuItem onClick={onExportAsImage} Icon={<ExportImageIcon size={20} />}>
+            {t('exportImage')}
+          </MenuItem>
+        )}
+      </React.Fragment>
+    ),
+    mainMenuOptions.includes('ACTION.SETTINGS') && (
+      <MenuItem key="settings" onClick={onOpenSettings} Icon={<SettingsIcon size={20} />}>
+        {t('settings')}
+      </MenuItem>
+    ),
+    sectionVisibility.links && mainMenuOptions.includes('LINK.GITHUB') && (
+      <MenuItem
+        key="github"
+        onClick={() => {
+          return gotoUrl(`${REPOSITORY_URL}`);
+        }}
+        Icon={<GitHubIcon size={20} />}
+      >
+        {t('gitHub')}
+      </MenuItem>
+    ),
+    sectionVisibility.version && (
+      <MenuItem key="version">
+        <Typography variant="body2" color="text.secondary">
+          Isenax v{PACKAGE_VERSION}
+        </Typography>
+      </MenuItem>
+    )
+  ].filter(Boolean);
+
   return (
     <UiElement>
       <IconButton
@@ -168,76 +230,15 @@ export const MainMenu = () => {
         }}
       >
         <Card sx={{ py: 1 }}>
-          {/* File Actions */}
-          {mainMenuOptions.includes('ACTION.OPEN') && (
-            <MenuItem onClick={onOpenModel} Icon={<FolderOpenIcon size={20} />}>
-              {t('open')}
-            </MenuItem>
-          )}
-
-          {mainMenuOptions.includes('EXPORT.JSON') && (
-            <MenuItem onClick={onExportAsJSON} Icon={<ExportJsonIcon size={20} />}>
-              {t('exportJson')}
-            </MenuItem>
-          )}
-
-          {mainMenuOptions.includes('EXPORT.JSON') && (
-            <MenuItem onClick={onExportAsCompactJSON} Icon={<ExportJsonIcon size={20} />}>
-              {t('exportCompactJson')}
-            </MenuItem>
-          )}
-
-          {mainMenuOptions.includes('EXPORT.PNG') && (
-            <MenuItem onClick={onExportAsImage} Icon={<ExportImageIcon size={20} />}>
-              {t('exportImage')}
-            </MenuItem>
-          )}
-
-          <Divider />
-
-          <MenuItem onClick={onOpenSettings} Icon={<SettingsIcon size={20} />}>
-            {t('settings')}
-          </MenuItem>
-
-          {sectionVisibility.links && (
-            <>
-              <Divider />
-
-              {mainMenuOptions.includes('LINK.GITHUB') && (
-                <MenuItem
-                  onClick={() => {
-                    return gotoUrl(`${REPOSITORY_URL}`);
-                  }}
-                  Icon={<GitHubIcon size={20} />}
-                >
-                  {t('gitHub')}
-                </MenuItem>
-              )}
-            </>
-          )}
-
-          {sectionVisibility.version && (
-            <>
-              <Divider />
-
-              {mainMenuOptions.includes('VERSION') && (
-                <MenuItem>
-                  <Typography variant="body2" color="text.secondary">
-                    Isenax v{PACKAGE_VERSION}
-                  </Typography>
-                </MenuItem>
-              )}
-            </>
-          )}
-
-          {mainMenuOptions.includes('ACTION.CLEAR_CANVAS') && (
-            <>
-              <Divider />
-              <MenuItem onClick={onClearCanvas} Icon={<DeleteOutlineIcon size={20} />} danger>
-                {t('clearCanvas')}
-              </MenuItem>
-            </>
-          )}
+          {sections.map((section, index) => {
+            return (
+              // eslint-disable-next-line react/no-array-index-key
+              <React.Fragment key={index}>
+                {index > 0 && <Divider />}
+                {section}
+              </React.Fragment>
+            );
+          })}
         </Card>
       </Menu>
     </UiElement>

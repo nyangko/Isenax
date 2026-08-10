@@ -28,6 +28,11 @@ export type SlimMouseEvent = Pick<
 export const EditorModeEnum = {
   NON_INTERACTIVE: 'NON_INTERACTIVE',
   EXPLORABLE_READONLY: 'EXPLORABLE_READONLY',
+  // Same editing restrictions as EXPLORABLE_READONLY (every gate keys off
+  // `editorMode !== 'EDITABLE'`), but keeps MAIN_MENU/TOOL_MENU chrome
+  // visible -- for a user locking their own diagram, vs. a public read-only
+  // viewer link where hiding that chrome is intentional.
+  LOCKED: 'LOCKED',
   EDITABLE: 'EDITABLE'
 } as const;
 
@@ -40,7 +45,9 @@ export const ProjectionModeEnum = {
 
 export const MainMenuOptionsEnum = {
   'ACTION.OPEN': 'ACTION.OPEN',
+  'ACTION.SETTINGS': 'ACTION.SETTINGS',
   'EXPORT.JSON': 'EXPORT.JSON',
+  'EXPORT.JSON_COMPACT': 'EXPORT.JSON_COMPACT',
   'EXPORT.PNG': 'EXPORT.PNG',
   'ACTION.CLEAR_CANVAS': 'ACTION.CLEAR_CANVAS',
   'LINK.GITHUB': 'LINK.GITHUB',

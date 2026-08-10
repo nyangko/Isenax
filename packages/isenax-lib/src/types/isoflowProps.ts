@@ -30,6 +30,7 @@ export interface LocaleProps {
     clearCanvasConfirm: string;
     settings: string;
     gitHub: string;
+    layers: string;
   };
   viewControls: {
     switchToFlatView: string;
@@ -324,6 +325,18 @@ export interface LocaleProps {
       helpBrowsing: string;
     };
   };
+  layersPanel: {
+    title: string;
+    tabLayers: string;
+    tabEdit: string;
+    emptyDetail: string;
+    emptyCanvas: string;
+    groupNodes: string;
+    groupConnectors: string;
+    groupRectangles: string;
+    groupTextBoxes: string;
+    rectangleFallbackName: string;
+  };
   // other namespaces can be added here
 }
 
@@ -361,4 +374,12 @@ export interface IsoflowProps {
   historyControlsPortalTarget?: HTMLElement | null;
   /** Renders the help (?) button into this DOM node instead of the zoom controls cluster. */
   helpButtonPortalTarget?: HTMLElement | null;
+  /** Renders a standalone "export as image" button into this DOM node. Unlike the other portal targets, there's no default floating position — pass this only if you want the action available outside the main menu. */
+  exportImageButtonPortalTarget?: HTMLElement | null;
+  /** Renders a standalone settings button into this DOM node. Unlike the other portal targets, there's no default floating position — pass this only if you want the action available outside the main menu. */
+  settingsButtonPortalTarget?: HTMLElement | null;
+  /** Renders a standalone "export as compact JSON" button into this DOM node. Unlike the other portal targets, there's no default floating position — pass this only if you want the action available outside the main menu. */
+  exportCompactJsonButtonPortalTarget?: HTMLElement | null;
+  /** Renders a standalone layers-panel toggle button into this DOM node. Unlike the other portal targets, there's no default floating position — pass this only if you want the action available outside the main menu. */
+  layersButtonPortalTarget?: HTMLElement | null;
 }

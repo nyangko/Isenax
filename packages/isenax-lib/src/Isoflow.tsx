@@ -30,6 +30,10 @@ const App = ({
   mainMenuPortalTarget,
   historyControlsPortalTarget,
   helpButtonPortalTarget,
+  exportImageButtonPortalTarget,
+  settingsButtonPortalTarget,
+  exportCompactJsonButtonPortalTarget,
+  layersButtonPortalTarget,
 }: IsoflowProps) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -83,6 +87,22 @@ const App = ({
   useEffect(() => {
     uiStateActions.setHelpButtonPortalTarget(helpButtonPortalTarget ?? null);
   }, [helpButtonPortalTarget, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setExportImageButtonPortalTarget(exportImageButtonPortalTarget ?? null);
+  }, [exportImageButtonPortalTarget, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setSettingsButtonPortalTarget(settingsButtonPortalTarget ?? null);
+  }, [settingsButtonPortalTarget, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setExportCompactJsonButtonPortalTarget(exportCompactJsonButtonPortalTarget ?? null);
+  }, [exportCompactJsonButtonPortalTarget, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setLayersButtonPortalTarget(layersButtonPortalTarget ?? null);
+  }, [layersButtonPortalTarget, uiStateActions]);
 
   useEffect(() => {
     if (renderer?.expandLabels !== undefined) {

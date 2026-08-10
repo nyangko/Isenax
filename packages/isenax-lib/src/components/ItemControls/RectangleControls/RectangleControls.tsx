@@ -14,9 +14,10 @@ import { DeleteButton } from '../components/DeleteButton';
 
 interface Props {
   id: string;
+  embedded?: boolean;
 }
 
-export const RectangleControls = ({ id }: Props) => {
+export const RectangleControls = ({ id, embedded }: Props) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -31,25 +32,26 @@ export const RectangleControls = ({ id }: Props) => {
     return null;
   }
 
-  return (
-    <ControlsContainer>
+  const content = (
       <Box sx={{ position: 'relative' }}>
         {/* Close button */}
-        <MUIIconButton
-          aria-label={t('itemControls.close')}
-          onClick={() => {
-            return uiStateActions.setItemControls(null);
-          }}
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            zIndex: 2
-          }}
-          size="small"
-        >
-          <CloseIcon size={20} />
-        </MUIIconButton>
+        {!embedded && (
+          <MUIIconButton
+            aria-label={t('itemControls.close')}
+            onClick={() => {
+              return uiStateActions.setItemControls(null);
+            }}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              zIndex: 2
+            }}
+            size="small"
+          >
+            <CloseIcon size={20} />
+          </MUIIconButton>
+        )}
         <Section title={t('itemControls.color')}>
           <FormControlLabel
             control={
@@ -96,6 +98,11 @@ export const RectangleControls = ({ id }: Props) => {
           </Box>
         </Section>
       </Box>
-    </ControlsContainer>
   );
+
+  if (embedded) {
+    return content;
+  }
+
+  return <ControlsContainer>{content}</ControlsContainer>;
 };

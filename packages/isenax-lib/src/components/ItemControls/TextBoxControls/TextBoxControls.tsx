@@ -20,9 +20,10 @@ import { DeleteButton } from '../components/DeleteButton';
 
 interface Props {
   id: string;
+  embedded?: boolean;
 }
 
-export const TextBoxControls = ({ id }: Props) => {
+export const TextBoxControls = ({ id, embedded }: Props) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -36,25 +37,26 @@ export const TextBoxControls = ({ id }: Props) => {
     return null;
   }
 
-  return (
-    <ControlsContainer>
-      <Box sx={{ position: 'relative', paddingTop: '24px' }}>
+  const content = (
+      <Box sx={{ position: 'relative', paddingTop: embedded ? 0 : '24px' }}>
         {/* Close button */}
-        <MUIIconButton
-          aria-label={t('textBoxControls.close')}
-          onClick={() => {
-            return uiStateActions.setItemControls(null);
-          }}
-          sx={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            zIndex: 2
-          }}
-          size="small"
-        >
-          <CloseIcon size={20} />
-        </MUIIconButton>
+        {!embedded && (
+          <MUIIconButton
+            aria-label={t('textBoxControls.close')}
+            onClick={() => {
+              return uiStateActions.setItemControls(null);
+            }}
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              zIndex: 2
+            }}
+            size="small"
+          >
+            <CloseIcon size={20} />
+          </MUIIconButton>
+        )}
         <Section title={t('textBoxControls.enterText')}>
           <TextField
             value={textBox.content}
@@ -112,6 +114,11 @@ export const TextBoxControls = ({ id }: Props) => {
           </Box>
         </Section>
       </Box>
-    </ControlsContainer>
   );
+
+  if (embedded) {
+    return content;
+  }
+
+  return <ControlsContainer>{content}</ControlsContainer>;
 };

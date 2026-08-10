@@ -203,6 +203,11 @@ export interface UiState {
   mainMenuPortalTarget: HTMLElement | null;
   historyControlsPortalTarget: HTMLElement | null;
   helpButtonPortalTarget: HTMLElement | null;
+  exportImageButtonPortalTarget: HTMLElement | null;
+  settingsButtonPortalTarget: HTMLElement | null;
+  exportCompactJsonButtonPortalTarget: HTMLElement | null;
+  layersButtonPortalTarget: HTMLElement | null;
+  layersPanelOpen: boolean;
 }
 
 export interface UiStateActions {
@@ -226,6 +231,11 @@ export interface UiStateActions {
   setMainMenuPortalTarget: (el: HTMLElement | null) => void;
   setHistoryControlsPortalTarget: (el: HTMLElement | null) => void;
   setHelpButtonPortalTarget: (el: HTMLElement | null) => void;
+  setExportImageButtonPortalTarget: (el: HTMLElement | null) => void;
+  setSettingsButtonPortalTarget: (el: HTMLElement | null) => void;
+  setExportCompactJsonButtonPortalTarget: (el: HTMLElement | null) => void;
+  setLayersButtonPortalTarget: (el: HTMLElement | null) => void;
+  setLayersPanelOpen: (open: boolean) => void;
   setHotkeyProfile: (profile: HotkeyProfile) => void;
   setPanSettings: (settings: PanSettings) => void;
   setZoomSettings: (settings: ZoomSettings) => void;

@@ -22,6 +22,7 @@ import { QuickIconSelector } from './QuickIconSelector';
 
 interface Props {
   id: string;
+  embedded?: boolean;
 }
 
 const ModeOptions = {
@@ -31,7 +32,7 @@ const ModeOptions = {
 
 type Mode = keyof typeof ModeOptions;
 
-export const NodeControls = ({ id }: Props) => {
+export const NodeControls = ({ id, embedded }: Props) => {
   const [mode, setMode] = useState<Mode>('SETTINGS');
   const scene = useScene();
   const { updateModelItem, updateViewItem, deleteViewItem, duplicateItem } = scene;
@@ -99,22 +100,24 @@ export const NodeControls = ({ id }: Props) => {
         }}
       >
         {/* Close button */}
-        <MUIIconButton
-          aria-label={t('itemControls.close')}
-          onClick={() => {
-            return uiStateActions.setItemControls(null);
-          }}
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            zIndex: 2
-          }}
-          size="small"
-        >
-          <CloseIcon size={20} />
-        </MUIIconButton>
-        {mode === 'SETTINGS' && (
+        {!embedded && (
+          <MUIIconButton
+            aria-label={t('itemControls.close')}
+            onClick={() => {
+              return uiStateActions.setItemControls(null);
+            }}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              zIndex: 2
+            }}
+            size="small"
+          >
+            <CloseIcon size={20} />
+          </MUIIconButton>
+        )}
+        {!embedded && mode === 'SETTINGS' && (
           <>
             <Section sx={{ pb: 2 }}>
               <Typography variant="h6">

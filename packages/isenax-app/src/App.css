@@ -68,6 +68,28 @@
   border: none;
 }
 
+/* Isoflow's export-compact-json/export-image/settings/layers buttons portal
+   into these slots (see exportCompactJsonButtonPortalTarget/
+   exportImageButtonPortalTarget/settingsButtonPortalTarget/
+   layersButtonPortalTarget) so they sit in the app's top bar as regular
+   icons instead of living only in the hamburger menu's dropdown. */
+.export-compact-json-button-slot,
+.export-image-button-slot,
+.settings-button-slot,
+.layers-button-slot {
+  flex-shrink: 0;
+  display: flex;
+}
+
+.export-compact-json-button-slot .MuiCard-root,
+.export-image-button-slot .MuiCard-root,
+.settings-button-slot .MuiCard-root,
+.layers-button-slot .MuiCard-root {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
 .icon-toolbar .language-selector {
   margin-left: auto;
 }
@@ -114,6 +136,45 @@
 .icon-btn--active:hover {
   background-color: #fadbd9;
   color: #d0342c;
+}
+
+/* Lightweight CSS-only tooltip for the app's own toolbar icons (New/Save/Load/
+   Download/Lock/History/Language) -- the native `title` attribute they used
+   before is kept as a screen-reader label (via aria-label) but is too slow/
+   inconsistently styled across browsers to rely on visually. The portaled
+   Isoflow buttons (hamburger, undo/redo, help, etc.) already get a styled
+   tooltip from MUI's own Tooltip component, so this only needs to cover the
+   plain HTML buttons defined in App.tsx. */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: var(--isenax-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  z-index: 30;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  transition-delay: 0.15s;
 }
 
 .diagram-badge {

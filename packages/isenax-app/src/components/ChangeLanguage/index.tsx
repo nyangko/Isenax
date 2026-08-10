@@ -5,7 +5,7 @@ import './styles.css';
 import { supportedLanguages } from '../../i18n';
 
 const ChangeLanguage = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('app');
   const [isOpen, setIsOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState(i18n.language || 'en-US');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,6 +35,10 @@ const ChangeLanguage = () => {
       <div
         className="language-display"
         onMouseEnter={() => setIsOpen(true)}
+        role="button"
+        tabIndex={0}
+        aria-label={t('nav.language')}
+        data-tooltip={t('nav.language')}
       >
         <IconLanguage size={18} />
       </div>
