@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.it.md">Italiano</a> | <a href="README.pl.md">Polski</a> | <a href="README.tr.md">Türkçe</a>
 </p>
 
 ## Nota:
@@ -133,6 +133,11 @@ npm run publish:lib  # Publicar biblioteca en npm
    - **Guardado Rápido** - Guarda en la sesión del navegador
    - **Exportar** - Descargar como archivo JSON
    - **Importar** - Cargar desde archivo JSON
+
+4. **Organizar con el panel de Capas**:
+   - Abre Capas desde la barra de herramientas para ver todos los nodos, conectores, áreas y cuadros de texto en una sola lista
+   - Selecciona un elemento allí para editarlo en la pestaña «Editar» del mismo panel
+   - En pantallas estrechas se abre como panel inferior desde el botón de la esquina inferior derecha del lienzo
 
 ### Opciones de Almacenamiento
 

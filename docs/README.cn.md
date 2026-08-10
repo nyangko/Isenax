@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.it.md">Italiano</a> | <a href="README.pl.md">Polski</a> | <a href="README.tr.md">Türkçe</a>
 </p>
 
 ## 说明：
@@ -133,6 +133,11 @@ npm run publish:lib  # 将库发布到 npm
    - **快速保存** - 保存到浏览器会话
    - **导出** - 下载为 JSON 文件
    - **导入** - 从 JSON 文件加载
+
+4. **使用图层面板整理**:
+   - 点击工具栏的图层按钮，可在一个列表中查看画布上的所有节点、连接器、区域和文本
+   - 在列表中选择项目后，可直接在同一面板的“编辑”标签页中修改
+   - 屏幕较窄时，可通过画布右下角的按钮以底部弹出面板的形式打开
 
 ### 存储选项
 

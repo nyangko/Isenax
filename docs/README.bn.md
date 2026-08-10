@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.it.md">Italiano</a> | <a href="README.pl.md">Polski</a> | <a href="README.tr.md">Türkçe</a>
 </p>
 
 ## নোট:
@@ -133,6 +133,11 @@ npm run publish:lib  # npm-এ লাইব্রেরি প্রকাশ �
    - **দ্রুত সংরক্ষণ** - ব্রাউজার সেশনে সংরক্ষণ করে
    - **রপ্তানি** - JSON ফাইল হিসাবে ডাউনলোড করুন
    - **আমদানি** - JSON ফাইল থেকে লোড করুন
+
+4. **লেয়ার প্যানেল দিয়ে গুছিয়ে নিন**:
+   - টুলবার থেকে লেয়ার প্যানেল খুলুন — ক্যানভাসের সব নোড, কানেক্টর, এরিয়া ও টেক্সট বক্স এক তালিকায় দেখা যাবে
+   - তালিকা থেকে কোনো আইটেম বেছে নিলে একই প্যানেলের "সম্পাদনা" ট্যাবে সেটি সরাসরি সম্পাদনা করা যায়
+   - ছোট স্ক্রিনে এটি ক্যানভাসের নিচে-ডানদিকের বোতাম থেকে বটম শিট হিসেবে খোলে
 
 ### স্টোরেজ বিকল্প
 

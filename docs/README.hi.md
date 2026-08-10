@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.it.md">Italiano</a> | <a href="README.pl.md">Polski</a> | <a href="README.tr.md">Türkçe</a>
 </p>
 
 ## नोट:
@@ -133,6 +133,11 @@ npm run publish:lib  # लाइब्रेरी को npm पर प्र�
    - **त्वरित सहेजें** - ब्राउज़र सेशन में सहेजता है
    - **एक्सपोर्ट** - JSON फ़ाइल के रूप में डाउनलोड करें
    - **इम्पोर्ट** - JSON फ़ाइल से लोड करें
+
+4. **लेयर पैनल से व्यवस्थित करें**:
+   - टूलबार से लेयर पैनल खोलें और कैनवास के सभी नोड, कनेक्टर, क्षेत्र और टेक्स्ट बॉक्स एक ही सूची में देखें
+   - सूची में कोई आइटम चुनें और उसी पैनल के "संपादित करें" टैब में उसे तुरंत बदलें
+   - छोटी स्क्रीन पर यह कैनवास के नीचे-दाएँ बटन से बॉटम शीट के रूप में खुलता है
 
 ### स्टोरेज विकल्प
 

@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.it.md">Italiano</a> | <a href="README.pl.md">Polski</a> | <a href="README.tr.md">Türkçe</a>
 </p>
 
 ## Hinweis:
@@ -133,6 +133,11 @@ npm run publish:lib  # Bibliothek auf npm veröffentlichen
    - **Schnellspeichern** - Speichert in der Browser-Sitzung
    - **Exportieren** - Als JSON-Datei herunterladen
    - **Importieren** - Aus JSON-Datei laden
+
+4. **Mit dem Ebenen-Panel organisieren**:
+   - Öffne „Ebenen“ in der Symbolleiste, um alle Knoten, Verbinder, Bereiche und Textfelder in einer Liste zu sehen
+   - Wähle dort ein Element aus, um es im Tab „Bearbeiten“ desselben Panels zu bearbeiten
+   - Auf schmalen Bildschirmen öffnet es sich als Bottom Sheet über die Schaltfläche unten rechts auf der Arbeitsfläche
 
 ### Speicheroptionen
 

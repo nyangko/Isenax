@@ -7,7 +7,7 @@
 
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a> | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.it.md">Italiano</a> | <a href="README.pl.md">Polski</a> | <a href="README.tr.md">Türkçe</a>
 </p>
 
 ## 참고:
@@ -134,6 +134,11 @@ npm run publish:lib  # 라이브러리를 npm에 배포
    - **빠른 저장** - 브라우저 세션에 저장
    - **내보내기** - JSON 파일로 다운로드
    - **가져오기** - JSON 파일에서 불러오기
+
+4. **레이어 패널로 정리하기**:
+   - 툴바의 레이어 버튼을 누르면 캔버스의 모든 노드/연결선/영역/텍스트가 하나의 목록으로 표시됩니다
+   - 목록에서 항목을 선택하면 같은 패널의 "편집" 탭에서 바로 수정할 수 있습니다
+   - 좁은 화면에서는 캔버스 우측 하단 버튼을 눌러 하단 시트로 열립니다
 
 ### 저장 옵션
 
