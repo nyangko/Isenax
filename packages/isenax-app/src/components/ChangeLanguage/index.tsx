@@ -34,7 +34,9 @@ const ChangeLanguage = () => {
     <div className="language-selector" ref={dropdownRef}>
       <div
         className="language-display"
-        onMouseEnter={() => setIsOpen(true)}
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+        }}
         role="button"
         tabIndex={0}
         aria-label={t('nav.language')}
