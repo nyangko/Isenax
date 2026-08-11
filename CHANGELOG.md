@@ -1,5 +1,31 @@
 # Changelog
 
+All notable changes to Isenax will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+> Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
+
+## [1.5.0](https://github.com/nyangko/Isenax/compare/v1.4.0...v1.5.0) (2026-08-11)
+
+### Features
+
+* add layers panel, split toolbar actions out of hamburger menu ([4e50161](https://github.com/nyangko/Isenax/commit/4e50161f1e1ad26f051282db4787d2b3b3c35faf))
+* responsive mobile layout for layers panel and top toolbar ([#39](https://github.com/nyangko/Isenax/issues/39)) ([4157cc9](https://github.com/nyangko/Isenax/commit/4157cc93bdad3f7f6f1504caf119206168ab8222))
+
+### Bug Fixes
+
+* **e2e:** update tests for the toolbar/layers-panel UX changes ([98ca198](https://github.com/nyangko/Isenax/commit/98ca19816cba8c22d10e1e9c87a03830cf7731bf)), closes [#37](https://github.com/nyangko/Isenax/issues/37)
+* language selector doesn't close on a second click ([a8481b3](https://github.com/nyangko/Isenax/commit/a8481b3fd3b4c6cdac5ebccd1e0f26baa323e918))
+
+### Documentation
+
+* add Italian/Polish/Turkish READMEs, document the Layers Panel ([83741d0](https://github.com/nyangko/Isenax/commit/83741d09fc74158d18b069b4e205e9b3b2a559d8))
+* **history:** add v1.5.0 changelog entries ([46f110f](https://github.com/nyangko/Isenax/commit/46f110f709bc0c17c8400711e10880ea8d029e4b))
+
+# Changelog
+
 All notable changes to Flowvia will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
