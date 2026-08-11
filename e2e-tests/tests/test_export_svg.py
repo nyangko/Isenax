@@ -269,59 +269,19 @@ def test_export_svg(driver):
     save_screenshot(driver, "export_01_scene_built")
     print("   Scene verified: nodes, rectangle, and text box all present.")
 
-    # --- Open main menu ---
-    print("\n6. Opening main menu...")
-    menu_btn = driver.execute_script("""
-        // MainMenu uses IconButton with name="Main menu"
-        var buttons = document.querySelectorAll('button');
-        for (var i = 0; i < buttons.length; i++) {
-            var btn = buttons[i];
-            var label = (btn.getAttribute('aria-label') || '').toLowerCase();
-            var name = (btn.getAttribute('name') || '').toLowerCase();
-            if (label.includes('main menu') || name.includes('main menu') ||
-                label.includes('menu')) {
-                return btn;
-            }
-        }
-        // Fallback: look for the MUI MenuIcon (hamburger)
-        var svgs = document.querySelectorAll('button svg');
-        for (var j = 0; j < svgs.length; j++) {
-            var path = svgs[j].querySelector('path');
-            if (path) {
-                var d = path.getAttribute('d') || '';
-                // MUI MenuIcon path starts with "M3 18h18v-2H3"
-                if (d.includes('M3 18h18') || d.includes('M3 18')) return svgs[j].closest('button');
-            }
-        }
-        return null;
-    """)
-    assert menu_btn is not None, "Main menu button not found"
-    menu_btn.click()
-    time.sleep(1)
-    save_screenshot(driver, "export_02_menu_open")
-    print("   Main menu opened.")
-
-    # --- Click "Export as image" ---
-    print("\n7. Clicking 'Export as image'...")
+    # --- Click the standalone "Export as image" toolbar button ---
+    # This used to live inside the hamburger menu, but it's now its own
+    # top-toolbar icon (see App.tsx export-image-button-slot / issue #37),
+    # portaled in from the library's ExportImageButton component.
+    print("\n6. Clicking 'Export as image' toolbar button...")
     export_item = driver.execute_script("""
-        // Look for menu item containing "Export as image" or similar
-        var items = document.querySelectorAll('[role="menuitem"], li.MuiMenuItem-root');
-        for (var i = 0; i < items.length; i++) {
-            var text = items[i].textContent.trim().toLowerCase();
-            if (text.includes('export') && text.includes('image')) return items[i];
-        }
-        // Fallback: any menu item with "export"
-        for (var j = 0; j < items.length; j++) {
-            var t = items[j].textContent.trim().toLowerCase();
-            if (t.includes('export')) return items[j];
-        }
-        return null;
+        return document.querySelector('.export-image-button-slot button');
     """)
-    assert export_item is not None, "Export as image menu item not found"
+    assert export_item is not None, "Export as image button not found"
     export_item.click()
     time.sleep(2)
     save_screenshot(driver, "export_03_dialog_opening")
-    print("   Clicked export menu item.")
+    print("   Clicked export image button.")
 
     # --- Wait for export dialog ---
     print("\n8. Waiting for export dialog...")

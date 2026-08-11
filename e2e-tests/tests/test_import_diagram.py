@@ -132,7 +132,7 @@ def load_expected_counts():
 
 
 def test_import_via_app_button(driver):
-    """Import a diagram using the MainMenu 'Open' and verify all elements loaded."""
+    """Import a diagram using the app's Load dropdown -> Import File, and verify all elements loaded."""
     base_url = get_base_url()
     expected = load_expected_counts()
 
@@ -151,10 +151,11 @@ def test_import_via_app_button(driver):
     print(f"   Baseline state: {baseline}")
     save_screenshot(driver, "import_01_baseline")
 
-    # --- Import via MainMenu "Open" ---
-    # The MainMenu "Open" creates a transient <input type="file">.click().
-    # We intercept this by overriding click() to capture the input element
-    # so we can send_keys to it.
+    # --- Import via the app's own Load dropdown -> "Import File" ---
+    # loadFromFile() (App.tsx) creates a transient <input type="file">.click(),
+    # same as the library's old MainMenu "Open" did -- we intercept it the
+    # same way, by overriding click() to capture the input element so we can
+    # send_keys to it.
     print(f"\n2. Importing diagram from {TEST_DIAGRAM}...")
 
     # Step 1: Install interceptor that captures the file input before it clicks
@@ -178,32 +179,25 @@ def test_import_via_app_button(driver):
         };
     """)
 
-    # Step 2: Open main menu and click "Open"
-    menu_btn = driver.execute_script("""
-        var buttons = document.querySelectorAll('button');
-        for (var i = 0; i < buttons.length; i++) {
-            var label = (buttons[i].getAttribute('aria-label') || '').toLowerCase();
-            var name = (buttons[i].getAttribute('name') || '').toLowerCase();
-            if (label.includes('main menu') || name.includes('main menu') ||
-                label.includes('menu')) return buttons[i];
-        }
-        return null;
+    # Step 2: Open the Load dropdown and click "Import File"
+    load_btn = driver.execute_script("""
+        return document.querySelector('.load-menu-wrapper button');
     """)
-    assert menu_btn is not None, "Main menu button not found"
-    menu_btn.click()
-    time.sleep(1)
+    assert load_btn is not None, "Load button not found"
+    load_btn.click()
+    time.sleep(0.5)
     save_screenshot(driver, "import_02_menu_open")
 
-    # Click "Open" menu item
+    # Click "Import File" menu item
     open_item = driver.execute_script("""
-        var items = document.querySelectorAll('[role="menuitem"], li.MuiMenuItem-root');
+        var items = document.querySelectorAll('.load-menu button');
         for (var i = 0; i < items.length; i++) {
             var text = items[i].textContent.trim().toLowerCase();
-            if (text === 'open') return items[i];
+            if (text.includes('import')) return items[i];
         }
         return null;
     """)
-    assert open_item is not None, "'Open' menu item not found"
+    assert open_item is not None, "'Import File' menu item not found"
     open_item.click()
     time.sleep(1)
 

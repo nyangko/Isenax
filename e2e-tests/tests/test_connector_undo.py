@@ -157,28 +157,54 @@ def place_node_at(driver, x_offset, y_offset):
     """Select icon and place at a specific canvas offset."""
     add_btn = driver.find_element(By.CSS_SELECTOR, "button[aria-label*='Add Item']")
     add_btn.click()
-    time.sleep(0.8)
 
-    driver.execute_script("""
-        const buttons = document.querySelectorAll('button');
-        for (const btn of buttons) {
-            const text = btn.textContent.trim().toUpperCase();
-            if (text.includes('ISOFLOW') && !text.includes('IMPORT')) {
-                btn.click(); return;
+    # Placing a node now opens the docked Layers panel (in its Edit tab) to
+    # host the icon picker, instead of a standalone floating panel -- that's
+    # an extra mount + tab-switch render cycle, so poll for the category
+    # button instead of trusting a fixed sleep.
+    deadline = time.time() + 5
+    category_btn = None
+    while category_btn is None and time.time() < deadline:
+        category_btn = driver.execute_script("""
+            const buttons = document.querySelectorAll('button');
+            for (const btn of buttons) {
+                const text = btn.textContent.trim().toUpperCase();
+                if (text.includes('ISOFLOW') && !text.includes('IMPORT')) return btn;
             }
-        }
-    """)
-    time.sleep(2)
+            return null;
+        """)
+        if category_btn is None:
+            time.sleep(0.2)
+    if category_btn is None:
+        return False
+    # JS-dispatched click rather than a real WebDriver click: the panel this
+    # button lives in is still animating in (MUI transition), and a real
+    # click gets intercepted by the transitioning Paper underneath it.
+    driver.execute_script("arguments[0].click();", category_btn)
+
+    # Wait for the expanded icon grid (many small-thumbnail buttons) rather
+    # than grabbing the first "button > img" match -- a previously-selected
+    # node's own "change icon" preview button in the Layers panel's Edit tab
+    # matches that same shape and can still be on screen for a moment.
+    deadline = time.time() + 5
+    icon_count = 0
+    while icon_count < 4 and time.time() < deadline:
+        icon_count = driver.execute_script("""
+            let n = 0;
+            document.querySelectorAll('button').forEach(btn => {
+                const img = btn.querySelector('img');
+                if (img && img.naturalWidth > 0 && img.naturalWidth <= 100) n++;
+            });
+            return n;
+        """)
+        if icon_count < 4:
+            time.sleep(0.2)
 
     first_icon_btn = driver.execute_script("""
         const buttons = document.querySelectorAll('button');
         for (const btn of buttons) {
             const img = btn.querySelector('img');
             if (img && img.naturalWidth > 0 && img.naturalWidth <= 100) return btn;
-        }
-        for (const btn of buttons) {
-            const img = btn.querySelector('img');
-            if (img) return btn;
         }
         return null;
     """)
@@ -187,6 +213,15 @@ def place_node_at(driver, x_offset, y_offset):
 
     ActionChains(driver).click(first_icon_btn).perform()
     time.sleep(0.5)
+
+    # Placing an item selects it, which docks the Layers panel over the
+    # right ~360px of the canvas (see LayersPanel/UiOverlay) -- close it so
+    # later placements' click offsets can't land on the panel instead of
+    # the canvas.
+    driver.execute_script("""
+        const closeBtn = document.querySelector('[data-testid="layers-panel-close"]');
+        if (closeBtn) closeBtn.click();
+    """)
 
     canvas = driver.find_element(By.CLASS_NAME, "isenax-container")
     ActionChains(driver).move_to_element_with_offset(canvas, x_offset, y_offset).click().perform()

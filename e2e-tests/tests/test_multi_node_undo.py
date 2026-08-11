@@ -45,15 +45,37 @@ def save_screenshot(driver, name):
 
 
 def dismiss_modals(driver):
+    """Dismiss all modals, dialogs, and tip popups."""
     try:
         driver.execute_script("""
+            // Close MUI dialogs
             const dialogs = document.querySelectorAll('[role="dialog"], [class*="MuiDialog"]');
             dialogs.forEach(d => {
                 const closeBtn = d.querySelector('button');
                 if (closeBtn) closeBtn.click();
             });
+            // Close tip popups (X buttons)
+            const closeIcons = document.querySelectorAll('[data-testid="CloseIcon"], [data-testid="ClearIcon"]');
+            closeIcons.forEach(icon => {
+                const btn = icon.closest('button');
+                if (btn) btn.click();
+            });
+            // Close anything with a close/dismiss aria-label
+            document.querySelectorAll('button').forEach(btn => {
+                const label = (btn.getAttribute('aria-label') || '').toLowerCase();
+                if (label.includes('close') || label.includes('dismiss')) btn.click();
+            });
         """)
         time.sleep(0.5)
+        # Second pass to catch the lazy loading modal that may appear later
+        driver.execute_script("""
+            const dialogs = document.querySelectorAll('[role="dialog"], [class*="MuiDialog"]');
+            dialogs.forEach(d => {
+                const btns = d.querySelectorAll('button');
+                btns.forEach(b => { if (b.textContent.trim() === '×' || b.querySelector('svg')) b.click(); });
+            });
+        """)
+        time.sleep(0.3)
     except Exception:
         pass
 
@@ -97,30 +119,54 @@ def place_node_at(driver, x_offset, y_offset):
     # Click "Add Item (N)" button
     add_btn = driver.find_element(By.CSS_SELECTOR, "button[aria-label*='Add Item']")
     add_btn.click()
-    time.sleep(0.8)
 
-    # Expand ISOFLOW icon collection
-    driver.execute_script("""
-        const buttons = document.querySelectorAll('button');
-        for (const btn of buttons) {
-            const text = btn.textContent.trim().toUpperCase();
-            if (text.includes('ISOFLOW') && !text.includes('IMPORT')) {
-                btn.click(); return;
+    # Placing a node now opens the docked Layers panel (in its Edit tab) to
+    # host the icon picker, instead of a standalone floating panel -- that's
+    # an extra mount + tab-switch render cycle, so poll for the category
+    # button instead of trusting a fixed sleep.
+    deadline = time.time() + 5
+    category_btn = None
+    while category_btn is None and time.time() < deadline:
+        category_btn = driver.execute_script("""
+            const buttons = document.querySelectorAll('button');
+            for (const btn of buttons) {
+                const text = btn.textContent.trim().toUpperCase();
+                if (text.includes('ISOFLOW') && !text.includes('IMPORT')) return btn;
             }
-        }
-    """)
-    time.sleep(2)
+            return null;
+        """)
+        if category_btn is None:
+            time.sleep(0.2)
+    if category_btn is None:
+        return False
+    # JS-dispatched click rather than a real WebDriver click: the panel this
+    # button lives in is still animating in (MUI transition), and a real
+    # click gets intercepted by the transitioning Paper underneath it.
+    driver.execute_script("arguments[0].click();", category_btn)
 
-    # Select first icon
+    # Wait for the expanded icon grid (many small-thumbnail buttons) rather
+    # than grabbing the first "button > img" match -- a previously-selected
+    # node's own "change icon" preview button in the Layers panel's Edit tab
+    # matches that same shape and can still be on screen for a moment.
+    deadline = time.time() + 5
+    icon_count = 0
+    while icon_count < 4 and time.time() < deadline:
+        icon_count = driver.execute_script("""
+            let n = 0;
+            document.querySelectorAll('button').forEach(btn => {
+                const img = btn.querySelector('img');
+                if (img && img.naturalWidth > 0 && img.naturalWidth <= 100) n++;
+            });
+            return n;
+        """)
+        if icon_count < 4:
+            time.sleep(0.2)
+
     first_icon_btn = driver.execute_script("""
         const buttons = document.querySelectorAll('button');
         for (const btn of buttons) {
             const img = btn.querySelector('img');
             if (img && img.naturalWidth > 0 && img.naturalWidth <= 100) return btn;
-        }
-        for (const btn of buttons) {
-            const img = btn.querySelector('img');
-            if (img) return btn;
         }
         return null;
     """)
@@ -129,6 +175,15 @@ def place_node_at(driver, x_offset, y_offset):
 
     ActionChains(driver).click(first_icon_btn).perform()
     time.sleep(0.5)
+
+    # Placing an item selects it, which docks the Layers panel over the
+    # right ~360px of the canvas (see LayersPanel/UiOverlay) -- close it so
+    # later placements' click offsets can't land on the panel instead of
+    # the canvas.
+    driver.execute_script("""
+        const closeBtn = document.querySelector('[data-testid="layers-panel-close"]');
+        if (closeBtn) closeBtn.click();
+    """)
 
     # Click on canvas at specific offset
     canvas = driver.find_element(By.CLASS_NAME, "isenax-container")
