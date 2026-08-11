@@ -234,6 +234,7 @@ export const LayersPanel = () => {
         <MUIIconButton
           size="small"
           aria-label={t('title')}
+          data-testid="layers-panel-close"
           onClick={() => {
             uiStateActions.setLayersPanelOpen(false);
           }}
