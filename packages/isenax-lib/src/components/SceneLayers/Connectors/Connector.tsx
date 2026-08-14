@@ -1,6 +1,6 @@
 import React, { useMemo, memo } from 'react';
 import { useTheme, Box } from '@mui/material';
-import { UNPROJECTED_TILE_SIZE } from 'src/config';
+import { UNPROJECTED_TILE_SIZE, PROJECTED_TILE_SIZE } from 'src/config';
 import {
   getAnchorTile,
   getColorVariant,
@@ -58,22 +58,106 @@ const getPerpendicularAt = (
   return { dx: -dirY / len, dy: dirX / len };
 };
 
+// The whole SVG is skewed onto the isometric grid by a CSS matrix (see
+// getIsoProjectionCss) that does NOT scale every local tile-space direction
+// equally on screen — e.g. a (dx=1,dy=1) step projects to a visibly longer
+// on-screen line than a (dx=1,dy=0) step of the same local length. Endpoint
+// retraction needs to happen in on-screen length, not local length, or the
+// gap ends up a different visual size depending on which way the connector
+// approaches its target.
+const ISO_SCALE_A = PROJECTED_TILE_SIZE.width / 2 / UNPROJECTED_TILE_SIZE;
+const ISO_SCALE_B = PROJECTED_TILE_SIZE.height / 2 / UNPROJECTED_TILE_SIZE;
+
+const projectedLength = (dx: number, dy: number): number => {
+  const sx = ISO_SCALE_A * (dx + dy);
+  const sy = ISO_SCALE_B * (dy - dx);
+  return Math.sqrt(sx * sx + sy * sy) || 1;
+};
+
+// A connector's path runs tile-center to tile-center, which lands its drawn
+// endpoint dead in the middle of the item it connects to. Retract it just
+// enough that the line meets the icon's edge instead of running under it.
+const ENDPOINT_INSET_SCREEN_PX = UNPROJECTED_TILE_SIZE * 0.35;
+
+const segmentScreenLength = (
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+  isFlat: boolean
+): number => {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  return isFlat ? Math.sqrt(dx * dx + dy * dy) || 1 : projectedLength(dx, dy);
+};
+
+// Walk from one end of the path, accumulating on-screen segment length, and
+// return the point `targetDist` screen-px in — capped at half the path's
+// total screen length. A single-segment lookup isn't reliable here: routed
+// paths can have a very short (even near-zero) first hop right next to an
+// item (waypoint routing, grouped-connector offsets), which would otherwise
+// swallow the whole inset in one tiny segment and leave the line touching
+// the icon. Walking the full path finds the real edge regardless.
+const pointAtScreenDistance = (
+  points: { x: number; y: number }[],
+  fromStart: boolean,
+  targetDist: number,
+  isFlat: boolean
+): { x: number; y: number } => {
+  const seq = fromStart ? points : [...points].reverse();
+
+  let total = 0;
+  for (let i = 0; i < seq.length - 1; i++) {
+    total += segmentScreenLength(seq[i], seq[i + 1], isFlat);
+  }
+
+  let remaining = Math.min(targetDist, total / 2);
+  for (let i = 0; i < seq.length - 1; i++) {
+    const segLen = segmentScreenLength(seq[i], seq[i + 1], isFlat);
+    if (remaining <= segLen) {
+      const t = remaining / segLen;
+      return {
+        x: seq[i].x + (seq[i + 1].x - seq[i].x) * t,
+        y: seq[i].y + (seq[i + 1].y - seq[i].y) * t
+      };
+    }
+    remaining -= segLen;
+  }
+  return seq[seq.length - 1];
+};
+
+const insetEndpoints = (
+  points: { x: number; y: number }[],
+  isFlat: boolean
+): { x: number; y: number }[] => {
+  if (points.length < 2) return points;
+  const result = points.map((p) => ({ ...p }));
+
+  result[0] = pointAtScreenDistance(points, true, ENDPOINT_INSET_SCREEN_PX, isFlat);
+  result[result.length - 1] = pointAtScreenDistance(points, false, ENDPOINT_INSET_SCREEN_PX, isFlat);
+
+  return result;
+};
+
+const pointsToString = (points: { x: number; y: number }[]): string => {
+  return points.map((p) => `${p.x},${p.y}`).join(' ');
+};
+
 /**
  * Build a polyline points string from tiles, applying a perpendicular pixel offset.
  */
 const buildOffsetPolyline = (
   tiles: { x: number; y: number }[],
   drawOffset: { x: number; y: number },
-  perpOffset: number
+  perpOffset: number,
+  isFlat: boolean
 ): string => {
-  const points: string[] = [];
-  for (let i = 0; i < tiles.length; i++) {
+  const points = tiles.map((tile, i) => {
     const { dx, dy } = getPerpendicularAt(tiles, i);
-    const x = tiles[i].x * UNPROJECTED_TILE_SIZE + drawOffset.x + dx * perpOffset;
-    const y = tiles[i].y * UNPROJECTED_TILE_SIZE + drawOffset.y + dy * perpOffset;
-    points.push(`${x},${y}`);
-  }
-  return points.join(' ');
+    return {
+      x: tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x + dx * perpOffset,
+      y: tile.y * UNPROJECTED_TILE_SIZE + drawOffset.y + dy * perpOffset
+    };
+  });
+  return pointsToString(insetEndpoints(points, isFlat));
 };
 
 export const Connector = memo(({ connector: _connector, isSelected, groupIndex = 0, groupTotal = 1, groupReversed = false, groupWidthRatio = 0, dimmed = false }: Props) => {
@@ -158,14 +242,14 @@ export const Connector = memo(({ connector: _connector, isSelected, groupIndex =
 
   const pathString = useMemo(() => {
     if (groupTotal > 1) {
-      return buildOffsetPolyline(pathTiles, drawOffset, groupOffsetPx);
+      return buildOffsetPolyline(pathTiles, drawOffset, groupOffsetPx, isFlat);
     }
-    return pathTiles.reduce((acc, tile) => {
-      return `${acc} ${tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x},${
-        tile.y * UNPROJECTED_TILE_SIZE + drawOffset.y
-      }`;
-    }, '');
-  }, [pathTiles, drawOffset, groupTotal, groupOffsetPx]);
+    const points = pathTiles.map((tile) => ({
+      x: tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x,
+      y: tile.y * UNPROJECTED_TILE_SIZE + drawOffset.y
+    }));
+    return pointsToString(insetEndpoints(points, isFlat));
+  }, [pathTiles, drawOffset, groupTotal, groupOffsetPx, isFlat]);
 
   // Create offset paths for double lines
   const offsetPaths = useMemo(() => {
@@ -179,17 +263,17 @@ export const Connector = memo(({ connector: _connector, isSelected, groupIndex =
     if (groupTotal > 1) {
       // For grouped double lines: apply group offset + double-line offset together
       return {
-        path1: buildOffsetPolyline(tiles, drawOffset, groupOffsetPx + doubleOffset),
-        path2: buildOffsetPolyline(tiles, drawOffset, groupOffsetPx - doubleOffset)
+        path1: buildOffsetPolyline(tiles, drawOffset, groupOffsetPx + doubleOffset, isFlat),
+        path2: buildOffsetPolyline(tiles, drawOffset, groupOffsetPx - doubleOffset, isFlat)
       };
     }
 
     // Non-grouped double lines: original behavior
     return {
-      path1: buildOffsetPolyline(tiles, drawOffset, doubleOffset),
-      path2: buildOffsetPolyline(tiles, drawOffset, -doubleOffset)
+      path1: buildOffsetPolyline(tiles, drawOffset, doubleOffset, isFlat),
+      path2: buildOffsetPolyline(tiles, drawOffset, -doubleOffset, isFlat)
     };
-  }, [pathTiles, connector.lineType, connectorWidthPx, drawOffset, groupTotal, groupOffsetPx]);
+  }, [pathTiles, connector.lineType, connectorWidthPx, drawOffset, groupTotal, groupOffsetPx, isFlat]);
 
   const anchorPositions = useMemo(() => {
     if (!isSelected) return [];
