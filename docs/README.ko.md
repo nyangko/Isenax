@@ -85,11 +85,12 @@ npm run dev
 
 ## 모노레포 구조
 
-이 저장소는 세 개의 패키지로 구성된 모노레포입니다:
+이 저장소는 네 개의 패키지로 구성된 모노레포입니다:
 
 - `packages/isenax-lib` - 네트워크 다이어그램을 그리는 React 컴포넌트 라이브러리 (Rslib/Rspack으로 빌드)
 - `packages/isenax-app` - 라이브러리를 감싸서 보여주는 프로그레시브 웹 앱 (RSBuild로 빌드)
 - `packages/isenax-backend` - 다이어그램의 선택적 자체 호스팅 저장소를 제공하는 Express 서버 (Docker 배포에 사용)
+- `packages/isenax-mcp` - 외부 AI 에이전트가 다이어그램을 직접 읽고 만들고 수정할 수 있게 해주는 MCP(Model Context Protocol) 서버 (stdio 또는 Streamable HTTP)
 
 ### 개발 명령어
 
@@ -145,6 +146,16 @@ npm run publish:lib  # 라이브러리를 npm에 배포
 - **세션 저장소**: 브라우저를 닫으면 사라지는 임시 저장
 - **내보내기/가져오기**: JSON 파일로 영구 저장
 - **자동 저장**: 5초마다 세션에 자동으로 변경사항 저장
+
+### MCP 연동 (AI 에이전트)
+
+Isenax는 외부 AI 에이전트(Claude 등)가 다이어그램을 직접 읽고 만들고 수정할 수 있도록 MCP 서버를 함께 제공합니다:
+
+1. **설정 → MCP**를 열고 켜면 연결 URL과 Bearer 토큰이 표시됩니다.
+2. 이 URL/토큰으로 MCP 클라이언트를 연결하세요 (`packages/isenax-mcp`는 stdio와 Streamable HTTP 트랜스포트를 모두 지원합니다).
+3. 에이전트가 수정하면 그 다이어그램이 열려 있는 브라우저 탭에 새로고침 없이 바로 반영됩니다 — 작업 중에는 "MCP로 작성 중..." 표시가 나타납니다.
+
+내장 아이콘은 id만으로 왕복하고(base64 데이터를 에이전트에 보내지 않음), `update_diagram_patch` 툴로 변경된 필드만 보내 전체 모델을 다시 보내지 않아도 됩니다.
 
 ## 최근 추가된 기능
 

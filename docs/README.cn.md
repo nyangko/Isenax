@@ -84,11 +84,12 @@ npm run dev
 
 ## Monorepo 结构
 
-这是一个包含三个包的 monorepo：
+这是一个包含四个包的 monorepo：
 
 - `packages/isenax-lib` - 用于绘制网络图表的 React 组件库（使用 Rslib/Rspack 构建）
 - `packages/isenax-app` - 封装并展示该库的渐进式 Web 应用（使用 RSBuild 构建）
 - `packages/isenax-backend` - 提供可选的自托管图表存储的 Express 服务器（用于 Docker 部署）
+- `packages/isenax-mcp` - MCP(Model Context Protocol)服务器，让外部 AI 代理可以直接读取、创建和编辑你的图表（stdio 或 Streamable HTTP）
 
 ### 开发命令
 
@@ -144,6 +145,16 @@ npm run publish:lib  # 将库发布到 npm
 - **会话存储**：浏览器关闭时清除的临时保存
 - **导出/导入**：以 JSON 文件形式永久存储
 - **自动保存**：每 5 秒自动将更改保存到会话中
+
+### MCP 集成（AI 代理）
+
+Isenax 自带 MCP 服务器，让外部 AI 代理（Claude 等）可以直接读取、创建和编辑你的图表：
+
+1. 打开 **设置 → MCP** 并开启，会显示连接 URL 和 Bearer 令牌。
+2. 用该 URL/令牌连接你的 MCP 客户端（`packages/isenax-mcp` 同时支持 stdio 和 Streamable HTTP 传输）。
+3. 代理所做的修改会实时反映在打开该图表的任意标签页中，无需刷新——修改进行中会显示"MCP 正在写入..."提示。
+
+内置图标只通过 id 往返（不会向代理发送 base64 数据），`update_diagram_patch` 工具让代理只发送改动的字段，而不必重新发送整个模型。
 
 ## 最近新增功能
 

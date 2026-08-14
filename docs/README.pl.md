@@ -84,11 +84,12 @@ Otwórz [http://localhost:3000](http://localhost:3000) w przeglądarce.
 
 ## Struktura monorepo
 
-To monorepo zawiera trzy pakiety:
+To monorepo zawiera cztery pakiety:
 
 - `packages/isenax-lib` - Biblioteka komponentów React do rysowania diagramów sieciowych (budowana za pomocą Rslib/Rspack)
 - `packages/isenax-app` - Progressive Web App opakowująca i prezentująca bibliotekę (budowana za pomocą RSBuild)
 - `packages/isenax-backend` - Serwer Express zapewniający opcjonalny własny magazyn diagramów (używany we wdrożeniu Docker)
+- `packages/isenax-mcp` - Serwer MCP (Model Context Protocol) pozwalający zewnętrznemu agentowi AI bezpośrednio odczytywać, tworzyć i edytować Twoje diagramy (stdio lub Streamable HTTP)
 
 ### Polecenia deweloperskie
 
@@ -144,6 +145,16 @@ npm run publish:lib  # Opublikuj bibliotekę w npm
 - **Magazyn sesji**: tymczasowe zapisy usuwane po zamknięciu przeglądarki
 - **Eksport/Import**: trwałe przechowywanie w plikach JSON
 - **Autozapis**: automatycznie zapisuje zmiany w sesji co 5 sekund
+
+### Integracja MCP (Agenci AI)
+
+Isenax zawiera serwer MCP, dzięki któremu zewnętrzny agent AI (Claude itp.) może bezpośrednio odczytywać, tworzyć i edytować Twoje diagramy:
+
+1. Otwórz **Ustawienia → MCP** i włącz — pojawi się adres URL połączenia oraz token Bearer.
+2. Podłącz swojego klienta MCP pod ten URL/token (`packages/isenax-mcp` obsługuje zarówno transport stdio, jak i Streamable HTTP).
+3. Zmiany wprowadzone przez agenta pojawiają się na żywo w każdej otwartej karcie z tym diagramem, bez potrzeby odświeżania — podczas pracy widoczny jest wskaźnik „MCP zapisuje...”.
+
+Wbudowane ikony są przesyłane tylko przez id (dane base64 nie są wysyłane do agenta), a `update_diagram_patch` pozwala agentowi wysyłać tylko zmienione pola zamiast całego modelu.
 
 ## Ostatnio dodane
 

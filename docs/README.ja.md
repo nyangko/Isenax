@@ -85,11 +85,12 @@ npm run dev
 
 ## モノレポ構成
 
-このリポジトリは3つのパッケージからなるモノレポです:
+このリポジトリは4つのパッケージからなるモノレポです:
 
 - `packages/isenax-lib` - ネットワーク図を描画する React コンポーネントライブラリ(Rslib/Rspack でビルド)
 - `packages/isenax-app` - ライブラリをラップして表示する Progressive Web App(RSBuild でビルド)
 - `packages/isenax-backend` - 図のオプションのセルフホスト型ストレージを提供する Express サーバー(Docker デプロイで使用)
+- `packages/isenax-mcp` - 外部のAIエージェントが図を直接読み取り、作成、編集できるようにするMCP(Model Context Protocol)サーバー(stdio または Streamable HTTP)
 
 ### 開発コマンド
 
@@ -145,6 +146,16 @@ npm run publish:lib  # ライブラリを npm に公開
 - **セッションストレージ**: ブラウザを閉じると消える一時保存
 - **エクスポート/インポート**: JSON ファイルとして永続保存
 - **自動保存**: 5秒ごとに変更内容をセッションへ自動保存
+
+### MCP連携(AIエージェント)
+
+Isenaxには、外部のAIエージェント(Claude など)が図を直接読み取り、作成、編集できるMCPサーバーが同梱されています:
+
+1. **設定 → MCP** を開いてオンにすると、接続URLとBearerトークンが表示されます。
+2. そのURL/トークンでMCPクライアントを接続します(`packages/isenax-mcp` は stdio と Streamable HTTP の両方のトランスポートに対応)。
+3. エージェントによる変更は、その図を表示している開いているタブにリフレッシュ不要でリアルタイムに反映され、作業中は「MCPが作成中...」という表示が出ます。
+
+組み込みアイコンはid のみでやり取りされ(base64データはエージェントに送られません)、`update_diagram_patch` を使うとエージェントはモデル全体を送り直さずに変更したフィールドだけを送信できます。
 
 ## 最近追加された機能
 

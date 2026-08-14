@@ -84,11 +84,12 @@ Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
 ## Struktur Monorepo
 
-Ini adalah monorepo yang berisi tiga paket:
+Ini adalah monorepo yang berisi empat paket:
 
 - `packages/isenax-lib` - Library komponen React untuk menggambar diagram jaringan (dibangun dengan Rslib/Rspack)
 - `packages/isenax-app` - Progressive Web App yang membungkus dan menampilkan library (dibangun dengan RSBuild)
 - `packages/isenax-backend` - Server Express yang menyediakan penyimpanan self-hosted opsional untuk diagram (digunakan dalam deployment Docker)
+- `packages/isenax-mcp` - Server MCP (Model Context Protocol) yang memungkinkan agen AI eksternal membaca, membuat, dan mengedit diagram Anda secara langsung (stdio atau Streamable HTTP)
 
 ### Perintah Pengembangan
 
@@ -144,6 +145,16 @@ npm run publish:lib  # Publish library ke npm
 - **Penyimpanan Sesi**: Simpan sementara yang dihapus saat browser ditutup
 - **Ekspor/Impor**: Penyimpanan permanen sebagai file JSON
 - **Auto-Save**: Secara otomatis menyimpan perubahan setiap 5 detik ke sesi
+
+### Integrasi MCP (Agen AI)
+
+Isenax dilengkapi server MCP agar agen AI eksternal (Claude, dll.) dapat membaca, membuat, dan mengedit diagram Anda secara langsung:
+
+1. Buka **Pengaturan → MCP** lalu aktifkan — URL koneksi dan token Bearer akan ditampilkan.
+2. Hubungkan klien MCP Anda ke URL/token tersebut (`packages/isenax-mcp` mendukung transport stdio maupun Streamable HTTP).
+3. Perubahan yang dibuat agen langsung muncul di tab mana pun yang membuka diagram tersebut, tanpa perlu refresh — indikator "MCP sedang menulis..." muncul saat prosesnya berlangsung.
+
+Ikon bawaan hanya dikirim melalui id (data base64 tidak dikirim ke agen), dan `update_diagram_patch` memungkinkan agen mengirim hanya field yang berubah alih-alih mengirim ulang seluruh model.
 
 ## Baru ditambahkan
 

@@ -84,11 +84,12 @@ Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açın.
 
 ## Monorepo yapısı
 
-Bu monorepo üç paket içerir:
+Bu monorepo dört paket içerir:
 
 - `packages/isenax-lib` - Ağ diyagramları çizmek için React bileşen kütüphanesi (Rslib/Rspack ile derlenir)
 - `packages/isenax-app` - Kütüphaneyi saran ve sunan Progressive Web App (RSBuild ile derlenir)
 - `packages/isenax-backend` - Diyagramlar için isteğe bağlı kendi sunucunuzda depolama sağlayan Express sunucusu (Docker dağıtımında kullanılır)
+- `packages/isenax-mcp` - Harici bir AI ajanının diyagramlarınızı doğrudan okumasını, oluşturmasını ve düzenlemesini sağlayan MCP (Model Context Protocol) sunucusu (stdio veya Streamable HTTP)
 
 ### Geliştirme komutları
 
@@ -144,6 +145,16 @@ npm run publish:lib  # Kütüphaneyi npm'e yayımla
 - **Oturum depolaması**: Tarayıcı kapatıldığında silinen geçici kayıtlar
 - **Dışa/İçe aktarma**: JSON dosyaları olarak kalıcı depolama
 - **Otomatik kaydetme**: Değişiklikleri her 5 saniyede bir oturuma kaydeder
+
+### MCP Entegrasyonu (AI Ajanları)
+
+Isenax, harici bir AI ajanının (Claude vb.) diyagramlarınızı doğrudan okuyabilmesi, oluşturabilmesi ve düzenleyebilmesi için bir MCP sunucusuyla birlikte gelir:
+
+1. **Ayarlar → MCP**'yi açın ve etkinleştirin — bir bağlantı URL'si ve Bearer token gösterilir.
+2. MCP istemcinizi bu URL/token ile bağlayın (`packages/isenax-mcp` hem stdio hem de Streamable HTTP taşımasını destekler).
+3. Ajanın yaptığı değişiklikler, o diyagramı gösteren herhangi bir açık sekmede yenileme gerekmeden anında görünür — çalışma sırasında "MCP yazıyor..." göstergesi belirir.
+
+Yerleşik simgeler yalnızca id ile aktarılır (ajana base64 verisi gönderilmez) ve `update_diagram_patch`, ajanın tüm modeli yeniden göndermek yerine yalnızca değiştirdiği alanları göndermesini sağlar.
 
 ## Yakın zamanda eklenenler
 

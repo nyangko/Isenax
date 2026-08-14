@@ -84,11 +84,12 @@ npm run dev
 
 ## Monorepo-Struktur
 
-Dies ist ein Monorepo mit drei Paketen:
+Dies ist ein Monorepo mit vier Paketen:
 
 - `packages/isenax-lib` - React-Komponentenbibliothek zum Zeichnen von Netzwerkdiagrammen (gebaut mit Rslib/Rspack)
 - `packages/isenax-app` - Progressive Web App, die die Bibliothek umhüllt und präsentiert (gebaut mit RSBuild)
 - `packages/isenax-backend` - Express-Server, der optionalen selbst gehosteten Speicher für Diagramme bereitstellt (verwendet im Docker-Deployment)
+- `packages/isenax-mcp` - MCP-Server (Model Context Protocol), der einem externen KI-Agenten erlaubt, deine Diagramme direkt zu lesen, zu erstellen und zu bearbeiten (stdio oder Streamable HTTP)
 
 ### Entwicklungsbefehle
 
@@ -144,6 +145,16 @@ npm run publish:lib  # Bibliothek auf npm veröffentlichen
 - **Sitzungsspeicher**: Temporäre Speicherungen, die beim Schließen des Browsers gelöscht werden
 - **Export/Import**: Permanente Speicherung als JSON-Dateien
 - **Automatisches Speichern**: Speichert Änderungen automatisch alle 5 Sekunden in der Sitzung
+
+### MCP-Integration (KI-Agenten)
+
+Isenax liefert einen MCP-Server mit, damit ein externer KI-Agent (Claude usw.) deine Diagramme direkt lesen, erstellen und bearbeiten kann:
+
+1. Öffne **Einstellungen → MCP** und aktiviere es — eine Verbindungs-URL und ein Bearer-Token werden angezeigt.
+2. Verbinde deinen MCP-Client mit dieser URL/diesem Token (`packages/isenax-mcp` unterstützt sowohl stdio- als auch Streamable-HTTP-Transport).
+3. Änderungen des Agenten erscheinen live in jedem offenen Tab, der dieses Diagramm zeigt — kein Neuladen nötig; während der Bearbeitung wird eine Anzeige "MCP schreibt..." eingeblendet.
+
+Integrierte Icons werden nur per id übertragen (kein Base64 an den Agenten gesendet), und mit `update_diagram_patch` kann ein Agent nur die geänderten Felder senden, statt das gesamte Modell erneut zu übertragen.
 
 ## Kürzlich hinzugefügt
 

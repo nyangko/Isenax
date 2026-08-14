@@ -25,8 +25,20 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
-    version: 'v1.5.0 (현재)',
+    version: 'v1.6.0 (현재)',
     date: '업데이트 중',
+    items: [
+      ['MCP 서버 지원', ' 추가 — 설정 화면에서 켜고 끄면 외부 AI 에이전트가 연결 정보(URL·토큰)로 접속해 다이어그램을 직접 읽고 만들고 수정할 수 있음'],
+      ['MCP로 다이어그램을 수정하는 동안', ' 그 다이어그램이 열려 있는 탭에 새로고침 없이 실시간으로 반영되고, 화면 하단에 "MCP로 작성 중..." 표시가 나타남'],
+      ['Skills 패널', ' 추가 (설정 화면) — AI 다이어그램 자동화 기능(자동 배치 등)을 켜고 실행'],
+      ['영역(사각형) 위에 겹친 텍스트', '를 클릭하면 텍스트 대신 영역이 선택되던 문제 수정 — 특히 소수점 좌표로 미세 배치한 구역 이름표에서 자주 발생하던 문제'],
+      ['연결선이 노드 아이콘 박스 안쪽까지 그려져', ' 선이 아이콘 뒤로 비쳐 보이던 문제 수정 — 이제 아이콘 가장자리에서 선이 멈춤'],
+      ['MCP가 켜진 상태에서 히스토리 패널을 여는 등', ' 화면이 다시 그려질 때 "Maximum update depth exceeded" 오류로 앱이 멈추던 문제 수정']
+    ]
+  },
+  {
+    version: 'v1.5.0',
+    date: '2026-08-11',
     items: [
       ['Flowvia → Isenax', ' 리브랜딩 — 앱 이름, 로고, 배너 이미지 교체'],
       ['레이어 패널', ' 추가 — 캔버스의 노드/연결선/영역/텍스트를 오른쪽 목록에서 한눈에 보고 선택 가능, 항목을 고르면 같은 패널의 "편집" 탭에서 바로 수정 (기존처럼 별도 편집 창이 캔버스 위에 뜨지 않음)'],
@@ -134,8 +146,20 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 
 const CHANGELOG_EN: ChangelogGroup[] = [
   {
-    version: 'v1.5.0 (current)',
+    version: 'v1.6.0 (current)',
     date: 'In progress',
+    items: [
+      ['MCP server support', ' added — enable it in Settings and an external AI agent can connect with the shown URL/token to read, create and edit diagrams directly'],
+      ['While a diagram is being edited over MCP', ' any open tab showing that diagram updates live, no refresh needed, with an "MCP is writing..." indicator at the bottom of the screen'],
+      ['Skills panel', ' added (Settings) — turn on and run AI diagram-automation features (e.g. auto-arrange)'],
+      ['Text overlapping a colored area (rectangle)', ' fixed selecting the area instead of the text underneath your click — this hit zone labels placed at fine-tuned fractional coordinates especially often'],
+      ['Connector lines drawn into a node\'s icon box', ' fixed the line showing through the icon artwork — it now stops right at the icon\'s edge'],
+      ['A "Maximum update depth exceeded" crash', ' fixed when the app re-rendered while MCP was enabled (e.g. opening the History panel)']
+    ]
+  },
+  {
+    version: 'v1.5.0',
+    date: '2026-08-11',
     items: [
       ['Flowvia is now Isenax', ' — new name, logo and banner artwork'],
       ['Layers panel', ' added — a docked list of every node/connector/area/text box on the canvas; picking one opens it in the same panel’s "Edit" tab instead of a separate floating panel over the canvas'],
