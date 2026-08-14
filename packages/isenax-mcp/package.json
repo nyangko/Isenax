@@ -1,0 +1,28 @@
+{
+  "name": "isenax-mcp",
+  "version": "1.5.0",
+  "description": "MCP server exposing Isenax diagrams as tools for AI agents",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./http-handler": "./src/httpHandler.js"
+  },
+  "bin": {
+    "isenax-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "express": "^5.2.1",
+    "isenax": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

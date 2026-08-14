@@ -14,7 +14,8 @@
     "current": "Current",
     "untitled": "Untitled Diagram",
     "modified": "Modified",
-    "clickToRename": "Click to rename"
+    "clickToRename": "Click to rename",
+    "mcpSyncing": "MCP is writing..."
   },
   "dialog": {
     "save": {

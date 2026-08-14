@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { IconX } from '@tabler/icons-react';
-import { Isoflow, MainMenuItem } from 'isenax';
+import { Isoflow, MainMenuItem, stripBuiltinIconUrls, compressTextToBlob, readPossiblyGzippedFile } from 'isenax';
 import type { IsoflowProps } from 'isenax';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
@@ -25,6 +25,8 @@ import {
 import { HistoryPanel } from './components/HistoryPanel';
 import { allLocales } from 'isenax';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
+import { useMcpManager } from './services/mcpManager';
+import { useDiagramLiveSync } from './services/diagramLiveSync';
 import './App.css';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 
@@ -68,6 +70,12 @@ const MOBILE_MAIN_MENU_OPTIONS: NonNullable<IsoflowProps['mainMenuOptions']> = [
   'EXPORT.PNG',
   'ACTION.SETTINGS'
 ];
+
+// Diagram data carries built-in icons (loaded fresh from iconPackManager on
+// every save/load anyway) alongside genuinely custom uploads. Anywhere we
+// persist or re-merge icons, we only want the latter.
+const getImportedIcons = (icons: any[] = []) =>
+  icons.filter((icon) => icon.collection === 'imported');
 
 const MOBILE_BREAKPOINT_QUERY = '(max-width: 599.95px)';
 
@@ -126,6 +134,7 @@ function App() {
 function EditorPage() {
   // Initialize icon pack manager with core icons
   const iconPackManager = useIconPackManager(coreIcons);
+  const mcpManager = useMcpManager();
   const isMobile = useIsMobile();
   const { readonlyDiagramId, editableDiagramId } = useParams<{
     readonlyDiagramId: string;
@@ -176,6 +185,12 @@ function EditorPage() {
   const skipNextModelUpdateRef = useRef(true);
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
+  // Distinguishes an SSE echo of our own save from an actually-external
+  // change (e.g. an MCP-driven edit), so we don't immediately reload what we
+  // just wrote ourselves.
+  const lastLocalSaveRef = useRef<{ id: string; at: number }>({ id: '', at: 0 });
+  const [mcpSyncing, setMcpSyncing] = useState(false);
+  const mcpSyncingSinceRef = useRef<number | null>(null);
   const isReadonlyUrl =
     window.location.pathname.startsWith('/display/') && readonlyDiagramId;
   const isEditableUrl =
@@ -233,9 +248,7 @@ function EditorPage() {
     if (lastOpenedData) {
       try {
         const data = JSON.parse(lastOpenedData);
-        const importedIcons = (data.icons || []).filter((icon: any) => {
-          return icon.collection === 'imported';
-        });
+        const importedIcons = getImportedIcons(data.icons);
         const mergedIcons = [...coreIcons, ...importedIcons];
         return {
           ...data,
@@ -303,12 +316,7 @@ function EditorPage() {
     setDiagramData((prev) => {
       return {
         ...prev,
-        icons: [
-          ...iconPackManager.loadedIcons,
-          ...(prev.icons || []).filter((icon) => {
-            return icon.collection === 'imported';
-          })
-        ]
+        icons: [...iconPackManager.loadedIcons, ...getImportedIcons(prev.icons)]
       };
     });
   }, [iconPackManager.loadedIcons]);
@@ -334,13 +342,7 @@ function EditorPage() {
     }
 
     // Construct save data - include only imported icons
-    const importedIcons = (
-      currentModel?.icons ||
-      diagramData.icons ||
-      []
-    ).filter((icon) => {
-      return icon.collection === 'imported';
-    });
+    const importedIcons = getImportedIcons(currentModel?.icons || diagramData.icons);
 
     const savedData = {
       title: diagramName,
@@ -384,6 +386,7 @@ function EditorPage() {
       });
       setUnsavedDiagramLocked(false);
     }
+    lastLocalSaveRef.current = { id: savedId, at: Date.now() };
     setCurrentDiagram({ id: savedId, name: diagramName });
     setShowSaveDialog(false);
     setHasUnsavedChanges(false);
@@ -405,6 +408,53 @@ function EditorPage() {
     }
   };
 
+  // Silently assigns the current diagram a server-side id if it doesn't
+  // have one yet — no dialog, no name prompt. Used to make an in-progress,
+  // never-saved diagram addressable the moment MCP is turned on, since an
+  // AI agent can only read/write diagrams that exist in server storage.
+  const ensureCurrentDiagramSaved = async (): Promise<string> => {
+    if (currentDiagram) return currentDiagram.id;
+
+    const name = diagramName.trim() || currentModel?.title || 'Untitled Diagram';
+    const importedIcons = getImportedIcons(currentModel?.icons || diagramData.icons);
+    const savedData = {
+      title: name,
+      name,
+      icons: importedIcons,
+      colors: currentModel?.colors || diagramData.colors || [],
+      items: currentModel?.items || diagramData.items || [],
+      views: currentModel?.views || diagramData.views || [],
+      fitToScreen: true
+    };
+
+    const storage = storageManager.getStorage();
+    const id = await storage.createDiagram(savedData);
+
+    lastLocalSaveRef.current = { id, at: Date.now() };
+    setCurrentDiagram({ id, name });
+    setDiagramName(name);
+    setHasUnsavedChanges(false);
+    setDiagrams(await storage.listDiagrams());
+    return id;
+  };
+
+  const handleMcpToggle = useCallback(
+    async (enabled: boolean) => {
+      if (enabled) {
+        try {
+          await ensureCurrentDiagramSaved();
+        } catch (e) {
+          console.error('Failed to auto-save diagram before enabling MCP:', e);
+          alert(t('alert.storageFull'));
+          return;
+        }
+      }
+      mcpManager.onToggle(enabled);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mcpManager]
+  );
+
   const loadDiagram = async (id: string, skipUnsavedCheck = false) => {
     if (
       !skipUnsavedCheck &&
@@ -418,15 +468,15 @@ function EditorPage() {
     const cached = diagrams.find((d) => {
       return d.id === id;
     });
-    const name = cached?.name || data.name || data.title || 'Untitled Diagram';
+    // Prefer the freshly-fetched data over the (possibly stale, e.g. after
+    // an external MCP edit) cached list entry — data.title is always set.
+    const name = data.name || data.title || cached?.name || 'Untitled Diagram';
 
     // Auto-detect and load required icon packs
     await iconPackManager.loadPacksForDiagram(data.items || []);
 
     // Merge imported icons with loaded icon set
-    const importedIcons = (data.icons || []).filter((icon: any) => {
-      return icon.collection === 'imported';
-    });
+    const importedIcons = getImportedIcons(data.icons);
     const mergedIcons = [...iconPackManager.loadedIcons, ...importedIcons];
     const dataWithIcons = {
       ...data,
@@ -444,17 +494,63 @@ function EditorPage() {
     setShareMenu(null);
     setHasUnsavedChanges(false);
 
-    // Save as last opened (without icons)
+    // Save as last opened (without icons) — the cold-start reader above
+    // only reads collection==='imported' entries back out anyway and
+    // rebuilds everything else from iconPackManager, so caching the
+    // merged built-in-pack icons here would be pure localStorage waste.
     try {
       localStorage.setItem('isenax-last-opened', id);
       localStorage.setItem(
         'isenax-last-opened-data',
-        JSON.stringify(dataWithIcons)
+        JSON.stringify({ ...data, icons: importedIcons })
       );
     } catch (e) {
       console.error('Failed to save last opened:', e);
     }
   };
+
+  // MCP's on/off switch lives on the backend, not per-tab — so if it's
+  // already on when this tab loads (or a new blank diagram is started while
+  // it's on), the toggle's own onChange never fires and the earlier
+  // enable-time auto-save never runs. Re-check on every change to either
+  // side instead of only at the moment of flipping the switch.
+  useEffect(() => {
+    if (mcpManager.enabled && !currentDiagram) {
+      ensureCurrentDiagramSaved().catch((e) => {
+        console.error('Failed to auto-attach current diagram to MCP:', e);
+      });
+    }
+  }, [mcpManager.enabled, currentDiagram]);
+
+  // An MCP-driven (or any other client's) edit to the diagram currently open
+  // in this tab reloads it live, via the backend's SSE stream — skipped
+  // while the user has unsaved local edits, or if the change is just an
+  // echo of our own save.
+  useDiagramLiveSync(
+    serverStorageAvailable,
+    currentDiagram?.id,
+    hasUnsavedChanges,
+    async (id) => {
+      const { id: lastId, at } = lastLocalSaveRef.current;
+      if (id === lastId && Date.now() - at < 2000) return;
+      // 'start' (below) usually already showed the indicator — measure the
+      // minimum-visible-time from whichever came first, not just from here.
+      const startedAt = mcpSyncingSinceRef.current ?? Date.now();
+      setMcpSyncing(true);
+      await loadDiagram(id, true);
+      setTimeout(() => {
+        setMcpSyncing(false);
+        mcpSyncingSinceRef.current = null;
+      }, Math.max(0, 600 - (Date.now() - startedAt)));
+    },
+    () => {
+      // Fires the instant the MCP call starts (before it's even validated
+      // or written) — immediate feedback, well before the file-change event
+      // above would otherwise be the first sign anything happened.
+      mcpSyncingSinceRef.current = mcpSyncingSinceRef.current ?? Date.now();
+      setMcpSyncing(true);
+    }
+  );
 
   const commitTitleEdit = () => {
     setIsEditingTitle(false);
@@ -486,7 +582,7 @@ function EditorPage() {
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = 'application/json';
+    fileInput.accept = '.json,.gz,application/json,application/gzip';
     fileInput.onchange = async (event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (!file) return;
@@ -498,40 +594,35 @@ function EditorPage() {
         return;
       }
 
-      const fileReader = new FileReader();
-      fileReader.onload = async (e) => {
-        try {
-          const raw = JSON.parse(e.target?.result as string);
+      try {
+        const text = await readPossiblyGzippedFile(file);
+        const raw = JSON.parse(text);
 
-          await iconPackManager.loadPacksForDiagram(raw.items || []);
+        await iconPackManager.loadPacksForDiagram(raw.items || []);
 
-          const importedIcons = (raw.icons || []).filter((icon: any) => {
-            return icon.collection === 'imported';
-          });
-          const mergedIcons = [...iconPackManager.loadedIcons, ...importedIcons];
+        const importedIcons = getImportedIcons(raw.icons);
+        const mergedIcons = [...iconPackManager.loadedIcons, ...importedIcons];
 
-          const loaded: DiagramData = {
-            ...raw,
-            icons: mergedIcons,
-            colors: raw.colors?.length ? raw.colors : defaultColors,
-            fitToScreen: raw.fitToScreen !== false
-          };
+        const loaded: DiagramData = {
+          ...raw,
+          icons: mergedIcons,
+          colors: raw.colors?.length ? raw.colors : defaultColors,
+          fitToScreen: raw.fitToScreen !== false
+        };
 
-          setCurrentDiagram(null);
-          setDiagramName(raw.title || file.name.replace(/\.json$/i, ''));
-          setDiagramData(loaded);
-          setCurrentModel(loaded);
-          setIsenaxKey((prev) => {
-            return prev + 1;
-          });
-          setHasUnsavedChanges(true);
-          localStorage.removeItem('isenax-last-opened');
-          localStorage.removeItem('isenax-last-opened-data');
-        } catch (err) {
-          alert(t('dialog.readOnly.failed'));
-        }
-      };
-      fileReader.readAsText(file);
+        setCurrentDiagram(null);
+        setDiagramName(raw.title || file.name.replace(/(\.json)?\.gz$|\.json$/i, ''));
+        setDiagramData(loaded);
+        setCurrentModel(loaded);
+        setIsenaxKey((prev) => {
+          return prev + 1;
+        });
+        setHasUnsavedChanges(true);
+        localStorage.removeItem('isenax-last-opened');
+        localStorage.removeItem('isenax-last-opened-data');
+      } catch (err) {
+        alert(t('dialog.readOnly.failed'));
+      }
     };
     fileInput.click();
   };
@@ -610,7 +701,7 @@ function EditorPage() {
     }
   }, [isReadonlyUrl]);
 
-  const exportDiagram = () => {
+  const exportDiagram = async () => {
     // Use the most recent model data - prefer currentModel as it gets updated by handleModelUpdated
     const modelToExport = currentModel || diagramData;
 
@@ -618,9 +709,7 @@ function EditorPage() {
     const allModelIcons = modelToExport.icons || [];
 
     // For safety, also check diagramData for any imported icons not in currentModel
-    const diagramImportedIcons = (diagramData.icons || []).filter((icon) => {
-      return icon.collection === 'imported';
-    });
+    const diagramImportedIcons = getImportedIcons(diagramData.icons);
 
     // Create a map to deduplicate icons by ID, preferring the ones from currentModel
     const iconMap = new Map();
@@ -640,9 +729,15 @@ function EditorPage() {
     // Get all unique icons
     const allIcons = Array.from(iconMap.values());
 
+    // Built-in icons (aws/gcp/azure/kubernetes/isoflow packs) are the same
+    // base64 blob every time — drop it here, isenax-lib's loader (and this
+    // app's own loadFromFile/loadDiagram, via iconPackManager) restores it
+    // from the bundled packs by id on import.
+    const exportableIcons = stripBuiltinIconUrls(allIcons);
+
     const exportData = {
       title: diagramName || modelToExport.title || 'Exported Diagram',
-      icons: allIcons, // Include ALL icons (default + imported) for portability
+      icons: exportableIcons, // Include ALL icons (default + imported) for portability
       colors: modelToExport.colors || [],
       items: modelToExport.items || [],
       views: modelToExport.views || [],
@@ -650,14 +745,14 @@ function EditorPage() {
     };
 
     const jsonString = JSON.stringify(exportData, null, 2);
+    const blob = await compressTextToBlob(jsonString, 'application/gzip');
 
     // Create a blob and download link
-    const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     const exportTimestamp = new Date().toISOString().replace(/[:T]/g, '-').split('.')[0];
-    a.download = `${diagramName || 'diagram'}-${exportTimestamp}.json`;
+    a.download = `${diagramName || 'diagram'}-${exportTimestamp}.json.gz`;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -707,13 +802,7 @@ function EditorPage() {
 
     const autoSaveTimer = setTimeout(async () => {
       // Include imported icons in auto-save
-      const importedIcons = (
-        currentModel?.icons ||
-        diagramData.icons ||
-        []
-      ).filter((icon) => {
-        return icon.collection === 'imported';
-      });
+      const importedIcons = getImportedIcons(currentModel?.icons || diagramData.icons);
 
       const savedData = {
         title: diagramName || currentDiagram.name,
@@ -727,6 +816,7 @@ function EditorPage() {
 
       try {
         await storageManager.getStorage().saveDiagram(currentDiagram.id, savedData);
+        lastLocalSaveRef.current = { id: currentDiagram.id, at: Date.now() };
         setDiagrams((prevDiagrams) => {
           return prevDiagrams.map((d) => {
             return d.id === currentDiagram.id
@@ -837,6 +927,14 @@ function EditorPage() {
     iconPackManager.enabledPacks,
     iconPackManager.togglePack
   ]);
+
+  // Same reference-identity trap as iconPackManager above — {...mcpManager,
+  // onToggle: handleMcpToggle} inline in JSX built a new object every render,
+  // re-firing Isoflow's effect and eventually hitting React's nested-update
+  // ceiling ("Maximum update depth exceeded").
+  const isoflowMcpManager = useMemo(() => {
+    return { ...mcpManager, onToggle: handleMcpToggle };
+  }, [mcpManager, handleMcpToggle]);
 
   // Mobile hides the New/Load/Export/History toolbar buttons (see
   // .mobile-hidden in App.css) since there's no room for them in a single
@@ -1081,6 +1179,7 @@ function EditorPage() {
           exportCompactJsonButtonPortalTarget={exportCompactJsonButtonSlot}
           layersButtonPortalTarget={layersButtonSlot}
           iconPackManager={isoflowIconPackManager}
+          mcpManager={isoflowMcpManager}
         />
       </div>
 
@@ -1333,6 +1432,13 @@ function EditorPage() {
             return setShowHistoryPanel(false);
           }}
         />
+      )}
+
+      {mcpSyncing && (
+        <div className="mcp-syncing-indicator">
+          <span className="mcp-syncing-spinner" />
+          {t('status.mcpSyncing')}
+        </div>
       )}
     </div>
   );

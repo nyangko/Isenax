@@ -27,8 +27,8 @@ export const useLocale = (): LocaleProps => {
 
 // Generic type helper for nested object access
 type NestedKeyOf<ObjectType extends object> = {
-  [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
-    ? `${Key}.${NestedKeyOf<ObjectType[Key]>}`
+  [Key in keyof ObjectType & (string | number)]: NonNullable<ObjectType[Key]> extends object
+    ? `${Key}.${NestedKeyOf<NonNullable<ObjectType[Key]>>}`
     : `${Key}`;
 }[keyof ObjectType & (string | number)];
 

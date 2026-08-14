@@ -2,6 +2,8 @@ import domtoimage from 'dom-to-image-more';
 import FileSaver from 'file-saver';
 import { Model, Size } from '../types';
 import { icons as availableIcons } from '../examples/initialData';
+import { stripBuiltinIconUrls } from './iconLibrary';
+import { compressTextToBlob } from './compression';
 
 export const generateGenericFilename = (extension: string) => {
   return `isenax-export-${new Date().toISOString()}.${extension}`;
@@ -158,21 +160,22 @@ export const transformFromCompactFormat = (compactModel: any): Model => {
   };
 };
 
-export const exportAsJSON = (model: Model) => {
-  const data = new Blob([JSON.stringify(model)], {
-    type: 'application/json;charset=utf-8'
-  });
+export const exportAsJSON = async (model: Model) => {
+  // Built-in icons (aws/gcp/azure/kubernetes/isoflow packs) are the same
+  // base64 blob every time — drop it here, isenax-lib's loader restores it
+  // from the bundled packs by id on import (hydrateBuiltinIconUrls).
+  const exportableModel = { ...model, icons: stripBuiltinIconUrls(model.icons) };
 
-  downloadFile(data, generateGenericFilename('json'));
+  const data = await compressTextToBlob(JSON.stringify(exportableModel), 'application/gzip');
+
+  downloadFile(data, generateGenericFilename('json.gz'));
 };
 
-export const exportAsCompactJSON = (model: Model) => {
+export const exportAsCompactJSON = async (model: Model) => {
   const compactModel = transformToCompactFormat(model);
-  const data = new Blob([JSON.stringify(compactModel)], {
-    type: 'application/json;charset=utf-8'
-  });
+  const data = await compressTextToBlob(JSON.stringify(compactModel), 'application/gzip');
 
-  downloadFile(data, generateGenericFilename('compact.json'));
+  downloadFile(data, generateGenericFilename('compact.json.gz'));
 };
 
 export const exportAsImage = async (

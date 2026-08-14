@@ -48,6 +48,8 @@ const initialState = () => {
           expandLabels: false, // Default to collapsed labels
           projectionMode: 'ISOMETRIC', // Default to the tilted isometric view
           iconPackManager: null, // Will be set by Isoflow if provided
+          mcpManager: null, // Will be set by Isoflow if provided
+          enabledSkills: [],
           isAnythingCopied: false,
           mainMenuPortalTarget: null,
           historyControlsPortalTarget: null,
@@ -184,6 +186,12 @@ const initialState = () => {
             setIconPackManager: (iconPackManager) => {
               set({ iconPackManager });
             },
+            setMcpManager: (mcpManager) => {
+              set({ mcpManager });
+            },
+            setEnabledSkills: (enabledSkills) => {
+              set({ enabledSkills });
+            },
             setIsAnythingCopied: (isAnythingCopied) => {
               set({ isAnythingCopied });
             }
@@ -205,7 +213,8 @@ const initialState = () => {
             connectorAnimationEnabled: state.connectorAnimationEnabled,
             connectorAnimationSpeed: state.connectorAnimationSpeed,
             expandLabels: state.expandLabels,
-            projectionMode: state.projectionMode
+            projectionMode: state.projectionMode,
+            enabledSkills: state.enabledSkills
           };
         }
       }

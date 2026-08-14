@@ -6,7 +6,7 @@ import { HotkeyProfile } from 'src/config/hotkeys';
 import { PanSettings } from 'src/config/panSettings';
 import { ZoomSettings } from 'src/config/zoomSettings';
 import { LabelSettings } from 'src/config/labelSettings';
-import { IconPackManagerProps } from './isoflowProps';
+import { IconPackManagerProps, MCPManagerProps } from './isoflowProps';
 
 interface AddItemControls {
   type: 'ADD_ITEM';
@@ -200,6 +200,9 @@ export interface UiState {
   expandLabels: boolean;
   projectionMode: keyof typeof ProjectionModeEnum;
   iconPackManager: IconPackManagerProps | null;
+  mcpManager: MCPManagerProps | null;
+  /** Skill ids the user has enabled in Settings; gates whether their action is offered. */
+  enabledSkills: string[];
   isAnythingCopied: boolean;
   mainMenuPortalTarget: HTMLElement | null;
   historyControlsPortalTarget: HTMLElement | null;
@@ -252,6 +255,8 @@ export interface UiStateActions {
   setExpandLabels: (expand: boolean) => void;
   setProjectionMode: (mode: keyof typeof ProjectionModeEnum) => void;
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
+  setMcpManager: (mcpManager: MCPManagerProps | null) => void;
+  setEnabledSkills: (enabledSkills: string[]) => void;
   setIsAnythingCopied: (isAnythingCopied: boolean) => void;
 }
 

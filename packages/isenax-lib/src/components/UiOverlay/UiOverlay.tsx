@@ -105,6 +105,9 @@ export const UiOverlay = () => {
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
   });
+  const mcpManager = useUiStateStore((state) => {
+    return state.mcpManager;
+  });
   const contextMenu = useUiStateStore((state) => {
     return state.contextMenu;
   });
@@ -342,7 +345,12 @@ export const UiOverlay = () => {
 
       {dialog === DialogTypeEnum.HELP && <HelpDialog />}
 
-      {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog iconPackManager={iconPackManager || undefined} />}
+      {dialog === DialogTypeEnum.SETTINGS && (
+        <SettingsDialog
+          iconPackManager={iconPackManager || undefined}
+          mcpManager={mcpManager || undefined}
+        />
+      )}
 
       {/* Show hint tooltips only in editable mode */}
       {editorMode === EditorModeEnum.EDITABLE && (

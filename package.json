@@ -11,6 +11,7 @@
     "dev:win": "cross-env NODE_ENV=development npm run start --workspace=packages/isenax-app",
     "dev:lib": "npm run dev --workspace=packages/isenax-lib",
     "dev:backend": "npm run dev --workspace=packages/isenax-backend",
+    "dev:mcp": "npm run dev --workspace=packages/isenax-mcp",
     "build": "npm run build:lib && npm run build:app",
     "build:lib": "npm run build --workspace=packages/isenax-lib",
     "build:app": "npm run build --workspace=packages/isenax-app",

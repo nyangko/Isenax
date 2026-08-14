@@ -14,7 +14,8 @@
     "current": "현재",
     "untitled": "제목 없는 다이어그램",
     "modified": "수정됨",
-    "clickToRename": "클릭하여 이름 변경"
+    "clickToRename": "클릭하여 이름 변경",
+    "mcpSyncing": "MCP로 작성 중..."
   },
   "dialog": {
     "save": {

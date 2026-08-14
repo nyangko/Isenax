@@ -237,6 +237,26 @@ const locale: LocaleProps = {
       iconCount: "{count} icons",
       lazyLoadingDisabledNote: "Lazy loading is disabled. All icon packs are loaded at startup.",
       note: "Icon packs can be enabled or disabled based on your needs. Disabled packs will reduce memory usage and improve performance."
+    },
+    mcp: {
+      title: "MCP Server",
+      description: "Let an AI agent (e.g. Claude) read and edit your diagrams through the Model Context Protocol.",
+      enable: "Enable MCP server",
+      available: "Running",
+      unavailable: "MCP is disabled for this deployment.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Claude Desktop / Claude Code config — paste into mcpServers",
+      copy: "Copy",
+      copied: "Copied"
+    },
+    skills: {
+      title: "Skills",
+      description: "Automations you can run on the current diagram.",
+      autoArrangeName: "Auto-arrange",
+      autoArrangeDescription: "Repack the current view's nodes onto a tidy, non-overlapping grid.",
+      run: "Run",
+      noView: "Open a view first."
     }
   },
   lazyLoadingWelcome: {

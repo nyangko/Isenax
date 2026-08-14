@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs/promises';
+import { watch } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { randomBytes } from 'crypto';
 import rateLimit from 'express-rate-limit';
+import { createMcpRouter } from 'isenax-mcp/http-handler';
 
 try {
   process.loadEnvFile();
@@ -36,6 +39,54 @@ const writeLimiter = rateLimit({ windowMs: 60_000, max: 50, standardHeaders: tru
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+
+// MCP: opt in at the process level (ENABLE_MCP), then toggled at runtime from
+// the app's Settings screen. isenax-mcp reads diagrams via the same
+// STORAGE_PATH/STORAGE_ENABLED this server uses — no separate storage wiring.
+const MCP_ENABLED_AT_ALL = process.env.ENABLE_MCP === 'true';
+let mcpRuntimeEnabled = false;
+let mcpToken = null;
+
+app.get('/api/mcp/status', readLimiter, (req, res) => {
+  // Anyone who can reach this can already mint a token via /enable below —
+  // handing back the current one on status too isn't a new exposure, and
+  // avoids losing it (and thus silently invalidating whatever a user
+  // already pasted into an MCP client's config) on every page refresh.
+  res.json({
+    available: MCP_ENABLED_AT_ALL,
+    enabled: mcpRuntimeEnabled,
+    url: mcpRuntimeEnabled ? '/mcp' : null,
+    token: mcpRuntimeEnabled ? mcpToken : null
+  });
+});
+
+app.post('/api/mcp/enable', writeLimiter, (req, res) => {
+  if (!MCP_ENABLED_AT_ALL) {
+    return res.status(503).json({ error: 'MCP is disabled for this deployment (set ENABLE_MCP=true)' });
+  }
+  // Idempotent: re-enabling an already-enabled server reuses its token
+  // instead of rotating it out from under anyone already using it.
+  if (!mcpRuntimeEnabled) {
+    mcpToken = randomBytes(24).toString('hex');
+    mcpRuntimeEnabled = true;
+  }
+  res.json({ enabled: true, url: '/mcp', token: mcpToken });
+});
+
+app.post('/api/mcp/disable', writeLimiter, (req, res) => {
+  mcpRuntimeEnabled = false;
+  mcpToken = null;
+  res.json({ enabled: false });
+});
+
+app.use(
+  '/mcp',
+  (req, res, next) => {
+    if (!mcpRuntimeEnabled) return res.status(503).json({ error: 'MCP is disabled' });
+    next();
+  },
+  createMcpRouter({ getToken: () => mcpToken, onActivity: broadcastMcpActivity })
+);
 
 // Health check / Storage status endpoint
 app.get('/api/storage/status', (req, res) => {
@@ -80,6 +131,55 @@ if (STORAGE_ENABLED) {
     console.error('Failed to initialize storage:', err);
   });
 }
+
+// Live sync: any writer to STORAGE_PATH — this server's own PUT/POST/DELETE
+// routes, or isenax-mcp writing straight to the filesystem when embedded
+// (bypasses those routes entirely) — ends up as a change to a file here.
+// Watching the directory itself, instead of hooking each write call site,
+// is what lets one broadcaster cover every current and future writer.
+const sseClients = new Set();
+const debouncedIds = new Map();
+
+function broadcastDiagramChanged(id) {
+  clearTimeout(debouncedIds.get(id));
+  debouncedIds.set(
+    id,
+    setTimeout(() => {
+      debouncedIds.delete(id);
+      const payload = `data: ${JSON.stringify({ type: 'changed', id })}\n\n`;
+      sseClients.forEach((res) => res.write(payload));
+    }, 150)
+  );
+}
+
+// Fired the instant an MCP tool call starts (before validation/write), so
+// the UI can show "MCP is writing..." immediately instead of waiting for
+// the debounced filesystem-change broadcast above once it's already done.
+function broadcastMcpActivity(id) {
+  const payload = `data: ${JSON.stringify({ type: 'start', id: id || null })}\n\n`;
+  sseClients.forEach((res) => res.write(payload));
+}
+
+if (STORAGE_ENABLED) {
+  watch(STORAGE_PATH, (eventType, filename) => {
+    if (!filename || !filename.endsWith('.json') || filename === 'metadata.json') return;
+    broadcastDiagramChanged(filename.replace(/\.json$/, ''));
+  });
+}
+
+app.get('/api/diagrams/stream', (req, res) => {
+  if (!STORAGE_ENABLED) {
+    return res.status(503).json({ error: 'Server storage is disabled' });
+  }
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive'
+  });
+  res.write(': connected\n\n');
+  sseClients.add(res);
+  req.on('close', () => sseClients.delete(res));
+});
 
 app.get('/api/diagrams', readLimiter, async (req, res) => {
   try {

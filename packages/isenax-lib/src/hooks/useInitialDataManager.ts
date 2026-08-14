@@ -6,7 +6,8 @@ import {
   CoordsUtils,
   categoriseIcons,
   generateId,
-  getItemByIdOrThrow
+  getItemByIdOrThrow,
+  hydrateBuiltinIconUrls
 } from 'src/utils';
 import * as reducers from 'src/stores/reducers';
 import { useModelStore } from 'src/stores/modelStore';
@@ -56,7 +57,14 @@ export const useInitialDataManager = () => {
 
       setIsReady(false);
 
-      const validationResult = modelSchema.safeParse(_initialData);
+      // Exports (and hand-authored/AI-authored models) may reference a
+      // built-in icon by id only, without its url — restore it from the
+      // bundled packs before validating against the strict schema.
+      const hydratedInitialData = _initialData.icons
+        ? { ..._initialData, icons: hydrateBuiltinIconUrls(_initialData.icons) }
+        : _initialData;
+
+      const validationResult = modelSchema.safeParse(hydratedInitialData);
 
       if (!validationResult.success) {
         // TODO: let's get better at reporting error messages here (starting with how we present them to users)
@@ -67,7 +75,7 @@ export const useInitialDataManager = () => {
       }
 
       // Clean up invalid connector references before loading
-      const initialData = { ..._initialData };
+      const initialData = { ...hydratedInitialData };
       initialData.views = initialData.views.map(view => {
         if (!view.connectors) return view;
 

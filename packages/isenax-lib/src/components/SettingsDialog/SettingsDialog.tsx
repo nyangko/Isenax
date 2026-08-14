@@ -16,8 +16,11 @@ import { ZoomSettings } from '../ZoomSettings/ZoomSettings';
 import { LabelSettings } from '../LabelSettings/LabelSettings';
 import { ConnectorSettings } from '../ConnectorSettings/ConnectorSettings';
 import { IconPackSettings } from '../IconPackSettings/IconPackSettings';
+import { MCPSettings } from '../MCPSettings/MCPSettings';
+import { SkillsSettings } from '../SkillsSettings/SkillsSettings';
 import { useTranslation } from 'src/stores/localeStore';
 import { clickStopperProps } from 'src/utils';
+import { MCPManagerProps } from 'src/types';
 
 export interface SettingsDialogProps {
   iconPackManager?: {
@@ -34,9 +37,10 @@ export interface SettingsDialogProps {
     enabledPacks: string[];
     onTogglePack: (packName: string, enabled: boolean) => void;
   };
+  mcpManager?: MCPManagerProps;
 }
 
-export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
+export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogProps) => {
   const dialog = useUiStateStore((state) => state.dialog);
   const setDialog = useUiStateStore((state) => state.actions.setDialog);
   const [tabValue, setTabValue] = useState(0);
@@ -48,9 +52,38 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
     setDialog(null);
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
+
+  // Array-driven so tab index and content always line up, even as
+  // conditional tabs (icon packs, MCP) are added/removed above others.
+  type TabDef = { label: string; content: React.ReactNode };
+  const tabs: TabDef[] = [
+    { label: t('settings.hotkeys.title'), content: <HotkeySettings /> },
+    { label: t('settings.pan.title'), content: <PanSettings /> },
+    { label: t('settings.zoom.title'), content: <ZoomSettings /> },
+    { label: t('settings.labels.title'), content: <LabelSettings /> },
+    { label: t('settings.connector.title'), content: <ConnectorSettings /> },
+    { label: t('settings.skills.title'), content: <SkillsSettings /> },
+    ...(iconPackManager
+      ? [
+          {
+            label: t('settings.iconPacks.title'),
+            content: (
+              <IconPackSettings
+                lazyLoadingEnabled={iconPackManager.lazyLoadingEnabled}
+                onToggleLazyLoading={iconPackManager.onToggleLazyLoading}
+                packInfo={iconPackManager.packInfo}
+                enabledPacks={iconPackManager.enabledPacks}
+                onTogglePack={iconPackManager.onTogglePack}
+              />
+            )
+          }
+        ]
+      : []),
+    ...(mcpManager ? [{ label: t('settings.mcp.title'), content: <MCPSettings mcpManager={mcpManager} /> }] : [])
+  ];
 
   return (
     <Dialog
@@ -84,30 +117,12 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
           allowScrollButtonsMobile
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          <Tab label={t('settings.hotkeys.title')} />
-          <Tab label={t('settings.pan.title')} />
-          <Tab label={t('settings.zoom.title')} />
-          <Tab label={t('settings.labels.title')} />
-          <Tab label={t('settings.connector.title')} />
-          {iconPackManager && <Tab label={t('settings.iconPacks.title')} />}
+          {tabs.map((tab) => (
+            <Tab key={tab.label} label={tab.label} />
+          ))}
         </Tabs>
 
-        <Box sx={{ mt: 2 }}>
-          {tabValue === 0 && <HotkeySettings />}
-          {tabValue === 1 && <PanSettings />}
-          {tabValue === 2 && <ZoomSettings />}
-          {tabValue === 3 && <LabelSettings />}
-          {tabValue === 4 && <ConnectorSettings />}
-          {tabValue === 5 && iconPackManager && (
-            <IconPackSettings
-              lazyLoadingEnabled={iconPackManager.lazyLoadingEnabled}
-              onToggleLazyLoading={iconPackManager.onToggleLazyLoading}
-              packInfo={iconPackManager.packInfo}
-              enabledPacks={iconPackManager.enabledPacks}
-              onTogglePack={iconPackManager.onTogglePack}
-            />
-          )}
-        </Box>
+        <Box sx={{ mt: 2 }}>{tabs[tabValue]?.content}</Box>
       </DialogContent>
     </Dialog>
   );

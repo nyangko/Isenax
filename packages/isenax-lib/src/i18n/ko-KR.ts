@@ -237,6 +237,26 @@ const locale: LocaleProps = {
       iconCount: "아이콘 {count}개",
       lazyLoadingDisabledNote: "지연 로딩이 비활성화되어 있습니다. 모든 아이콘 팩이 시작 시 로드됩니다.",
       note: "필요에 따라 아이콘 팩을 켜거나 끌 수 있습니다. 비활성화된 팩은 메모리 사용량을 줄이고 성능을 향상시킵니다."
+    },
+    mcp: {
+      title: "MCP 서버",
+      description: "AI 에이전트(예: Claude)가 Model Context Protocol을 통해 다이어그램을 읽고 편집할 수 있게 합니다.",
+      enable: "MCP 서버 사용",
+      available: "실행 중",
+      unavailable: "이 배포에서는 MCP가 비활성화되어 있습니다.",
+      url: "URL",
+      token: "토큰",
+      clientConfig: "Claude Desktop / Claude Code 설정 — mcpServers에 붙여넣으세요",
+      copy: "복사",
+      copied: "복사됨"
+    },
+    skills: {
+      title: "스킬",
+      description: "현재 다이어그램에 실행할 수 있는 자동화 기능입니다.",
+      autoArrangeName: "자동 정렬",
+      autoArrangeDescription: "현재 뷰의 노드를 겹치지 않는 격자 형태로 재배치합니다.",
+      run: "실행",
+      noView: "먼저 뷰를 여세요."
     }
   },
   lazyLoadingWelcome: {

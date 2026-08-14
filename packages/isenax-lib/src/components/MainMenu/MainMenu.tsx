@@ -17,7 +17,7 @@ import {
   exportAsCompactJSON,
   transformFromCompactFormat
 } from 'src/utils/exportOptions';
-import { modelFromModelStore } from 'src/utils';
+import { modelFromModelStore, readPossiblyGzippedFile } from 'src/utils';
 import { useInitialDataManager } from 'src/hooks/useInitialDataManager';
 import { useModelStore } from 'src/stores/modelStore';
 import { useHistory } from 'src/hooks/useHistory';
@@ -64,7 +64,7 @@ export const MainMenu = () => {
   const onOpenModel = useCallback(async () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = 'application/json';
+    fileInput.accept = '.json,.gz,application/json,application/gzip';
 
     fileInput.onchange = async (event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
@@ -73,21 +73,17 @@ export const MainMenu = () => {
         throw new Error('No file selected');
       }
 
-      const fileReader = new FileReader();
+      const text = await readPossiblyGzippedFile(file);
+      const rawData = JSON.parse(text);
+      let modelData = rawData;
 
-      fileReader.onload = async (e) => {
-        const rawData = JSON.parse(e.target?.result as string);
-        let modelData = rawData;
+      // Check format and transform if needed
+      if (rawData._?.f === 'compact') {
+        modelData = transformFromCompactFormat(rawData);
+      }
 
-        // Check format and transform if needed
-        if (rawData._?.f === 'compact') {
-          modelData = transformFromCompactFormat(rawData);
-        }
-
-        load(modelData);
-        clearHistory(); // Clear history when loading new model
-      };
-      fileReader.readAsText(file);
+      load(modelData);
+      clearHistory(); // Clear history when loading new model
 
       uiStateActions.resetUiState();
     };

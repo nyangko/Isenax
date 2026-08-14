@@ -10,6 +10,16 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./standalone": {
+      "types": "./dist/standaloneExports.d.ts",
+      "default": "./dist/standalone.js"
+    }
+  },
   "files": [
     "dist"
   ],

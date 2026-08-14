@@ -27,6 +27,7 @@ const App = ({
   renderer,
   locale = enUS,
   iconPackManager,
+  mcpManager,
   mainMenuPortalTarget,
   historyControlsPortalTarget,
   helpButtonPortalTarget,
@@ -121,6 +122,10 @@ const App = ({
   useLayoutEffect(() => {
     uiStateActions.setIconPackManager(iconPackManager || null);
   }, [iconPackManager, uiStateActions]);
+
+  useLayoutEffect(() => {
+    uiStateActions.setMcpManager(mcpManager || null);
+  }, [mcpManager, uiStateActions]);
 
   if (!initialDataManager.isReady) return null;
 

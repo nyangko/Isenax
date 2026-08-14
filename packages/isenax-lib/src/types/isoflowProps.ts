@@ -246,6 +246,28 @@ export interface LocaleProps {
       lazyLoadingDisabledNote: string;
       note: string;
     };
+    // Optional: only en-US/ko-KR ship these so far; other locales fall back
+    // to the raw key until the i18n completeness pass fills them in.
+    mcp?: {
+      title: string;
+      description: string;
+      enable: string;
+      available: string;
+      unavailable: string;
+      url: string;
+      token: string;
+      clientConfig: string;
+      copy: string;
+      copied: string;
+    };
+    skills?: {
+      title: string;
+      description: string;
+      autoArrangeName: string;
+      autoArrangeDescription: string;
+      run: string;
+      noView: string;
+    };
   };
   lazyLoadingWelcome: {
     title: string;
@@ -356,6 +378,18 @@ export interface IconPackManagerProps {
   onTogglePack: (packName: string, enabled: boolean) => void;
 }
 
+// Host-provided bridge to the app's own backend, which actually owns the
+// running MCP server process — the library only renders its state and lets
+// the user toggle it.
+export interface MCPManagerProps {
+  available: boolean;
+  enabled: boolean;
+  url: string | null;
+  token: string | null;
+  loading: boolean;
+  onToggle: (enabled: boolean) => void;
+}
+
 export interface IsoflowProps {
   initialData?: InitialData;
   mainMenuOptions?: MainMenuOptions;
@@ -369,6 +403,8 @@ export interface IsoflowProps {
   renderer?: RendererProps;
   locale?: LocaleProps;
   iconPackManager?: IconPackManagerProps;
+  /** Bridge to the host app's MCP server (see MCPManagerProps). Omit to hide the MCP settings tab entirely. */
+  mcpManager?: MCPManagerProps;
   /** Renders the main menu (hamburger) button into this DOM node instead of its default floating position. */
   mainMenuPortalTarget?: HTMLElement | null;
   /** Renders the undo/redo buttons into this DOM node instead of the floating tool menu. */
