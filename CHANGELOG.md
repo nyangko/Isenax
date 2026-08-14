@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.6.1](https://github.com/nyangko/Isenax/compare/v1.6.0...v1.6.1) (2026-08-14)
+
+### Bug Fixes
+
+* **docker:** resolve isenax-mcp workspace dependency in production image ([168bec6](https://github.com/nyangko/Isenax/commit/168bec6faeb723713282a5dde21020ba0d19dbff))
+
+### Documentation
+
+* add in-app changelog entry for the Docker/MCP fix ([b0816a6](https://github.com/nyangko/Isenax/commit/b0816a616772dc7a5e21f33831c3f6dcf4928057)), closes [#51](https://github.com/nyangko/Isenax/issues/51)
+
 ## [1.6.0](https://github.com/nyangko/Isenax/compare/v1.5.0...v1.6.0) (2026-08-14)
 
 ### Features
