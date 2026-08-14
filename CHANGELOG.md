@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.6.0](https://github.com/nyangko/Isenax/compare/v1.5.0...v1.6.0) (2026-08-14)
+
+### Features
+
+* add MCP server integration for AI-driven diagram editing ([7e17b72](https://github.com/nyangko/Isenax/commit/7e17b72d55363d7f1c48a7c77e23ffd1863f6581)), closes [#40](https://github.com/nyangko/Isenax/issues/40) [#41](https://github.com/nyangko/Isenax/issues/41) [#43](https://github.com/nyangko/Isenax/issues/43) [#46](https://github.com/nyangko/Isenax/issues/46) [#47](https://github.com/nyangko/Isenax/issues/47) [#48](https://github.com/nyangko/Isenax/issues/48) [#49](https://github.com/nyangko/Isenax/issues/49) [#50](https://github.com/nyangko/Isenax/issues/50)
+
+### Bug Fixes
+
+* **ci:** build the library before running tests, not just before app build ([4ff549e](https://github.com/nyangko/Isenax/commit/4ff549efc2d099fa6b6a7854d2e3c7e7bb679e10))
+* clicking a TextBox over a Rectangle selected the Rectangle instead ([5bed916](https://github.com/nyangko/Isenax/commit/5bed9164efdefb80752a4ee19d24457540fa10ed)), closes [#42](https://github.com/nyangko/Isenax/issues/42)
+* stop connector lines at the icon edge instead of drawing through it ([53dca17](https://github.com/nyangko/Isenax/commit/53dca1786543d50ea22b3ce683021d6b0a07cf3d)), closes [#44](https://github.com/nyangko/Isenax/issues/44)
+
+### Documentation
+
+* document MCP integration, add v1.6.0 in-app changelog entries ([995dfdf](https://github.com/nyangko/Isenax/commit/995dfdf5eaab39696a0d8aefcc35a8304ce80cc2))
+
 ## [1.5.0](https://github.com/nyangko/Isenax/compare/v1.4.0...v1.5.0) (2026-08-11)
 
 ### Features
