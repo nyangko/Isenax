@@ -9,6 +9,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/isenax-lib/package.json ./packages/isenax-lib/
 COPY packages/isenax-app/package.json ./packages/isenax-app/
 COPY packages/isenax-backend/package.json ./packages/isenax-backend/
+COPY packages/isenax-mcp/package.json ./packages/isenax-mcp/
 
 # Install dependencies for the entire workspace
 RUN corepack enable && corepack prepare pnpm@10 --activate && pnpm install --frozen-lockfile
@@ -19,17 +20,23 @@ COPY . .
 # Build the library first, then the app
 RUN pnpm run build:lib && pnpm run build:app
 
+# isenax-backend depends on the isenax-mcp workspace package (which itself
+# depends on isenax-lib's built standalone bundle) via "workspace:*" -- a
+# plain `npm install` in the slim final stage can't resolve that protocol at
+# all. `pnpm deploy` resolves workspace deps into a real, self-contained
+# node_modules instead, so the final stage can just copy it over.
+RUN pnpm --filter=isenax-backend deploy --prod --legacy /app/deploy/backend
+
 # Use Node with nginx for production
 FROM node:24-alpine
 
 # Install web server packages
 RUN apk add --no-cache nginx openssl su-exec
 
-# Copy backend code
-COPY --from=build /app/packages/isenax-backend /app/packages/isenax-backend
+# Copy backend code (already deployed with resolved workspace deps, see build stage)
+COPY --from=build /app/deploy/backend /app/packages/isenax-backend
 
 WORKDIR /app/packages/isenax-backend
-RUN npm install --omit=dev
 
 # Copy the built React app to Nginx's web server directory
 COPY --from=build /app/packages/isenax-app/build /usr/share/nginx/html
