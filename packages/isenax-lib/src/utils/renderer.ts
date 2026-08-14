@@ -530,15 +530,28 @@ export const getItemAtTile = ({
 
   const textBox = scene.textBoxes.find((tb) => {
     const textBoxTo = getTextBoxEndTile(tb, tb.size);
+    const isX = tb.orientation === 'X';
+
+    // getTextBoxEndTile only extends the box along the text's own reading
+    // axis, leaving zero thickness on the perpendicular one — a click
+    // anywhere off that single line falls through to whatever's underneath
+    // (usually a zone Rectangle). Pad by the textbox's own height on the
+    // perpendicular axis so the hit box matches its actual rendered
+    // footprint. tb.tile/textBoxTo can also be fractional (zone labels are
+    // routinely placed at e.g. {x: 1.2, y: -4.8} for fine positioning), so
+    // floor/ceil both ends to the full integer-tile footprint instead of
+    // comparing raw fractional bounds against an integer click.
+    const perp = tb.size.height;
+    const xs = isX
+      ? [tb.tile.x, textBoxTo.x]
+      : [tb.tile.x, textBoxTo.x, textBoxTo.x - perp, textBoxTo.x + perp];
+    const ys = isX
+      ? [tb.tile.y, textBoxTo.y, textBoxTo.y - perp, textBoxTo.y + perp]
+      : [tb.tile.y, textBoxTo.y];
+
     const textBoxBounds = getBoundingBox([
-      tb.tile,
-      {
-        x: Math.ceil(textBoxTo.x),
-        y:
-          tb.orientation === 'X'
-            ? Math.ceil(textBoxTo.y)
-            : Math.floor(textBoxTo.y)
-      }
+      { x: Math.floor(Math.min(...xs)), y: Math.floor(Math.min(...ys)) },
+      { x: Math.ceil(Math.max(...xs)), y: Math.ceil(Math.max(...ys)) }
     ]);
 
     return isWithinBounds(tile, textBoxBounds);

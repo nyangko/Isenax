@@ -1,7 +1,7 @@
 import { Coords, Size, Scroll } from 'src/types';
 import { CoordsUtils, SizeUtils } from 'src/utils';
 import { PROJECTED_TILE_SIZE } from 'src/config';
-import { getGridSubset, isWithinBounds, screenToIso } from '../renderer';
+import { getGridSubset, isWithinBounds, screenToIso, getItemAtTile } from '../renderer';
 
 const getRendererSize = (tileSize: Size, zoom: number = 1): Size => {
   const projectedTileSize = SizeUtils.multiply(PROJECTED_TILE_SIZE, zoom);
@@ -123,5 +123,67 @@ describe('Tests renderer utils', () => {
     });
 
     expect(tile).toEqual({ x: 0, y: 10 });
+  });
+
+  test('getItemAtTile() selects a TextBox instead of an underlying Rectangle when clicking on the text, even off its single anchor row', () => {
+    const scene = {
+      items: [],
+      connectors: [],
+      rectangles: [
+        { id: 'zone', from: { x: -5, y: -5 }, to: { x: 5, y: 5 } }
+      ],
+      textBoxes: [
+        {
+          id: 'label',
+          tile: { x: -2, y: -2 },
+          orientation: 'X',
+          size: { width: 3, height: 1 }
+        }
+      ]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+
+    // Directly on the textbox's own anchor row: already worked before the fix.
+    expect(getItemAtTile({ tile: { x: -1, y: -2 }, scene })).toEqual({
+      type: 'TEXTBOX',
+      id: 'label'
+    });
+
+    // One row off the anchor, but still within the text's rendered (1-tile-tall)
+    // footprint — this used to fall through to the Rectangle underneath.
+    expect(getItemAtTile({ tile: { x: -1, y: -1 }, scene })).toEqual({
+      type: 'TEXTBOX',
+      id: 'label'
+    });
+
+    // Comfortably outside the textbox's footprint: still resolves to the Rectangle.
+    expect(getItemAtTile({ tile: { x: -1, y: 3 }, scene })).toEqual({
+      type: 'RECTANGLE',
+      id: 'zone'
+    });
+  });
+
+  test('getItemAtTile() hits a fractionally-positioned TextBox (e.g. a zone label placed at {x: 1.2, y: -4.8})', () => {
+    const scene = {
+      items: [],
+      connectors: [],
+      rectangles: [
+        { id: 'zone', from: { x: 0, y: -5 }, to: { x: 4, y: -1 } }
+      ],
+      textBoxes: [
+        {
+          id: 'label',
+          tile: { x: 1.2, y: -4.8 },
+          orientation: 'X',
+          size: { width: 2, height: 1 }
+        }
+      ]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+
+    expect(getItemAtTile({ tile: { x: 1, y: -5 }, scene })).toEqual({
+      type: 'TEXTBOX',
+      id: 'label'
+    });
   });
 });
