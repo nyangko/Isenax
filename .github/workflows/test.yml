@@ -36,6 +36,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # isenax-mcp imports isenax-lib's built standalone bundle
+      # (dist/standalone.js) at test time, not just at app-build time.
+      - name: Build library
+        run: pnpm run build:lib
+
       - name: Run tests with coverage
         run: pnpm test -- --coverage || pnpm test
         env:
