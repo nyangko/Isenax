@@ -33,7 +33,8 @@ const CHANGELOG_KO: ChangelogGroup[] = [
       ['Skills 패널', ' 추가 (설정 화면) — AI 다이어그램 자동화 기능(자동 배치 등)을 켜고 실행'],
       ['영역(사각형) 위에 겹친 텍스트', '를 클릭하면 텍스트 대신 영역이 선택되던 문제 수정 — 특히 소수점 좌표로 미세 배치한 구역 이름표에서 자주 발생하던 문제'],
       ['연결선이 노드 아이콘 박스 안쪽까지 그려져', ' 선이 아이콘 뒤로 비쳐 보이던 문제 수정 — 이제 아이콘 가장자리에서 선이 멈춤'],
-      ['MCP가 켜진 상태에서 히스토리 패널을 여는 등', ' 화면이 다시 그려질 때 "Maximum update depth exceeded" 오류로 앱이 멈추던 문제 수정']
+      ['MCP가 켜진 상태에서 히스토리 패널을 여는 등', ' 화면이 다시 그려질 때 "Maximum update depth exceeded" 오류로 앱이 멈추던 문제 수정'],
+      ['Docker로 직접 호스팅하는 경우', ' MCP 서버가 빌드되지 않거나(빌드 실패) 빌드되어도 접속이 안 되던 문제 수정 — 이제 Docker 배포에서도 설정 화면에 뜨는 연결 URL로 정상 접속됨']
     ]
   },
   {
@@ -154,7 +155,8 @@ const CHANGELOG_EN: ChangelogGroup[] = [
       ['Skills panel', ' added (Settings) — turn on and run AI diagram-automation features (e.g. auto-arrange)'],
       ['Text overlapping a colored area (rectangle)', ' fixed selecting the area instead of the text underneath your click — this hit zone labels placed at fine-tuned fractional coordinates especially often'],
       ['Connector lines drawn into a node\'s icon box', ' fixed the line showing through the icon artwork — it now stops right at the icon\'s edge'],
-      ['A "Maximum update depth exceeded" crash', ' fixed when the app re-rendered while MCP was enabled (e.g. opening the History panel)']
+      ['A "Maximum update depth exceeded" crash', ' fixed when the app re-rendered while MCP was enabled (e.g. opening the History panel)'],
+      ['Self-hosting via Docker', ' fixed the MCP server failing to build, and (once built) being unreachable at the connection URL shown in Settings']
     ]
   },
   {
