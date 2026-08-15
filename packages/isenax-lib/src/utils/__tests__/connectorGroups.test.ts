@@ -190,6 +190,21 @@ describe('getConnectorGroups', () => {
     });
   });
 
+  it('should group a connector with a waypoint (3+ anchors) with its 2-anchor sibling by first/last endpoint', () => {
+    const withWaypoint: Connector = {
+      id: 'c1',
+      anchors: [
+        { id: 'c1-a1', ref: { item: 'item1' } },
+        { id: 'c1-mid', ref: { tile: { x: 2, y: 0 } } },
+        { id: 'c1-a2', ref: { item: 'item2' } }
+      ]
+    };
+    const result = getConnectorGroups([withWaypoint, makeConnector('c2', 'item1', 'item2')]);
+    const ratio = (2 * DEFAULT_WIDTH) / TILE_SIZE;
+    expect(result.get('c1')).toEqual({ index: 0, total: 2, reversed: false, groupWidthRatio: ratio });
+    expect(result.get('c2')).toEqual({ index: 1, total: 2, reversed: false, groupWidthRatio: ratio });
+  });
+
   it('should widen spacing for a group with mixed connector widths', () => {
     const result = getConnectorGroups([
       makeConnector('thin1', 'item1', 'item2', undefined, 10),

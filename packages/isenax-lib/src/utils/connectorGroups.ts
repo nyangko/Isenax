@@ -28,12 +28,17 @@ export function getConnectorGroups(
   >();
 
   for (const connector of connectors) {
-    if (connector.anchors.length !== 2) {
+    if (connector.anchors.length < 2) {
       continue;
     }
 
+    // Group by overall endpoints (first/last), not anchors.length === 2 --
+    // a connector with waypoints in between (e.g. dragged into a bend, even
+    // one later straightened back to collinear) must still group with a
+    // straight sibling sharing the same start/end, or both lose their offset
+    // and render on top of each other.
     const ref1 = getAnchorRefString(connector.anchors[0].ref);
-    const ref2 = getAnchorRefString(connector.anchors[1].ref);
+    const ref2 = getAnchorRefString(connector.anchors[connector.anchors.length - 1].ref);
     const sorted = [ref1, ref2].sort();
     const key = sorted.join('|');
     // Anchor order (which endpoint was drawn first) differs per connector even
