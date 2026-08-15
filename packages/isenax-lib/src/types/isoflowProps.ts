@@ -364,6 +364,14 @@ export interface LocaleProps {
     searchPlaceholder?: string;
     filterAll?: string;
     noSearchResults?: string;
+    subTabStructure?: string;
+    subTabConnections?: string;
+    boundaryRowPrefix?: string;
+    labelRowPrefix?: string;
+    ungrouped?: string;
+    summaryConnectorCount?: string;
+    summaryZone?: string;
+    summaryOpenProperties?: string;
   };
   // other namespaces can be added here
 }

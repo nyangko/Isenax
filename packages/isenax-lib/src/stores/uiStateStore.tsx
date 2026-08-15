@@ -60,6 +60,15 @@ const initialState = () => {
           layersButtonPortalTarget: null,
           layersPanelOpen: false,
           mainMenuExtraItems: null,
+          // Per-item visibility/lock, toggled from the Layers panel. Session-only
+          // (not persisted, not part of the exportable model) -- ponytail: a real
+          // "saved with the diagram" version needs schema changes plus wiring
+          // hidden/locked awareness into hit-testing across ~9 interaction call
+          // sites, tracked separately rather than risked here. Hidden actually
+          // stops rendering (Renderer.tsx filters on this); locked is
+          // stored+toggleable but not yet enforced against canvas clicks/drags.
+          hiddenLayerIds: [],
+          lockedLayerIds: [],
 
           actions: {
             setView: (view) => {
@@ -194,6 +203,22 @@ const initialState = () => {
             },
             setIsAnythingCopied: (isAnythingCopied) => {
               set({ isAnythingCopied });
+            },
+            toggleLayerHidden: (id) => {
+              const { hiddenLayerIds } = get();
+              set({
+                hiddenLayerIds: hiddenLayerIds.includes(id)
+                  ? hiddenLayerIds.filter((existingId) => existingId !== id)
+                  : [...hiddenLayerIds, id]
+              });
+            },
+            toggleLayerLocked: (id) => {
+              const { lockedLayerIds } = get();
+              set({
+                lockedLayerIds: lockedLayerIds.includes(id)
+                  ? lockedLayerIds.filter((existingId) => existingId !== id)
+                  : [...lockedLayerIds, id]
+              });
             }
           }
         };

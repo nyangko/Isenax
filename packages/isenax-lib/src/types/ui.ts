@@ -212,6 +212,10 @@ export interface UiState {
   exportCompactJsonButtonPortalTarget: HTMLElement | null;
   layersButtonPortalTarget: HTMLElement | null;
   layersPanelOpen: boolean;
+  /** Item/connector/rectangle/textBox ids hidden from the canvas via the Layers panel. Session-only. */
+  hiddenLayerIds: string[];
+  /** Ids marked locked via the Layers panel. Session-only; not yet enforced against canvas interaction. */
+  lockedLayerIds: string[];
   // Render prop rather than a plain node so the host app can close the menu
   // after its own item is clicked -- MainMenu owns isMainMenuOpen and no
   // other mechanism lets an externally-supplied item reach it.
@@ -258,6 +262,8 @@ export interface UiStateActions {
   setMcpManager: (mcpManager: MCPManagerProps | null) => void;
   setEnabledSkills: (enabledSkills: string[]) => void;
   setIsAnythingCopied: (isAnythingCopied: boolean) => void;
+  toggleLayerHidden: (id: string) => void;
+  toggleLayerLocked: (id: string) => void;
 }
 
 export type UiStateStore = UiState & {

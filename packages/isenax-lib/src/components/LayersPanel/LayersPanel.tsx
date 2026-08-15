@@ -13,27 +13,34 @@ import {
   TextField,
   InputAdornment,
   Chip,
-  Stack
+  Stack,
+  Button
 } from '@mui/material';
 import {
   IconX as CloseIcon,
   IconChevronDown as ChevronDownIcon,
-  IconSearch as SearchIcon
+  IconSearch as SearchIcon,
+  IconEye as EyeIcon,
+  IconEyeOff as EyeOffIcon,
+  IconLock as LockIcon,
+  IconLockOpen as LockOpenIcon,
+  IconSquare as BoundaryIcon,
+  IconTypography as LabelIcon
 } from '@tabler/icons-react';
 import { useScene } from 'src/hooks/useScene';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { useModelStore } from 'src/stores/modelStore';
 import { useIcon } from 'src/hooks/useIcon';
 import { useConnector } from 'src/hooks/useConnector';
-import { useRectangle } from 'src/hooks/useRectangle';
 import { useTextBox } from 'src/hooks/useTextBox';
-import { useColor } from 'src/hooks/useColor';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
-import { getConnectorLabels, getItemById } from 'src/utils';
+import { getConnectorLabels, getItemById, isWithinBounds } from 'src/utils';
 import { ItemControlsManager } from 'src/components/ItemControls/ItemControlsManager';
+import { ViewItem, Rectangle as RectangleType } from 'src/types';
 
 type TabValue = 'LIST' | 'DETAIL';
+type StructureTab = 'STRUCTURE' | 'CONNECTIONS';
 type TypeFilter = 'ALL' | 'NODE' | 'CONNECTOR' | 'RECTANGLE' | 'TEXTBOX';
 
 interface RowProps {
@@ -41,13 +48,58 @@ interface RowProps {
   onSelect: () => void;
 }
 
-const NodeRow = ({ id, isSelected, onSelect }: RowProps & { id: string }) => {
+// Eye/lock toggles shared by every row type. Session-only state (see
+// uiStateStore) -- hidden actually stops the item rendering on canvas, but
+// locked is visual-only for now (not yet enforced against canvas
+// clicks/drags, see the store's comment for why).
+const LayerRowActions = ({ id }: { id: string }) => {
+  const hiddenLayerIds = useUiStateStore((state) => state.hiddenLayerIds);
+  const lockedLayerIds = useUiStateStore((state) => state.lockedLayerIds);
+  const uiStateActions = useUiStateStore((state) => state.actions);
+  const isHidden = hiddenLayerIds.includes(id);
+  const isLocked = lockedLayerIds.includes(id);
+
+  return (
+    <Stack
+      direction="row"
+      spacing={0}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      sx={{ flexShrink: 0 }}
+    >
+      <MUIIconButton
+        size="small"
+        onClick={() => {
+          uiStateActions.toggleLayerHidden(id);
+        }}
+      >
+        {isHidden ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
+      </MUIIconButton>
+      <MUIIconButton
+        size="small"
+        onClick={() => {
+          uiStateActions.toggleLayerLocked(id);
+        }}
+      >
+        {isLocked ? <LockIcon size={16} /> : <LockOpenIcon size={16} />}
+      </MUIIconButton>
+    </Stack>
+  );
+};
+
+const NodeRow = ({
+  id,
+  connectorCount,
+  isSelected,
+  onSelect
+}: RowProps & { id: string; connectorCount: number }) => {
   const modelItem = useModelItem(id);
   const { icon } = useIcon(modelItem?.icon);
   if (!modelItem) return null;
 
   return (
-    <ListItemButton selected={isSelected} onClick={onSelect} dense>
+    <ListItemButton selected={isSelected} onClick={onSelect} dense sx={{ pr: 0.5 }}>
       <ListItemIcon sx={{ minWidth: 28 }}>
         <Box
           component="img"
@@ -57,6 +109,10 @@ const NodeRow = ({ id, isSelected, onSelect }: RowProps & { id: string }) => {
         />
       </ListItemIcon>
       <ListItemText primary={modelItem.name} primaryTypographyProps={{ noWrap: true }} />
+      <Typography variant="caption" color="text.disabled" sx={{ mr: 0.5, flexShrink: 0 }}>
+        · {connectorCount}
+      </Typography>
+      <LayerRowActions id={id} />
     </ListItemButton>
   );
 };
@@ -95,36 +151,48 @@ const ConnectorRow = ({
   );
 };
 
-const RectangleRow = ({
+// The zone's own boundary (rectangle) and label (textbox), shown as their
+// own selectable rows nested under the zone header -- the header itself is
+// a virtual grouping, not a real item, so the rectangle/textbox still need
+// their own row to be selected/toggled individually.
+const BoundaryRow = ({
   id,
-  index,
+  zoneName,
   isSelected,
   onSelect
-}: RowProps & { id: string; index: number }) => {
-  const rectangle = useRectangle(id);
-  const colorData = useColor(rectangle?.color);
+}: RowProps & { id: string; zoneName: string }) => {
   const { t } = useTranslation('layersPanel');
-
-  if (!rectangle) return null;
-
-  const displayColor = rectangle.customColor || colorData?.value || '#9e9e9e';
-
   return (
-    <ListItemButton selected={isSelected} onClick={onSelect} dense>
-      <ListItemIcon sx={{ minWidth: 32 }}>
-        <Box
-          sx={{
-            width: 14,
-            height: 14,
-            borderRadius: '3px',
-            bgcolor: displayColor,
-            border: '1px solid rgba(0,0,0,0.2)'
-          }}
-        />
+    <ListItemButton selected={isSelected} onClick={onSelect} dense sx={{ pr: 0.5 }}>
+      <ListItemIcon sx={{ minWidth: 28 }}>
+        <BoundaryIcon size={16} />
       </ListItemIcon>
       <ListItemText
-        primary={t('rectangleFallbackName').replace('{number}', String(index + 1))}
+        primary={`${t('boundaryRowPrefix')} (${zoneName})`}
+        primaryTypographyProps={{ noWrap: true, color: 'text.secondary' }}
       />
+      <LayerRowActions id={id} />
+    </ListItemButton>
+  );
+};
+
+const ZoneLabelRow = ({
+  id,
+  zoneName,
+  isSelected,
+  onSelect
+}: RowProps & { id: string; zoneName: string }) => {
+  const { t } = useTranslation('layersPanel');
+  return (
+    <ListItemButton selected={isSelected} onClick={onSelect} dense sx={{ pr: 0.5 }}>
+      <ListItemIcon sx={{ minWidth: 28 }}>
+        <LabelIcon size={16} />
+      </ListItemIcon>
+      <ListItemText
+        primary={`${t('labelRowPrefix')} (${zoneName})`}
+        primaryTypographyProps={{ noWrap: true, color: 'text.secondary' }}
+      />
+      <LayerRowActions id={id} />
     </ListItemButton>
   );
 };
@@ -134,8 +202,9 @@ const TextBoxRow = ({ id, isSelected, onSelect }: RowProps & { id: string }) => 
   if (!textBox) return null;
 
   return (
-    <ListItemButton selected={isSelected} onClick={onSelect} dense>
+    <ListItemButton selected={isSelected} onClick={onSelect} dense sx={{ pr: 0.5 }}>
       <ListItemText primary={textBox.content} primaryTypographyProps={{ noWrap: true }} />
+      <LayerRowActions id={id} />
     </ListItemButton>
   );
 };
@@ -143,13 +212,15 @@ const TextBoxRow = ({ id, isSelected, onSelect }: RowProps & { id: string }) => 
 interface GroupSectionProps {
   title: string;
   count: number;
+  color?: string;
+  actionsId?: string;
   // While the user is searching, force every matching group open so results
   // aren't hidden behind a collapse state they set before they started typing.
   forceExpanded?: boolean;
   children: React.ReactNode;
 }
 
-const GroupSection = ({ title, count, forceExpanded, children }: GroupSectionProps) => {
+const GroupSection = ({ title, count, color, actionsId, forceExpanded, children }: GroupSectionProps) => {
   const [localExpanded, setLocalExpanded] = useState(true);
   const expanded = forceExpanded || localExpanded;
 
@@ -158,35 +229,60 @@ const GroupSection = ({ title, count, forceExpanded, children }: GroupSectionPro
   return (
     <Box>
       <Box
-        component="button"
-        onClick={() => {
-          setLocalExpanded((prev) => !prev);
-        }}
         sx={{
-          all: 'unset',
-          cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           gap: 0.5,
-          width: '100%',
-          py: 1,
-          px: 1.5
+          pr: 0.5
         }}
       >
-        <ChevronDownIcon
-          size={14}
-          style={{
-            transform: expanded ? undefined : 'rotate(-90deg)',
-            transition: 'transform 150ms ease'
+        <Box
+          component="button"
+          onClick={() => {
+            setLocalExpanded((prev) => !prev);
           }}
-        />
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: 0.4 }}
+          sx={{
+            all: 'unset',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            flex: 1,
+            minWidth: 0,
+            py: 1,
+            px: 1.5
+          }}
         >
-          {title} · {count}
-        </Typography>
+          <ChevronDownIcon
+            size={14}
+            style={{
+              flexShrink: 0,
+              transform: expanded ? undefined : 'rotate(-90deg)',
+              transition: 'transform 150ms ease'
+            }}
+          />
+          {color && (
+            <Box
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: '2px',
+                bgcolor: color,
+                border: '1px solid rgba(0,0,0,0.2)',
+                flexShrink: 0
+              }}
+            />
+          )}
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            noWrap
+            sx={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: 0.4 }}
+          >
+            {title} · {count}
+          </Typography>
+        </Box>
+        {actionsId && <LayerRowActions id={actionsId} />}
       </Box>
       <Collapse in={expanded}>
         <List dense disablePadding>
@@ -197,8 +293,37 @@ const GroupSection = ({ title, count, forceExpanded, children }: GroupSectionPro
   );
 };
 
+interface Zone {
+  rectangle: RectangleType;
+  index: number;
+  name: string;
+  color: string;
+  nodeItems: ViewItem[];
+  textBoxId?: string;
+}
+
+const zoneBounds = (rectangle: RectangleType) => [rectangle.from, rectangle.to];
+
+// Zone labels are routinely placed just outside their rectangle's edge for
+// readability (see the isenax-diagram skill's "hard-won specifics" -- e.g. a
+// label at y=-4.8 next to a zone edge at y=-5), so a strict containment
+// check misses the exact case it's meant to catch. Pad the bounds generously
+// for label matching only; node items still use the exact rectangle bounds.
+const LABEL_ZONE_TOLERANCE = 1;
+const zoneBoundsForLabels = (rectangle: RectangleType) => {
+  const { from, to } = rectangle;
+  const lowX = Math.min(from.x, to.x) - LABEL_ZONE_TOLERANCE;
+  const highX = Math.max(from.x, to.x) + LABEL_ZONE_TOLERANCE;
+  const lowY = Math.min(from.y, to.y) - LABEL_ZONE_TOLERANCE;
+  const highY = Math.max(from.y, to.y) + LABEL_ZONE_TOLERANCE;
+  return [
+    { x: lowX, y: lowY },
+    { x: highX, y: highY }
+  ];
+};
+
 export const LayersPanel = () => {
-  const { items, connectors, rectangles, textBoxes } = useScene();
+  const { items, connectors, rectangles, textBoxes, colors } = useScene();
   const modelItems = useModelStore((state) => state.items);
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
@@ -208,18 +333,17 @@ export const LayersPanel = () => {
   });
   const { t } = useTranslation('layersPanel');
   const [activeTab, setActiveTab] = useState<TabValue>('LIST');
+  const [structureTab, setStructureTab] = useState<StructureTab>('STRUCTURE');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('ALL');
 
-  // Clicking an item (canvas or list) always routes through setItemControls --
-  // jump to the Edit tab and make sure the panel is actually visible so the
-  // form is never set behind a closed/collapsed panel.
+  // Selecting an item (canvas or list) makes sure the panel is visible, but
+  // no longer force-switches to the Edit tab -- the bottom summary bar shows
+  // the selection inline, and the Edit tab is an explicit choice (the
+  // Properties button below) rather than something clicking an item jumps to.
   useEffect(() => {
     if (itemControls) {
-      setActiveTab('DETAIL');
       uiStateActions.setLayersPanelOpen(true);
-    } else {
-      setActiveTab('LIST');
     }
   }, [itemControls, uiStateActions]);
 
@@ -231,14 +355,72 @@ export const LayersPanel = () => {
   const query = search.trim().toLowerCase();
   const matches = (text: string) => !query || text.toLowerCase().includes(query);
 
-  const filteredItems = useMemo(() => {
-    if (typeFilter !== 'ALL' && typeFilter !== 'NODE') return [];
-    return items.filter((item) => {
-      const name = getItemById(modelItems, item.id)?.value.name ?? '';
-      return matches(name);
+  const connectorCountByItemId = useMemo(() => {
+    const counts = new Map<string, number>();
+    connectors.forEach((connector) => {
+      connector.anchors.forEach((anchor) => {
+        const itemId = anchor.ref?.item;
+        if (itemId) counts.set(itemId, (counts.get(itemId) ?? 0) + 1);
+      });
     });
+    return counts;
+  }, [connectors]);
+
+  // Groups nodes/textboxes by which zone (rectangle) their tile falls
+  // inside, for the Structure tab -- smaller rectangles claim first so a
+  // zone nested inside a larger one isn't shadowed by it. A zone's display
+  // name borrows its own label textbox's content when it has one (matching
+  // how zones are actually named in practice, e.g. "서비스 메시"), falling
+  // back to "Area N" otherwise. Items/textboxes outside every rectangle
+  // land in the Ungrouped bucket below instead of being dropped.
+  const { zones, ungroupedItems, ungroupedTextBoxes } = useMemo(() => {
+    const zoneList: Zone[] = rectangles.map((rectangle, index) => ({
+      rectangle,
+      index,
+      name: t('rectangleFallbackName').replace('{number}', String(index + 1)),
+      color: rectangle.customColor || getItemById(colors, rectangle.color ?? '')?.value.value || '#9e9e9e',
+      nodeItems: []
+    }));
+    const byArea = [...zoneList].sort((a, b) => {
+      const areaOf = (z: Zone) =>
+        Math.abs(z.rectangle.to.x - z.rectangle.from.x) * Math.abs(z.rectangle.to.y - z.rectangle.from.y);
+      return areaOf(a) - areaOf(b);
+    });
+
+    const claimedItemIds = new Set<string>();
+    items.forEach((item) => {
+      const zone = byArea.find((z) => isWithinBounds(item.tile, zoneBounds(z.rectangle)));
+      if (zone) {
+        zone.nodeItems.push(item);
+        claimedItemIds.add(item.id);
+      }
+    });
+
+    const claimedTextBoxIds = new Set<string>();
+    textBoxes.forEach((textBox) => {
+      const zone = byArea.find(
+        (z) => !z.textBoxId && isWithinBounds(textBox.tile, zoneBoundsForLabels(z.rectangle))
+      );
+      if (zone) {
+        zone.textBoxId = textBox.id;
+        claimedTextBoxIds.add(textBox.id);
+      }
+    });
+
+    zoneList.forEach((zone) => {
+      if (zone.textBoxId) {
+        const labelTextBox = getItemById(textBoxes, zone.textBoxId)?.value;
+        if (labelTextBox?.content) zone.name = labelTextBox.content;
+      }
+    });
+
+    return {
+      zones: zoneList,
+      ungroupedItems: items.filter((item) => !claimedItemIds.has(item.id)),
+      ungroupedTextBoxes: textBoxes.filter((textBox) => !claimedTextBoxIds.has(textBox.id))
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, modelItems, typeFilter, query]);
+  }, [rectangles, items, textBoxes, colors, t]);
 
   const filteredConnectors = useMemo(() => {
     if (typeFilter !== 'ALL' && typeFilter !== 'CONNECTOR') return [];
@@ -246,30 +428,13 @@ export const LayersPanel = () => {
       .map((connector, index) => ({ connector, index }))
       .filter(({ connector, index }) => {
         const labels = getConnectorLabels(connector);
-        const name =
-          connector.name ||
-          labels[0]?.text ||
-          t('groupConnectors') + ' ' + (index + 1);
+        const name = connector.name || labels[0]?.text || t('groupConnectors') + ' ' + (index + 1);
         return matches(name);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectors, typeFilter, query]);
 
-  const filteredRectangles = useMemo(() => {
-    if (typeFilter !== 'ALL' && typeFilter !== 'RECTANGLE') return [];
-    return rectangles
-      .map((rectangle, index) => ({ rectangle, index }))
-      .filter(({ index }) => {
-        return matches(t('rectangleFallbackName').replace('{number}', String(index + 1)));
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rectangles, typeFilter, query]);
-
-  const filteredTextBoxes = useMemo(() => {
-    if (typeFilter !== 'ALL' && typeFilter !== 'TEXTBOX') return [];
-    return textBoxes.filter((textBox) => matches(textBox.content));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [textBoxes, typeFilter, query]);
+  const nodeName = (id: string) => getItemById(modelItems, id)?.value.name ?? '';
 
   const isNodeSelected = (id: string) => {
     return itemControls?.type === 'ITEM' && itemControls.id === id;
@@ -286,6 +451,18 @@ export const LayersPanel = () => {
   const isTextBoxSelected = (id: string) => {
     return itemControls?.type === 'TEXTBOX' && itemControls.id === id;
   };
+
+  const structureMatchCount =
+    zones.reduce((sum, zone) => {
+      const nodeMatches = (typeFilter === 'ALL' || typeFilter === 'NODE') ? zone.nodeItems.filter((i) => matches(nodeName(i.id))).length : 0;
+      const boundaryMatches = (typeFilter === 'ALL' || typeFilter === 'RECTANGLE') && matches(zone.name) ? 1 : 0;
+      const labelMatches = zone.textBoxId && (typeFilter === 'ALL' || typeFilter === 'TEXTBOX') ? 1 : 0;
+      return sum + nodeMatches + boundaryMatches + labelMatches;
+    }, 0) +
+    ((typeFilter === 'ALL' || typeFilter === 'NODE') ? ungroupedItems.filter((i) => matches(nodeName(i.id))).length : 0) +
+    ((typeFilter === 'ALL' || typeFilter === 'TEXTBOX') ? ungroupedTextBoxes.filter((tb) => matches(tb.content)).length : 0);
+
+  const visibleResultCount = structureTab === 'STRUCTURE' ? structureMatchCount : filteredConnectors.length;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
@@ -364,14 +541,27 @@ export const LayersPanel = () => {
                 variant={typeFilter === value ? 'filled' : 'outlined'}
                 onClick={() => {
                   setTypeFilter(value);
+                  if (value === 'CONNECTOR') setStructureTab('CONNECTIONS');
+                  else if (structureTab === 'CONNECTIONS') setStructureTab('STRUCTURE');
                 }}
               />
             ))}
           </Stack>
+          <Tabs
+            value={structureTab}
+            onChange={(_e, value: StructureTab) => {
+              setStructureTab(value);
+            }}
+            variant="fullWidth"
+            sx={{ minHeight: 32, mt: 1 }}
+          >
+            <Tab value="STRUCTURE" label={t('subTabStructure')} sx={{ minHeight: 32, py: 0.5 }} />
+            <Tab value="CONNECTIONS" label={t('subTabConnections')} sx={{ minHeight: 32, py: 0.5 }} />
+          </Tabs>
         </Box>
       )}
 
-      <Box sx={{ flex: 1, overflowY: 'auto' }}>
+      <Box sx={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
         {activeTab === 'LIST' &&
           (totalCount === 0 ? (
             <Box sx={{ p: 3 }}>
@@ -379,85 +569,125 @@ export const LayersPanel = () => {
                 {t('emptyCanvas')}
               </Typography>
             </Box>
-          ) : filteredItems.length +
-              filteredConnectors.length +
-              filteredRectangles.length +
-              filteredTextBoxes.length ===
-            0 ? (
+          ) : visibleResultCount === 0 ? (
             <Box sx={{ p: 3 }}>
               <Typography variant="body2" color="text.secondary" textAlign="center">
                 {t('noSearchResults').replace('{query}', search.trim())}
               </Typography>
             </Box>
-          ) : (
+          ) : structureTab === 'STRUCTURE' ? (
             <>
-              <GroupSection title={t('groupNodes')} count={filteredItems.length} forceExpanded={!!query}>
-                {filteredItems.map((item) => (
-                  <NodeRow
-                    key={item.id}
-                    id={item.id}
-                    isSelected={isNodeSelected(item.id)}
-                    onSelect={() => {
-                      uiStateActions.setItemControls({ type: 'ITEM', id: item.id });
-                    }}
-                  />
-                ))}
-              </GroupSection>
-              <GroupSection
-                title={t('groupConnectors')}
-                count={filteredConnectors.length}
-                forceExpanded={!!query}
-              >
-                {filteredConnectors.map(({ connector, index }) => (
-                  <ConnectorRow
-                    key={connector.id}
-                    id={connector.id}
-                    index={index}
-                    isSelected={isConnectorSelected(connector.id)}
-                    onSelect={() => {
-                      uiStateActions.setItemControls({
-                        type: 'CONNECTOR_GROUP',
-                        ids: [connector.id],
-                        focusedId: connector.id
-                      });
-                    }}
-                  />
-                ))}
-              </GroupSection>
-              <GroupSection
-                title={t('groupRectangles')}
-                count={filteredRectangles.length}
-                forceExpanded={!!query}
-              >
-                {filteredRectangles.map(({ rectangle, index }) => (
-                  <RectangleRow
-                    key={rectangle.id}
-                    id={rectangle.id}
-                    index={index}
-                    isSelected={isRectangleSelected(rectangle.id)}
-                    onSelect={() => {
-                      uiStateActions.setItemControls({ type: 'RECTANGLE', id: rectangle.id });
-                    }}
-                  />
-                ))}
-              </GroupSection>
-              <GroupSection
-                title={t('groupTextBoxes')}
-                count={filteredTextBoxes.length}
-                forceExpanded={!!query}
-              >
-                {filteredTextBoxes.map((textBox) => (
-                  <TextBoxRow
-                    key={textBox.id}
-                    id={textBox.id}
-                    isSelected={isTextBoxSelected(textBox.id)}
-                    onSelect={() => {
-                      uiStateActions.setItemControls({ type: 'TEXTBOX', id: textBox.id });
-                    }}
-                  />
-                ))}
-              </GroupSection>
+              {zones.map((zone) => {
+                const visibleNodes =
+                  typeFilter === 'ALL' || typeFilter === 'NODE'
+                    ? zone.nodeItems.filter((item) => matches(nodeName(item.id)))
+                    : [];
+                const showBoundary =
+                  (typeFilter === 'ALL' || typeFilter === 'RECTANGLE') && matches(zone.name);
+                const showLabel =
+                  !!zone.textBoxId && (typeFilter === 'ALL' || typeFilter === 'TEXTBOX');
+                const rowCount = visibleNodes.length + (showBoundary ? 1 : 0) + (showLabel ? 1 : 0);
+
+                return (
+                  <GroupSection
+                    key={zone.rectangle.id}
+                    title={zone.name}
+                    count={rowCount}
+                    color={zone.color}
+                    actionsId={zone.rectangle.id}
+                    forceExpanded={!!query}
+                  >
+                    {visibleNodes.map((item) => (
+                      <NodeRow
+                        key={item.id}
+                        id={item.id}
+                        connectorCount={connectorCountByItemId.get(item.id) ?? 0}
+                        isSelected={isNodeSelected(item.id)}
+                        onSelect={() => {
+                          uiStateActions.setItemControls({ type: 'ITEM', id: item.id });
+                        }}
+                      />
+                    ))}
+                    {showBoundary && (
+                      <BoundaryRow
+                        id={zone.rectangle.id}
+                        zoneName={zone.name}
+                        isSelected={isRectangleSelected(zone.rectangle.id)}
+                        onSelect={() => {
+                          uiStateActions.setItemControls({ type: 'RECTANGLE', id: zone.rectangle.id });
+                        }}
+                      />
+                    )}
+                    {showLabel && zone.textBoxId && (
+                      <ZoneLabelRow
+                        id={zone.textBoxId}
+                        zoneName={zone.name}
+                        isSelected={isTextBoxSelected(zone.textBoxId)}
+                        onSelect={() => {
+                          uiStateActions.setItemControls({ type: 'TEXTBOX', id: zone.textBoxId as string });
+                        }}
+                      />
+                    )}
+                  </GroupSection>
+                );
+              })}
+
+              {(() => {
+                const visibleUngroupedItems =
+                  typeFilter === 'ALL' || typeFilter === 'NODE'
+                    ? ungroupedItems.filter((item) => matches(nodeName(item.id)))
+                    : [];
+                const visibleUngroupedTextBoxes =
+                  typeFilter === 'ALL' || typeFilter === 'TEXTBOX'
+                    ? ungroupedTextBoxes.filter((tb) => matches(tb.content))
+                    : [];
+                const count = visibleUngroupedItems.length + visibleUngroupedTextBoxes.length;
+
+                return (
+                  <GroupSection title={t('ungrouped')} count={count} forceExpanded={!!query}>
+                    {visibleUngroupedItems.map((item) => (
+                      <NodeRow
+                        key={item.id}
+                        id={item.id}
+                        connectorCount={connectorCountByItemId.get(item.id) ?? 0}
+                        isSelected={isNodeSelected(item.id)}
+                        onSelect={() => {
+                          uiStateActions.setItemControls({ type: 'ITEM', id: item.id });
+                        }}
+                      />
+                    ))}
+                    {visibleUngroupedTextBoxes.map((textBox) => (
+                      <TextBoxRow
+                        key={textBox.id}
+                        id={textBox.id}
+                        isSelected={isTextBoxSelected(textBox.id)}
+                        onSelect={() => {
+                          uiStateActions.setItemControls({ type: 'TEXTBOX', id: textBox.id });
+                        }}
+                      />
+                    ))}
+                  </GroupSection>
+                );
+              })()}
             </>
+          ) : (
+            <GroupSection title={t('groupConnectors')} count={filteredConnectors.length} forceExpanded>
+              {filteredConnectors.map(({ connector, index }) => (
+                <ConnectorRow
+                  key={connector.id}
+                  id={connector.id}
+                  index={index}
+                  isSelected={isConnectorSelected(connector.id)}
+                  onSelect={() => {
+                    uiStateActions.setItemControls({
+                      type: 'CONNECTOR_GROUP',
+                      ids: [connector.id],
+                      focusedId: connector.id
+                    });
+                  }}
+                />
+              ))}
+            </GroupSection>
           ))}
 
         {activeTab === 'DETAIL' &&
@@ -471,6 +701,72 @@ export const LayersPanel = () => {
             </Box>
           ))}
       </Box>
+
+      {activeTab === 'LIST' && itemControls?.type === 'ITEM' && (
+        <SelectionSummaryBar
+          itemId={itemControls.id}
+          connectorCount={connectorCountByItemId.get(itemControls.id) ?? 0}
+          zoneName={zones.find((z) => z.nodeItems.some((i) => i.id === itemControls.id))?.name}
+          onOpenProperties={() => {
+            setActiveTab('DETAIL');
+          }}
+        />
+      )}
+    </Box>
+  );
+};
+
+// Always-visible summary for the current selection, pinned under the list --
+// clicking Properties is what actually opens the full edit form now (see the
+// removed auto-switch-to-Edit effect above).
+const SelectionSummaryBar = ({
+  itemId,
+  connectorCount,
+  zoneName,
+  onOpenProperties
+}: {
+  itemId: string;
+  connectorCount: number;
+  zoneName?: string;
+  onOpenProperties: () => void;
+}) => {
+  const modelItem = useModelItem(itemId);
+  const { icon } = useIcon(modelItem?.icon);
+  const { t } = useTranslation('layersPanel');
+  if (!modelItem) return null;
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1.5,
+        px: 2,
+        py: 1.5,
+        borderTop: '1px solid',
+        borderColor: 'divider',
+        flexShrink: 0
+      }}
+    >
+      <Box component="img" src={icon.url} alt="" sx={{ width: 28, height: 28, objectFit: 'contain' }} />
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography variant="body2" noWrap sx={{ fontWeight: 600 }}>
+          {modelItem.name}
+        </Typography>
+        <Stack direction="row" spacing={1.5} sx={{ mt: 0.25 }}>
+          <Typography variant="caption" color="text.secondary">
+            {t('summaryConnectorCount')}: {connectorCount}
+          </Typography>
+          {zoneName && (
+            <Typography variant="caption" color="text.secondary" noWrap>
+              {t('summaryZone')}: {zoneName}
+            </Typography>
+          )}
+        </Stack>
+      </Box>
+      <Button size="small" variant="outlined" onClick={onOpenProperties} sx={{ flexShrink: 0 }}>
+        {t('summaryOpenProperties')}
+      </Button>
     </Box>
   );
 };

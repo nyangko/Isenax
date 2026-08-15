@@ -387,7 +387,15 @@ const locale: LocaleProps = {
     rectangleFallbackName: "Area {number}",
     searchPlaceholder: "Search",
     filterAll: "All",
-    noSearchResults: "No matches for \"{query}\"."
+    noSearchResults: "No matches for \"{query}\".",
+    subTabStructure: "Structure",
+    subTabConnections: "Connections",
+    boundaryRowPrefix: "Boundary",
+    labelRowPrefix: "Label",
+    ungrouped: "Ungrouped",
+    summaryConnectorCount: "Connections",
+    summaryZone: "Area",
+    summaryOpenProperties: "Properties"
   }
 };
 

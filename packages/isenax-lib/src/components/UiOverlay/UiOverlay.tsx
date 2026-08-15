@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Box, useTheme, useMediaQuery, Stack, SwipeableDrawer } from '@mui/material';
+import { Box, useTheme, useMediaQuery, Stack, SwipeableDrawer, Slide } from '@mui/material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
 import { SceneLayer } from 'src/components/SceneLayer/SceneLayer';
@@ -161,24 +161,25 @@ export const UiOverlay = () => {
           left: 0
         }}
       >
-        {availableTools.includes('ITEM_CONTROLS') && !isMobile && layersPanelOpen && (
-          <UiElement
-            sx={{
-              position: 'absolute',
-              width: '360px',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden'
-            }}
-            style={{
-              transform: 'translateX(-100%)',
-              left: rendererSize.width - 8,
-              top: appPadding.y * 2 + spacing(2),
-              height: rendererSize.height - appPadding.y * 3
-            }}
-          >
-            <LayersPanel />
-          </UiElement>
+        {availableTools.includes('ITEM_CONTROLS') && !isMobile && (
+          <Slide direction="left" in={layersPanelOpen} mountOnEnter unmountOnExit>
+            <UiElement
+              sx={{
+                position: 'absolute',
+                width: '360px',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+              }}
+              style={{
+                left: rendererSize.width - 8 - 360,
+                top: appPadding.y * 2 + spacing(2),
+                height: rendererSize.height - appPadding.y * 3
+              }}
+            >
+              <LayersPanel />
+            </UiElement>
+          </Slide>
         )}
 
         {/* Mobile: the 360px right-docked panel above can't shrink to fit a

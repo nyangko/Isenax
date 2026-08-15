@@ -31,6 +31,24 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
   });
   const { setInteractionsElement } = useInteractionManager();
   const { items, rectangles, connectors, textBoxes } = useScene();
+  const hiddenLayerIds = useUiStateStore((state) => {
+    return state.hiddenLayerIds;
+  });
+
+  // Hidden (via the Layers panel eye toggle) means "don't render" -- filtered
+  // once here rather than per-layer so every SceneLayer stays in sync.
+  const visibleItems = useMemo(() => {
+    return hiddenLayerIds.length ? items.filter((item) => !hiddenLayerIds.includes(item.id)) : items;
+  }, [items, hiddenLayerIds]);
+  const visibleRectangles = useMemo(() => {
+    return hiddenLayerIds.length ? rectangles.filter((r) => !hiddenLayerIds.includes(r.id)) : rectangles;
+  }, [rectangles, hiddenLayerIds]);
+  const visibleConnectors = useMemo(() => {
+    return hiddenLayerIds.length ? connectors.filter((c) => !hiddenLayerIds.includes(c.id)) : connectors;
+  }, [connectors, hiddenLayerIds]);
+  const visibleTextBoxes = useMemo(() => {
+    return hiddenLayerIds.length ? textBoxes.filter((tb) => !hiddenLayerIds.includes(tb.id)) : textBoxes;
+  }, [textBoxes, hiddenLayerIds]);
 
   useEffect(() => {
     if (!containerRef.current || !interactionsRef.current) return;
@@ -57,7 +75,7 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
       }}
     >
       <SceneLayer>
-        <Rectangles rectangles={rectangles} />
+        <Rectangles rectangles={visibleRectangles} />
       </SceneLayer>
       <SceneLayer>
         <Lasso />
@@ -80,13 +98,13 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
         </SceneLayer>
       )}
       <SceneLayer>
-        <Connectors connectors={connectors} />
+        <Connectors connectors={visibleConnectors} />
       </SceneLayer>
       <SceneLayer>
-        <TextBoxes textBoxes={textBoxes} />
+        <TextBoxes textBoxes={visibleTextBoxes} />
       </SceneLayer>
       <SceneLayer>
-        <ConnectorLabels connectors={connectors} />
+        <ConnectorLabels connectors={visibleConnectors} />
       </SceneLayer>
       {enableDebugTools && (
         <SceneLayer>
@@ -105,7 +123,7 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
         }}
       />
       <SceneLayer>
-        <Nodes nodes={items} />
+        <Nodes nodes={visibleItems} />
       </SceneLayer>
       <SceneLayer>
         <TransformControlsManager />

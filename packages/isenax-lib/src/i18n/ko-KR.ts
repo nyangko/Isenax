@@ -387,7 +387,15 @@ const locale: LocaleProps = {
     rectangleFallbackName: "영역 {number}",
     searchPlaceholder: "검색",
     filterAll: "전체",
-    noSearchResults: "\"{query}\"에 대한 검색 결과가 없습니다."
+    noSearchResults: "\"{query}\"에 대한 검색 결과가 없습니다.",
+    subTabStructure: "구조",
+    subTabConnections: "연결",
+    boundaryRowPrefix: "경계",
+    labelRowPrefix: "라벨",
+    ungrouped: "미분류",
+    summaryConnectorCount: "연결 수",
+    summaryZone: "영역",
+    summaryOpenProperties: "속성"
   }
 };
 
