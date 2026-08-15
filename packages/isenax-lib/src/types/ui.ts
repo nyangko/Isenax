@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Coords, EditorModeEnum, ProjectionModeEnum, MainMenuOptions } from './common';
+import { Coords, EditorModeEnum, ProjectionModeEnum, ToolbarPositionEnum, MainMenuOptions } from './common';
 import { Icon } from './model';
 import { ItemReference } from './scene';
 import { HotkeyProfile } from 'src/config/hotkeys';
@@ -199,6 +199,7 @@ export interface UiState {
   connectorAnimationSpeed: number;
   expandLabels: boolean;
   projectionMode: keyof typeof ProjectionModeEnum;
+  toolbarPosition: keyof typeof ToolbarPositionEnum;
   iconPackManager: IconPackManagerProps | null;
   mcpManager: MCPManagerProps | null;
   /** Skill ids the user has enabled in Settings; gates whether their action is offered. */
@@ -258,6 +259,7 @@ export interface UiStateActions {
   setConnectorAnimationSpeed: (speed: number) => void;
   setExpandLabels: (expand: boolean) => void;
   setProjectionMode: (mode: keyof typeof ProjectionModeEnum) => void;
+  setToolbarPosition: (position: keyof typeof ToolbarPositionEnum) => void;
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
   setMcpManager: (mcpManager: MCPManagerProps | null) => void;
   setEnabledSkills: (enabledSkills: string[]) => void;

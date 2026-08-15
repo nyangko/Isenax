@@ -257,6 +257,13 @@ const locale: LocaleProps = {
       autoArrangeDescription: "Repack the current view's nodes onto a tidy, non-overlapping grid.",
       run: "Run",
       noView: "Open a view first."
+    },
+    toolbar: {
+      title: "Toolbar",
+      description: "Choose where the tool menu (select, pan, add node, etc.) docks.",
+      position: "Toolbar Position",
+      positionTop: "Top",
+      positionLeft: "Left"
     }
   },
   lazyLoadingWelcome: {

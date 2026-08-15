@@ -47,6 +47,7 @@ const initialState = () => {
           connectorAnimationSpeed: 220, // px/sec — matches the original hardcoded default
           expandLabels: false, // Default to collapsed labels
           projectionMode: 'ISOMETRIC', // Default to the tilted isometric view
+          toolbarPosition: 'TOP', // Default to the horizontal top-right tool menu
           iconPackManager: null, // Will be set by Isoflow if provided
           mcpManager: null, // Will be set by Isoflow if provided
           enabledSkills: [],
@@ -192,6 +193,9 @@ const initialState = () => {
             setProjectionMode: (projectionMode) => {
               set({ projectionMode });
             },
+            setToolbarPosition: (toolbarPosition) => {
+              set({ toolbarPosition });
+            },
             setIconPackManager: (iconPackManager) => {
               set({ iconPackManager });
             },
@@ -239,6 +243,7 @@ const initialState = () => {
             connectorAnimationSpeed: state.connectorAnimationSpeed,
             expandLabels: state.expandLabels,
             projectionMode: state.projectionMode,
+            toolbarPosition: state.toolbarPosition,
             enabledSkills: state.enabledSkills
           };
         }

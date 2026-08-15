@@ -132,6 +132,9 @@ export const UiOverlay = () => {
   const layersPanelOpen = useUiStateStore((state) => {
     return state.layersPanelOpen;
   });
+  const toolbarPosition = useUiStateStore((state) => {
+    return state.toolbarPosition;
+  });
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
@@ -164,6 +167,7 @@ export const UiOverlay = () => {
         {availableTools.includes('ITEM_CONTROLS') && !isMobile && (
           <Slide direction="left" in={layersPanelOpen} mountOnEnter unmountOnExit>
             <UiElement
+              variant="docked"
               sx={{
                 position: 'absolute',
                 width: '360px',
@@ -172,9 +176,9 @@ export const UiOverlay = () => {
                 overflow: 'hidden'
               }}
               style={{
-                left: rendererSize.width - 8 - 360,
-                top: appPadding.y * 2 + spacing(2),
-                height: rendererSize.height - appPadding.y * 3
+                left: rendererSize.width - 360,
+                top: 0,
+                height: rendererSize.height
               }}
             >
               <LayersPanel />
@@ -210,7 +214,30 @@ export const UiOverlay = () => {
           </SwipeableDrawer>
         )}
 
-        {availableTools.includes('TOOL_MENU') && (
+        {availableTools.includes('TOOL_MENU') && toolbarPosition === 'LEFT' && (
+          <Box
+            ref={toolMenuRef}
+            // Deliberately NOT "ff-tool-menu-anchor" -- isenax-app's App.css
+            // force-centers that class at the top via `!important` (left:
+            // 50vw), which would silently override this left-docked position.
+            className="ff-tool-menu-anchor-left"
+            sx={{
+              position: 'absolute',
+              transform: 'translateY(-50%)'
+            }}
+            style={{
+              left: appPadding.x,
+              top: rendererSize.height / 2
+            }}
+          >
+            <Stack direction="column" spacing={1}>
+              {!historyControlsPortalTarget && <HistoryControls />}
+              <ToolMenu />
+            </Stack>
+          </Box>
+        )}
+
+        {availableTools.includes('TOOL_MENU') && toolbarPosition === 'TOP' && (
           <Box
             ref={toolMenuRef}
             className="ff-tool-menu-anchor"

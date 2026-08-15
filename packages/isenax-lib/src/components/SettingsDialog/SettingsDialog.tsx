@@ -15,6 +15,7 @@ import { PanSettings } from '../PanSettings/PanSettings';
 import { ZoomSettings } from '../ZoomSettings/ZoomSettings';
 import { LabelSettings } from '../LabelSettings/LabelSettings';
 import { ConnectorSettings } from '../ConnectorSettings/ConnectorSettings';
+import { ToolbarSettings } from '../ToolbarSettings/ToolbarSettings';
 import { IconPackSettings } from '../IconPackSettings/IconPackSettings';
 import { MCPSettings } from '../MCPSettings/MCPSettings';
 import { SkillsSettings } from '../SkillsSettings/SkillsSettings';
@@ -65,6 +66,7 @@ export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogPr
     { label: t('settings.zoom.title'), content: <ZoomSettings /> },
     { label: t('settings.labels.title'), content: <LabelSettings /> },
     { label: t('settings.connector.title'), content: <ConnectorSettings /> },
+    { label: t('settings.toolbar.title'), content: <ToolbarSettings /> },
     { label: t('settings.skills.title'), content: <SkillsSettings /> },
     ...(iconPackManager
       ? [

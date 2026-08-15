@@ -268,6 +268,13 @@ export interface LocaleProps {
       run: string;
       noView: string;
     };
+    toolbar?: {
+      title: string;
+      description: string;
+      position: string;
+      positionTop: string;
+      positionLeft: string;
+    };
   };
   lazyLoadingWelcome: {
     title: string;

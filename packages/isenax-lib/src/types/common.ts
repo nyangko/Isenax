@@ -43,6 +43,14 @@ export const ProjectionModeEnum = {
   FLAT: 'FLAT'
 } as const;
 
+// Where the tool menu (select/pan/add-node/rectangle/connector/text) docks
+// -- TOP is a horizontal bar top-right (default), LEFT a vertical bar
+// centered on the left edge.
+export const ToolbarPositionEnum = {
+  TOP: 'TOP',
+  LEFT: 'LEFT'
+} as const;
+
 export const MainMenuOptionsEnum = {
   'ACTION.OPEN': 'ACTION.OPEN',
   'ACTION.SETTINGS': 'ACTION.SETTINGS',

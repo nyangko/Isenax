@@ -35,6 +35,10 @@ export const ToolMenu = () => {
     return state.hotkeyProfile;
   });
 
+  const toolbarPosition = useUiStateStore((state) => {
+    return state.toolbarPosition;
+  });
+
   const hotkeys = HOTKEY_PROFILES[hotkeyProfile];
 
   const createTextBoxProxy = useCallback(() => {
@@ -55,7 +59,7 @@ export const ToolMenu = () => {
 
   return (
     <UiElement>
-      <Stack direction="row" spacing={0.5} alignItems="center">
+      <Stack direction={toolbarPosition === 'LEFT' ? 'column' : 'row'} spacing={0.5} alignItems="center">
         {/* Main Tools */}
         <IconButton
           name={`${t('settings.hotkeys.toolSelect')}${hotkeys.select ? ` (${hotkeys.select.toUpperCase()})` : ''}`}

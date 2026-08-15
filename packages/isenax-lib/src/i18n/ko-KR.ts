@@ -257,6 +257,13 @@ const locale: LocaleProps = {
       autoArrangeDescription: "현재 뷰의 노드를 겹치지 않는 격자 형태로 재배치합니다.",
       run: "실행",
       noView: "먼저 뷰를 여세요."
+    },
+    toolbar: {
+      title: "툴바",
+      description: "도구 메뉴(선택, 이동, 노드 추가 등)가 표시될 위치를 선택하세요.",
+      position: "툴바 위치",
+      positionTop: "상단",
+      positionLeft: "좌측"
     }
   },
   lazyLoadingWelcome: {

@@ -5,10 +5,14 @@ import { IconButton } from 'src/components/IconButton/IconButton';
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { useHistory } from 'src/hooks/useHistory';
 import { useTranslation } from 'src/stores/localeStore';
+import { useUiStateStore } from 'src/stores/uiStateStore';
 
 export const HistoryControls = () => {
   const { undo, redo, canUndo, canRedo } = useHistory();
   const { t } = useTranslation('mainMenu');
+  const toolbarPosition = useUiStateStore((state) => {
+    return state.toolbarPosition;
+  });
 
   const handleUndo = useCallback(() => {
     undo();
@@ -20,7 +24,7 @@ export const HistoryControls = () => {
 
   return (
     <UiElement>
-      <Stack direction="row" spacing={0.5} alignItems="center">
+      <Stack direction={toolbarPosition === 'LEFT' ? 'column' : 'row'} spacing={0.5} alignItems="center">
         <IconButton
           name={`${t('undo')} (Ctrl+Z)`}
           Icon={<UndoIcon size={20} />}
