@@ -186,4 +186,30 @@ describe('Tests renderer utils', () => {
       id: 'label'
     });
   });
+
+  test('getItemAtTile() falls through a locked item to whatever is underneath it', () => {
+    const scene = {
+      items: [{ id: 'node', tile: { x: 0, y: 0 } }],
+      connectors: [],
+      rectangles: [{ id: 'zone', from: { x: -5, y: -5 }, to: { x: 5, y: 5 } }],
+      textBoxes: []
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+
+    expect(getItemAtTile({ tile: { x: 0, y: 0 }, scene })).toEqual({
+      type: 'ITEM',
+      id: 'node'
+    });
+
+    // Locking the node makes the click fall through to the rectangle behind it.
+    expect(getItemAtTile({ tile: { x: 0, y: 0 }, scene, lockedIds: ['node'] })).toEqual({
+      type: 'RECTANGLE',
+      id: 'zone'
+    });
+
+    // A locked rectangle with nothing else there resolves to nothing at all.
+    expect(
+      getItemAtTile({ tile: { x: 0, y: 0 }, scene, lockedIds: ['node', 'zone'] })
+    ).toBeNull();
+  });
 });

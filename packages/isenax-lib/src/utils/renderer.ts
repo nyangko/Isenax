@@ -511,14 +511,23 @@ export const getTextBoxEndTile = (textBox: TextBox, size: Size) => {
 interface GetItemAtTile {
   tile: Coords;
   scene: ReturnType<typeof useScene>;
+  // Ids to treat as if they weren't there -- a locked layer falls through to
+  // whatever's underneath it instead of being hit, same as Figma. Only
+  // click-to-select (Cursor.ts) passes this today; other getItemAtTile call
+  // sites (connector drawing, icon placement, tile-occupancy checks) are
+  // left alone for now, see isenax#53.
+  lockedIds?: string[];
 }
 
 export const getItemAtTile = ({
   tile,
-  scene
+  scene,
+  lockedIds
 }: GetItemAtTile): ItemReference | null => {
+  const isLocked = (id: string) => !!lockedIds?.includes(id);
+
   const viewItem = scene.items.find((item) => {
-    return CoordsUtils.isEqual(item.tile, tile);
+    return !isLocked(item.id) && CoordsUtils.isEqual(item.tile, tile);
   });
 
   if (viewItem) {
@@ -529,6 +538,7 @@ export const getItemAtTile = ({
   }
 
   const textBox = scene.textBoxes.find((tb) => {
+    if (isLocked(tb.id)) return false;
     const textBoxTo = getTextBoxEndTile(tb, tb.size);
     const isX = tb.orientation === 'X';
 
@@ -565,6 +575,7 @@ export const getItemAtTile = ({
   }
 
   const connector = scene.connectors.find((con) => {
+    if (isLocked(con.id)) return false;
     return con.path.tiles.find((pathTile) => {
       const globalPathTile = connectorPathTileToGlobal(
         pathTile,
@@ -582,8 +593,8 @@ export const getItemAtTile = ({
     };
   }
 
-  const rectangle = scene.rectangles.find(({ from, to }) => {
-    return isWithinBounds(tile, [from, to]);
+  const rectangle = scene.rectangles.find(({ id, from, to }) => {
+    return !isLocked(id) && isWithinBounds(tile, [from, to]);
   });
 
   if (rectangle) {

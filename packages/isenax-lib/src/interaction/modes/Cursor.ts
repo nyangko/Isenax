@@ -84,7 +84,8 @@ const mousedown: ModeActionsAction = ({
 
   const itemAtTile = getItemAtTile({
     tile: uiState.mouse.position.tile,
-    scene
+    scene,
+    lockedIds: uiState.lockedLayerIds
   });
 
   if (itemAtTile) {
