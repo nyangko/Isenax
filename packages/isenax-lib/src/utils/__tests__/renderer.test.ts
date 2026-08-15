@@ -1,7 +1,7 @@
 import { Coords, Size, Scroll } from 'src/types';
-import { CoordsUtils, SizeUtils } from 'src/utils';
-import { PROJECTED_TILE_SIZE } from 'src/config';
-import { getGridSubset, isWithinBounds, screenToIso, getItemAtTile } from '../renderer';
+import { CoordsUtils, SizeUtils, getConnectorGroups, getGroupOffset } from 'src/utils';
+import { PROJECTED_TILE_SIZE, UNPROJECTED_TILE_SIZE } from 'src/config';
+import { getGridSubset, isWithinBounds, screenToIso, getItemAtTile, getTilePosition } from '../renderer';
 
 const getRendererSize = (tileSize: Size, zoom: number = 1): Size => {
   const projectedTileSize = SizeUtils.multiply(PROJECTED_TILE_SIZE, zoom);
@@ -211,5 +211,55 @@ describe('Tests renderer utils', () => {
     expect(
       getItemAtTile({ tile: { x: 0, y: 0 }, scene, lockedIds: ['node', 'zone'] })
     ).toBeNull();
+  });
+
+  test('getItemAtTile() picks the connector nearest the click among several sharing the same tile', () => {
+    // Three connectors between the same two points share the exact same tile
+    // path (that's why they get a perpendicular pixel offset at render time
+    // to visually spread apart) -- tile-only matching can't tell them apart,
+    // so a click on one of the outer (offset) lines must resolve to that
+    // specific connector, not just whichever is first in the array.
+    const rectangleFrom = { x: 4, y: 0 };
+    const pathTiles = [
+      { x: 4, y: 0 },
+      { x: 3, y: 0 },
+      { x: 2, y: 0 },
+      { x: 1, y: 0 },
+      { x: 0, y: 0 }
+    ]; // -> global tiles (0,0)..(4,0) via connectorPathTileToGlobal
+
+    const makeConnector = (id: string) => ({
+      id,
+      anchors: [{ id: `${id}-a1`, ref: { item: 'a' } }, { id: `${id}-a2`, ref: { item: 'b' } }],
+      path: { tiles: pathTiles, rectangle: { from: rectangleFrom, to: { x: 0, y: 0 } } }
+    });
+
+    const connectors = [makeConnector('c0'), makeConnector('c1'), makeConnector('c2')];
+    const scene = { items: [], connectors, rectangles: [], textBoxes: [] } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    const tile = { x: 2, y: 0 };
+    const rendererSize: Size = { width: 1000, height: 1000 };
+    const zoom = 1;
+    const scroll: Scroll = { position: { x: 0, y: 0 }, offset: CoordsUtils.zero() };
+
+    // Reuse the real grouping/offset math to compute where "c2" (the third,
+    // most-offset connector) actually renders, then click exactly there.
+    const groups = getConnectorGroups(connectors as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    const group = groups.get('c2')!;
+    const offsetPx = getGroupOffset(group.index, group.total, UNPROJECTED_TILE_SIZE, group.groupWidthRatio);
+    const offsetTiles = offsetPx / UNPROJECTED_TILE_SIZE;
+    // The path runs along x, so getPerpendicularAt's unit vector is (0, 1).
+    const world = getTilePosition({ tile: { x: tile.x, y: tile.y + offsetTiles } });
+    const mouseScreen = {
+      x: world.x + rendererSize.width / 2,
+      y: world.y + rendererSize.height / 2
+    };
+
+    expect(
+      getItemAtTile({ tile, scene, mouseScreen, rendererSize, zoom, scroll })
+    ).toEqual({ type: 'CONNECTOR', id: 'c2' });
+
+    // Without screen-space info, it falls back to the old first-match behavior.
+    expect(getItemAtTile({ tile, scene })).toEqual({ type: 'CONNECTOR', id: 'c0' });
   });
 });

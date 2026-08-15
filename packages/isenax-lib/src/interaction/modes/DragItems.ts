@@ -7,10 +7,45 @@ import {
   CoordsUtils,
   hasMovedTile,
   getAnchorParent,
+  getAnchorTile,
   getItemAtTile,
   findNearestUnoccupiedTilesForGroup,
   setWindowCursor
 } from 'src/utils';
+
+// Dragging a connector's line always creates a real waypoint anchor at the
+// drag-start tile (see Cursor.ts's getAnchor), even if the drag ends back
+// on the original straight line -- nothing ever prunes it, so it silently
+// breaks that connector's overlap-prevention grouping from then on (it no
+// longer has exactly 2 anchors). Remove an interior anchor here if it's
+// (re)dropped back onto the straight line between its neighbors, same as
+// most diagram tools do when you drag a bend point onto its own line.
+const COLLINEAR_EPSILON = 1e-6;
+
+const pruneCollinearAnchor = (
+  itemId: string,
+  scene: ReturnType<typeof useScene>
+) => {
+  const connector = getAnchorParent(itemId, scene.connectors);
+  const { index } = getItemByIdOrThrow(connector.anchors, itemId);
+
+  if (index === 0 || index === connector.anchors.length - 1) return;
+
+  const view = scene.currentView;
+  const prev = getAnchorTile(connector.anchors[index - 1], view);
+  const curr = getAnchorTile(connector.anchors[index], view);
+  const next = getAnchorTile(connector.anchors[index + 1], view);
+
+  const cross =
+    (next.x - prev.x) * (curr.y - prev.y) -
+    (next.y - prev.y) * (curr.x - prev.x);
+
+  if (Math.abs(cross) < COLLINEAR_EPSILON) {
+    scene.updateConnector(connector.id, {
+      anchors: connector.anchors.filter((a) => a.id !== itemId)
+    });
+  }
+};
 
 const dragItems = (
   items: ItemReference[],
@@ -164,7 +199,13 @@ export const DragItems: ModeActions = {
 
     dragItems(uiState.mode.items, uiState.mouse.position.tile, delta, scene);
   },
-  mouseup: ({ uiState }) => {
+  mouseup: ({ uiState, scene }) => {
+    if (uiState.mode.type === 'DRAG_ITEMS') {
+      uiState.mode.items
+        .filter((item) => item.type === 'CONNECTOR_ANCHOR')
+        .forEach((item) => pruneCollinearAnchor(item.id, scene));
+    }
+
     uiState.actions.setItemControls(null);
     uiState.actions.setMode({
       type: 'CURSOR',

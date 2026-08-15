@@ -78,14 +78,19 @@ const getAnchor = (
 const mousedown: ModeActionsAction = ({
   uiState,
   scene,
-  isRendererInteraction
+  isRendererInteraction,
+  rendererSize
 }) => {
   if (uiState.mode.type !== 'CURSOR' || !isRendererInteraction) return;
 
   const itemAtTile = getItemAtTile({
     tile: uiState.mouse.position.tile,
     scene,
-    lockedIds: uiState.lockedLayerIds
+    lockedIds: uiState.lockedLayerIds,
+    mouseScreen: uiState.mouse.position.screen,
+    rendererSize,
+    zoom: uiState.zoom,
+    scroll: uiState.scroll
   });
 
   if (itemAtTile) {
@@ -188,10 +193,14 @@ export const Cursor: ModeActions = {
         const connectorIds = getConnectorsAtTile({ tile: clickTile, scene });
 
         if (connectorIds.length > 0) {
+          // mousedownItem.id is now resolved to the specific connector whose
+          // own rendered (offset) line the click actually landed on -- see
+          // getItemAtTile -- so it's always a better focus target than
+          // nulling it out just because groupmates share the same tile.
           uiState.actions.setItemControls({
             type: 'CONNECTOR_GROUP',
             ids: connectorIds,
-            focusedId: connectorIds.length === 1 ? connectorIds[0] : null
+            focusedId: uiState.mode.mousedownItem.id
           });
         }
       } else if (uiState.mode.mousedownItem.type === 'TEXTBOX') {

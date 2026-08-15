@@ -6,7 +6,7 @@ import {
   getColorVariant,
   getConnectorDirectionIcon
 } from 'src/utils';
-import { getGroupOffset } from 'src/utils/connectorGroups';
+import { getGroupOffset, getPerpendicularAt } from 'src/utils/connectorGroups';
 import { Circle } from 'src/components/Circle/Circle';
 import { Svg } from 'src/components/Svg/Svg';
 import { useIsoProjection } from 'src/hooks/useIsoProjection';
@@ -28,35 +28,6 @@ interface Props {
   groupWidthRatio?: number;
   dimmed?: boolean;
 }
-
-/**
- * Calculate the perpendicular unit vector at a point along a tile path.
- */
-const getPerpendicularAt = (
-  tiles: { x: number; y: number }[],
-  i: number
-): { dx: number; dy: number } => {
-  const curr = tiles[i];
-  let dirX = 0;
-  let dirY = 0;
-
-  if (i > 0 && i < tiles.length - 1) {
-    const prev = tiles[i - 1];
-    const next = tiles[i + 1];
-    dirX = ((curr.x - prev.x) + (next.x - curr.x)) / 2;
-    dirY = ((curr.y - prev.y) + (next.y - curr.y)) / 2;
-  } else if (i === 0 && tiles.length > 1) {
-    dirX = tiles[1].x - curr.x;
-    dirY = tiles[1].y - curr.y;
-  } else if (i === tiles.length - 1 && tiles.length > 1) {
-    const prev = tiles[i - 1];
-    dirX = curr.x - prev.x;
-    dirY = curr.y - prev.y;
-  }
-
-  const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
-  return { dx: -dirY / len, dy: dirX / len };
-};
 
 // The whole SVG is skewed onto the isometric grid by a CSS matrix (see
 // getIsoProjectionCss) that does NOT scale every local tile-space direction

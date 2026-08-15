@@ -37,7 +37,10 @@ import {
   roundTo2Decimals,
   findPath,
   toPx,
-  getItemByIdOrThrow
+  getItemByIdOrThrow,
+  getConnectorGroups,
+  getGroupOffset,
+  getPerpendicularAt
 } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 
@@ -517,12 +520,28 @@ interface GetItemAtTile {
   // sites (connector drawing, icon placement, tile-occupancy checks) are
   // left alone for now, see isenax#53.
   lockedIds?: string[];
+  // Multiple connectors between the same two points share the exact same
+  // tile path -- that's why grouped/overlapping connectors get a perpendicular
+  // pixel offset at render time (connectorGroups.ts), to visually spread
+  // them apart. Tile-only matching can't tell them apart, so when these are
+  // provided, ties are broken by picking whichever connector's own rendered
+  // (offset) position is nearest the actual cursor. Omit to keep the simple
+  // first-match behavior (used by call sites that don't have screen-space
+  // mouse info, e.g. pathfinding/occupancy checks).
+  mouseScreen?: Coords;
+  rendererSize?: Size;
+  zoom?: number;
+  scroll?: Scroll;
 }
 
 export const getItemAtTile = ({
   tile,
   scene,
-  lockedIds
+  lockedIds,
+  mouseScreen,
+  rendererSize,
+  zoom,
+  scroll
 }: GetItemAtTile): ItemReference | null => {
   const isLocked = (id: string) => !!lockedIds?.includes(id);
 
@@ -574,9 +593,9 @@ export const getItemAtTile = ({
     };
   }
 
-  const connector = scene.connectors.find((con) => {
+  const matchingConnectors = scene.connectors.filter((con) => {
     if (isLocked(con.id)) return false;
-    return con.path.tiles.find((pathTile) => {
+    return con.path.tiles.some((pathTile) => {
       const globalPathTile = connectorPathTileToGlobal(
         pathTile,
         con.path.rectangle.from
@@ -585,6 +604,72 @@ export const getItemAtTile = ({
       return CoordsUtils.isEqual(globalPathTile, tile);
     });
   });
+
+  let connector = matchingConnectors[0];
+
+  if (
+    matchingConnectors.length > 1 &&
+    mouseScreen &&
+    rendererSize &&
+    zoom !== undefined &&
+    scroll
+  ) {
+    // Undo the same zoom/scroll/center transform screenToIso inverts, so the
+    // comparison below happens in the same unscaled "world" pixel space
+    // getTilePosition already operates in.
+    const worldMouse = {
+      x: (mouseScreen.x - rendererSize.width / 2 - scroll.position.x) / zoom,
+      y: (mouseScreen.y - rendererSize.height / 2 - scroll.position.y) / zoom
+    };
+    const groups = getConnectorGroups(scene.connectors);
+
+    let best = matchingConnectors[0];
+    let bestDist = Infinity;
+
+    for (const con of matchingConnectors) {
+      // Connector.tsx computes its own offset in a local SVG-space that it
+      // then un-mirrors via a CSS `scale(-1, 1)` hack (see its comment on
+      // that transform) -- getPerpendicularAt on the raw local path.tiles
+      // would inherit that mirroring here. Global tiles are already in the
+      // same un-mirrored convention getTilePosition uses everywhere else,
+      // so compute the perpendicular direction from those instead.
+      const globalPathTiles = con.path.tiles.map((pathTile) => {
+        return connectorPathTileToGlobal(pathTile, con.path.rectangle.from);
+      });
+      const pathIndex = globalPathTiles.findIndex((globalPathTile) => {
+        return CoordsUtils.isEqual(globalPathTile, tile);
+      });
+      const group = groups.get(con.id) ?? {
+        index: 0,
+        total: 1,
+        reversed: false,
+        groupWidthRatio: 0
+      };
+      const rawOffsetPx = getGroupOffset(
+        group.index,
+        group.total,
+        UNPROJECTED_TILE_SIZE,
+        group.groupWidthRatio
+      );
+      const offsetPx = group.reversed ? -rawOffsetPx : rawOffsetPx;
+      const perp = getPerpendicularAt(globalPathTiles, pathIndex);
+      const offsetTiles = offsetPx / UNPROJECTED_TILE_SIZE;
+      const world = getTilePosition({
+        tile: {
+          x: tile.x + perp.dx * offsetTiles,
+          y: tile.y + perp.dy * offsetTiles
+        }
+      });
+      const dist = Math.hypot(world.x - worldMouse.x, world.y - worldMouse.y);
+
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = con;
+      }
+    }
+
+    connector = best;
+  }
 
   if (connector) {
     return {
