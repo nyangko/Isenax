@@ -359,6 +359,11 @@ export interface LocaleProps {
     groupRectangles: string;
     groupTextBoxes: string;
     rectangleFallbackName: string;
+    // Optional: only en-US/ko-KR ship these so far; other locales fall back
+    // to the raw key until the i18n completeness pass fills them in.
+    searchPlaceholder?: string;
+    filterAll?: string;
+    noSearchResults?: string;
   };
   // other namespaces can be added here
 }

@@ -384,7 +384,10 @@ const locale: LocaleProps = {
     groupConnectors: "Connectors",
     groupRectangles: "Areas",
     groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    rectangleFallbackName: "Area {number}",
+    searchPlaceholder: "Search",
+    filterAll: "All",
+    noSearchResults: "No matches for \"{query}\"."
   }
 };
 

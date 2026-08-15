@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Tabs,
@@ -9,21 +9,32 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Collapse
+  Collapse,
+  TextField,
+  InputAdornment,
+  Chip,
+  Stack
 } from '@mui/material';
-import { IconX as CloseIcon, IconChevronDown as ChevronDownIcon } from '@tabler/icons-react';
+import {
+  IconX as CloseIcon,
+  IconChevronDown as ChevronDownIcon,
+  IconSearch as SearchIcon
+} from '@tabler/icons-react';
 import { useScene } from 'src/hooks/useScene';
 import { useModelItem } from 'src/hooks/useModelItem';
+import { useModelStore } from 'src/stores/modelStore';
+import { useIcon } from 'src/hooks/useIcon';
 import { useConnector } from 'src/hooks/useConnector';
 import { useRectangle } from 'src/hooks/useRectangle';
 import { useTextBox } from 'src/hooks/useTextBox';
 import { useColor } from 'src/hooks/useColor';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
-import { getConnectorLabels } from 'src/utils';
+import { getConnectorLabels, getItemById } from 'src/utils';
 import { ItemControlsManager } from 'src/components/ItemControls/ItemControlsManager';
 
 type TabValue = 'LIST' | 'DETAIL';
+type TypeFilter = 'ALL' | 'NODE' | 'CONNECTOR' | 'RECTANGLE' | 'TEXTBOX';
 
 interface RowProps {
   isSelected: boolean;
@@ -32,10 +43,19 @@ interface RowProps {
 
 const NodeRow = ({ id, isSelected, onSelect }: RowProps & { id: string }) => {
   const modelItem = useModelItem(id);
+  const { icon } = useIcon(modelItem?.icon);
   if (!modelItem) return null;
 
   return (
     <ListItemButton selected={isSelected} onClick={onSelect} dense>
+      <ListItemIcon sx={{ minWidth: 28 }}>
+        <Box
+          component="img"
+          src={icon.url}
+          alt=""
+          sx={{ width: 20, height: 20, objectFit: 'contain' }}
+        />
+      </ListItemIcon>
       <ListItemText primary={modelItem.name} primaryTypographyProps={{ noWrap: true }} />
     </ListItemButton>
   );
@@ -123,11 +143,15 @@ const TextBoxRow = ({ id, isSelected, onSelect }: RowProps & { id: string }) => 
 interface GroupSectionProps {
   title: string;
   count: number;
+  // While the user is searching, force every matching group open so results
+  // aren't hidden behind a collapse state they set before they started typing.
+  forceExpanded?: boolean;
   children: React.ReactNode;
 }
 
-const GroupSection = ({ title, count, children }: GroupSectionProps) => {
-  const [expanded, setExpanded] = useState(true);
+const GroupSection = ({ title, count, forceExpanded, children }: GroupSectionProps) => {
+  const [localExpanded, setLocalExpanded] = useState(true);
+  const expanded = forceExpanded || localExpanded;
 
   if (count === 0) return null;
 
@@ -136,7 +160,7 @@ const GroupSection = ({ title, count, children }: GroupSectionProps) => {
       <Box
         component="button"
         onClick={() => {
-          setExpanded((prev) => !prev);
+          setLocalExpanded((prev) => !prev);
         }}
         sx={{
           all: 'unset',
@@ -175,6 +199,7 @@ const GroupSection = ({ title, count, children }: GroupSectionProps) => {
 
 export const LayersPanel = () => {
   const { items, connectors, rectangles, textBoxes } = useScene();
+  const modelItems = useModelStore((state) => state.items);
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
@@ -183,6 +208,8 @@ export const LayersPanel = () => {
   });
   const { t } = useTranslation('layersPanel');
   const [activeTab, setActiveTab] = useState<TabValue>('LIST');
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('ALL');
 
   // Clicking an item (canvas or list) always routes through setItemControls --
   // jump to the Edit tab and make sure the panel is actually visible so the
@@ -197,6 +224,52 @@ export const LayersPanel = () => {
   }, [itemControls, uiStateActions]);
 
   const totalCount = items.length + connectors.length + rectangles.length + textBoxes.length;
+
+  // Same "does this row's display text match?" logic the rows themselves use
+  // to render a primary label -- kept in the parent (rather than filtering
+  // post-render) so a group can be hidden entirely when nothing in it matches.
+  const query = search.trim().toLowerCase();
+  const matches = (text: string) => !query || text.toLowerCase().includes(query);
+
+  const filteredItems = useMemo(() => {
+    if (typeFilter !== 'ALL' && typeFilter !== 'NODE') return [];
+    return items.filter((item) => {
+      const name = getItemById(modelItems, item.id)?.value.name ?? '';
+      return matches(name);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, modelItems, typeFilter, query]);
+
+  const filteredConnectors = useMemo(() => {
+    if (typeFilter !== 'ALL' && typeFilter !== 'CONNECTOR') return [];
+    return connectors
+      .map((connector, index) => ({ connector, index }))
+      .filter(({ connector, index }) => {
+        const labels = getConnectorLabels(connector);
+        const name =
+          connector.name ||
+          labels[0]?.text ||
+          t('groupConnectors') + ' ' + (index + 1);
+        return matches(name);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectors, typeFilter, query]);
+
+  const filteredRectangles = useMemo(() => {
+    if (typeFilter !== 'ALL' && typeFilter !== 'RECTANGLE') return [];
+    return rectangles
+      .map((rectangle, index) => ({ rectangle, index }))
+      .filter(({ index }) => {
+        return matches(t('rectangleFallbackName').replace('{number}', String(index + 1)));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rectangles, typeFilter, query]);
+
+  const filteredTextBoxes = useMemo(() => {
+    if (typeFilter !== 'ALL' && typeFilter !== 'TEXTBOX') return [];
+    return textBoxes.filter((textBox) => matches(textBox.content));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textBoxes, typeFilter, query]);
 
   const isNodeSelected = (id: string) => {
     return itemControls?.type === 'ITEM' && itemControls.id === id;
@@ -255,6 +328,49 @@ export const LayersPanel = () => {
         <Tab value="DETAIL" label={t('tabEdit')} sx={{ minHeight: 36 }} disabled={!itemControls} />
       </Tabs>
 
+      {activeTab === 'LIST' && totalCount > 0 && (
+        <Box sx={{ px: 1.5, pt: 1.5, pb: 1, flexShrink: 0 }}>
+          <TextField
+            size="small"
+            fullWidth
+            placeholder={t('searchPlaceholder')}
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon size={16} />
+                </InputAdornment>
+              )
+            }}
+          />
+          <Stack direction="row" spacing={0.75} sx={{ mt: 1, flexWrap: 'wrap', rowGap: 0.75 }}>
+            {(
+              [
+                ['ALL', t('filterAll')],
+                ['NODE', t('groupNodes')],
+                ['CONNECTOR', t('groupConnectors')],
+                ['RECTANGLE', t('groupRectangles')],
+                ['TEXTBOX', t('groupTextBoxes')]
+              ] as [TypeFilter, string][]
+            ).map(([value, label]) => (
+              <Chip
+                key={value}
+                label={label}
+                size="small"
+                color={typeFilter === value ? 'primary' : 'default'}
+                variant={typeFilter === value ? 'filled' : 'outlined'}
+                onClick={() => {
+                  setTypeFilter(value);
+                }}
+              />
+            ))}
+          </Stack>
+        </Box>
+      )}
+
       <Box sx={{ flex: 1, overflowY: 'auto' }}>
         {activeTab === 'LIST' &&
           (totalCount === 0 ? (
@@ -263,10 +379,20 @@ export const LayersPanel = () => {
                 {t('emptyCanvas')}
               </Typography>
             </Box>
+          ) : filteredItems.length +
+              filteredConnectors.length +
+              filteredRectangles.length +
+              filteredTextBoxes.length ===
+            0 ? (
+            <Box sx={{ p: 3 }}>
+              <Typography variant="body2" color="text.secondary" textAlign="center">
+                {t('noSearchResults').replace('{query}', search.trim())}
+              </Typography>
+            </Box>
           ) : (
             <>
-              <GroupSection title={t('groupNodes')} count={items.length}>
-                {items.map((item) => (
+              <GroupSection title={t('groupNodes')} count={filteredItems.length} forceExpanded={!!query}>
+                {filteredItems.map((item) => (
                   <NodeRow
                     key={item.id}
                     id={item.id}
@@ -277,8 +403,12 @@ export const LayersPanel = () => {
                   />
                 ))}
               </GroupSection>
-              <GroupSection title={t('groupConnectors')} count={connectors.length}>
-                {connectors.map((connector, index) => (
+              <GroupSection
+                title={t('groupConnectors')}
+                count={filteredConnectors.length}
+                forceExpanded={!!query}
+              >
+                {filteredConnectors.map(({ connector, index }) => (
                   <ConnectorRow
                     key={connector.id}
                     id={connector.id}
@@ -294,8 +424,12 @@ export const LayersPanel = () => {
                   />
                 ))}
               </GroupSection>
-              <GroupSection title={t('groupRectangles')} count={rectangles.length}>
-                {rectangles.map((rectangle, index) => (
+              <GroupSection
+                title={t('groupRectangles')}
+                count={filteredRectangles.length}
+                forceExpanded={!!query}
+              >
+                {filteredRectangles.map(({ rectangle, index }) => (
                   <RectangleRow
                     key={rectangle.id}
                     id={rectangle.id}
@@ -307,8 +441,12 @@ export const LayersPanel = () => {
                   />
                 ))}
               </GroupSection>
-              <GroupSection title={t('groupTextBoxes')} count={textBoxes.length}>
-                {textBoxes.map((textBox) => (
+              <GroupSection
+                title={t('groupTextBoxes')}
+                count={filteredTextBoxes.length}
+                forceExpanded={!!query}
+              >
+                {filteredTextBoxes.map((textBox) => (
                   <TextBoxRow
                     key={textBox.id}
                     id={textBox.id}

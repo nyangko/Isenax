@@ -384,7 +384,10 @@ const locale: LocaleProps = {
     groupConnectors: "연결선",
     groupRectangles: "영역",
     groupTextBoxes: "텍스트박스",
-    rectangleFallbackName: "영역 {number}"
+    rectangleFallbackName: "영역 {number}",
+    searchPlaceholder: "검색",
+    filterAll: "전체",
+    noSearchResults: "\"{query}\"에 대한 검색 결과가 없습니다."
   }
 };
 
