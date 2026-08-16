@@ -7,7 +7,13 @@ import { textBoxSchema } from './textBox';
 export const viewItemSchema = z.object({
   id,
   tile: coords,
-  labelHeight: z.number().optional()
+  labelHeight: z.number().optional(),
+  // ALWAYS (default when unset) matches existing behavior -- the name/
+  // description label always shows when present. HOVER only shows it while
+  // the node is moused over; HIDDEN never renders it regardless of content.
+  labelDisplayMode: z.enum(['ALWAYS', 'HOVER', 'HIDDEN']).optional(),
+  shadowEnabled: z.boolean().optional(),
+  accentColor: z.string().optional()
 });
 
 export const viewSchema = z.object({

@@ -2,7 +2,7 @@ import React, { useMemo, useState, memo } from 'react';
 import { Box, Typography, Stack, IconButton } from '@mui/material';
 import { IconChevronDown as ExpandMoreIcon, IconChevronUp as ExpandLessIcon } from '@tabler/icons-react';
 import { PROJECTED_TILE_SIZE, DEFAULT_LABEL_HEIGHT } from 'src/config';
-import { getTilePosition } from 'src/utils';
+import { getTilePosition, CoordsUtils } from 'src/utils';
 import { useIcon } from 'src/hooks/useIcon';
 import { ViewItem } from 'src/types';
 import { useModelItem } from 'src/hooks/useModelItem';
@@ -32,6 +32,18 @@ export const Node = memo(({ node, order }: Props) => {
   const isFlat = useUiStateStore((state) => state.projectionMode === 'FLAT');
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const { t } = useTranslation();
+
+  const labelDisplayMode = node.labelDisplayMode ?? 'ALWAYS';
+
+  // Every node's own visuals have pointer-events: none (see the icon/Label
+  // below) -- a single overlay owns all real hit-testing (Cursor.ts), so
+  // native onMouseEnter/Leave never fires here. Derive "hovered" the same
+  // way the app already tracks cursor position instead.
+  const mouseTile = useUiStateStore((state) =>
+    labelDisplayMode === 'HOVER' ? state.mouse.position.tile : null
+  );
+  const isHovered = labelDisplayMode === 'HOVER' && !!mouseTile && CoordsUtils.isEqual(mouseTile, node.tile);
+  const showLabel = labelDisplayMode !== 'HIDDEN' && (labelDisplayMode !== 'HOVER' || isHovered);
 
   const position = useMemo(() => {
     return getTilePosition({
@@ -73,7 +85,7 @@ export const Node = memo(({ node, order }: Props) => {
           top: position.y - (PROJECTED_TILE_SIZE.height / 2),
         }}
       >
-        {(modelItem?.name || hasDescription) && (
+        {showLabel && (modelItem?.name || hasDescription) && (
           <Box>
             <Label
               maxWidth={showDescription ? 375 : 250}
@@ -121,12 +133,37 @@ export const Node = memo(({ node, order }: Props) => {
           <Box
             sx={{
               pointerEvents: 'none',
+              position: 'relative',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'
             }}
           >
-            {iconComponent}
+            {node.accentColor && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  width: PROJECTED_TILE_SIZE.width * 0.9,
+                  height: PROJECTED_TILE_SIZE.width * 0.9,
+                  borderRadius: '50%',
+                  bgcolor: node.accentColor,
+                  opacity: 0.18,
+                  zIndex: -1
+                }}
+              />
+            )}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                filter: node.shadowEnabled
+                  ? 'drop-shadow(0 6px 8px rgba(0,0,0,0.35))'
+                  : undefined
+              }}
+            >
+              {iconComponent}
+            </Box>
           </Box>
         )}
       </Box>

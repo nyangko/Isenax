@@ -49,7 +49,10 @@ export const VIEW_DEFAULTS: Required<
 };
 
 export const VIEW_ITEM_DEFAULTS: Required<Omit<ViewItem, 'id' | 'tile'>> = {
-  labelHeight: 80
+  labelHeight: 80,
+  labelDisplayMode: 'ALWAYS',
+  shadowEnabled: false,
+  accentColor: ''
 };
 
 export const CONNECTOR_DEFAULTS: Required<Omit<Connector, 'id' | 'color'>> = {

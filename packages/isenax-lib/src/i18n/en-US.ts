@@ -334,7 +334,20 @@ const locale: LocaleProps = {
       updateIcon: "Update icon",
       backToSettings: "Settings",
       expandDescription: "Show description",
-      collapseDescription: "Hide description"
+      collapseDescription: "Hide description",
+      untitled: "Untitled",
+      selectedBadge: "Selected",
+      connectionsChip: "Connections",
+      typeNode: "Node",
+      labelDisplayMode: "Label Display",
+      labelDisplayAlways: "Always",
+      labelDisplayHover: "On Hover",
+      labelDisplayHidden: "Hidden",
+      shadow: "Shadow",
+      accentColor: "Accent Color",
+      connectionSummary: "Connection Summary",
+      connectionInput: "Input",
+      connectionOutput: "Output"
     },
     connector: {
       editTitle: "Edit Connector",

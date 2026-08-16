@@ -334,7 +334,20 @@ const locale: LocaleProps = {
       updateIcon: "아이콘 변경",
       backToSettings: "설정",
       expandDescription: "설명 보기",
-      collapseDescription: "설명 숨기기"
+      collapseDescription: "설명 숨기기",
+      untitled: "제목 없음",
+      selectedBadge: "선택됨",
+      connectionsChip: "연결",
+      typeNode: "노드",
+      labelDisplayMode: "라벨 표시",
+      labelDisplayAlways: "항상",
+      labelDisplayHover: "호버 시",
+      labelDisplayHidden: "숨김",
+      shadow: "그림자",
+      accentColor: "강조 색상",
+      connectionSummary: "연결 요약",
+      connectionInput: "입력",
+      connectionOutput: "출력"
     },
     connector: {
       editTitle: "연결선 편집",

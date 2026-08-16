@@ -309,6 +309,21 @@ export interface LocaleProps {
       backToSettings: string;
       expandDescription: string;
       collapseDescription: string;
+      // Optional: only en-US/ko-KR ship these so far; other locales fall
+      // back to the raw key until the i18n completeness pass fills them in.
+      untitled?: string;
+      selectedBadge?: string;
+      connectionsChip?: string;
+      typeNode?: string;
+      labelDisplayMode?: string;
+      labelDisplayAlways?: string;
+      labelDisplayHover?: string;
+      labelDisplayHidden?: string;
+      shadow?: string;
+      accentColor?: string;
+      connectionSummary?: string;
+      connectionInput?: string;
+      connectionOutput?: string;
     };
     connector: {
       editTitle: string;

@@ -302,7 +302,9 @@ interface Zone {
   textBoxId?: string;
 }
 
-const zoneBounds = (rectangle: RectangleType) => [rectangle.from, rectangle.to];
+// Exported so other item-detail panels (e.g. NodeControls' summary card) can
+// derive "which zone is this node in" without duplicating the containment math.
+export const zoneBounds = (rectangle: RectangleType) => [rectangle.from, rectangle.to];
 
 // Zone labels are routinely placed just outside their rectangle's edge for
 // readability (see the isenax-diagram skill's "hard-won specifics" -- e.g. a
@@ -310,7 +312,7 @@ const zoneBounds = (rectangle: RectangleType) => [rectangle.from, rectangle.to];
 // check misses the exact case it's meant to catch. Pad the bounds generously
 // for label matching only; node items still use the exact rectangle bounds.
 const LABEL_ZONE_TOLERANCE = 1;
-const zoneBoundsForLabels = (rectangle: RectangleType) => {
+export const zoneBoundsForLabels = (rectangle: RectangleType) => {
   const { from, to } = rectangle;
   const lowX = Math.min(from.x, to.x) - LABEL_ZONE_TOLERANCE;
   const highX = Math.max(from.x, to.x) + LABEL_ZONE_TOLERANCE;

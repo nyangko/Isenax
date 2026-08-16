@@ -8,6 +8,10 @@ import {
   InputAdornment,
   Tooltip,
   Divider,
+  Switch,
+  FormControlLabel,
+  ToggleButtonGroup,
+  ToggleButton,
   IconButton as MUIIconButton
 } from '@mui/material';
 import {
@@ -18,11 +22,14 @@ import {
 } from '@tabler/icons-react';
 import { ModelItem, ViewItem } from 'src/types';
 import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
+import { CustomColorInput } from 'src/components/ColorSelector/CustomColorInput';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
 import { Section } from '../../components/Section';
+
+const DEFAULT_ACCENT_COLOR = '#2563EB';
 
 export type NodeUpdates = {
   model: Partial<ModelItem>;
@@ -274,6 +281,54 @@ export const NodeSettings = ({
             }}
             disabled={isReadOnly}
           />
+
+          <Box>
+            <Typography variant="body2" fontWeight={600} sx={{ mb: 1 }}>
+              {t('itemControls.node.labelDisplayMode')}
+            </Typography>
+            <ToggleButtonGroup
+              exclusive
+              fullWidth
+              size="small"
+              value={node.labelDisplayMode ?? 'ALWAYS'}
+              onChange={(_e, value) => {
+                if (value) onViewItemUpdated({ labelDisplayMode: value });
+              }}
+              disabled={isReadOnly}
+            >
+              <ToggleButton value="ALWAYS">
+                {t('itemControls.node.labelDisplayAlways')}
+              </ToggleButton>
+              <ToggleButton value="HOVER">
+                {t('itemControls.node.labelDisplayHover')}
+              </ToggleButton>
+              <ToggleButton value="HIDDEN">
+                {t('itemControls.node.labelDisplayHidden')}
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={node.shadowEnabled ?? false}
+                onChange={(e) => onViewItemUpdated({ shadowEnabled: e.target.checked })}
+                disabled={isReadOnly}
+              />
+            }
+            label={t('itemControls.node.shadow')}
+          />
+
+          <Box>
+            <Typography variant="body2" fontWeight={600} sx={{ mb: 1 }}>
+              {t('itemControls.node.accentColor')}
+            </Typography>
+            <CustomColorInput
+              value={node.accentColor ?? DEFAULT_ACCENT_COLOR}
+              onChange={(accentColor) => onViewItemUpdated({ accentColor })}
+              disabled={isReadOnly}
+            />
+          </Box>
         </Stack>
       </Section>
     </>
