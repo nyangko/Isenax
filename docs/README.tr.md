@@ -158,6 +158,21 @@ Yerleşik simgeler yalnızca id ile aktarılır (ajana base64 verisi gönderilme
 
 ## Yakın zamanda eklenenler
 
+### Yeniden tasarlanan Ayarlar
+Aranabilir (⌘K), iki bölmeli ayarlar penceresi eski sekme şeridinin yerini aldı — Kısayollar/Kaydırma/Yakınlaştırma, Görünüm, Simge Paketleri ve Uzantılar olarak gruplandı; her bölümde İptal/Kaydet mantığı ve "Varsayılanlara sıfırla" düğmesi var.
+
+### Katmanlar paneli
+Arama ve tür filtreleri (Tümü/Düğümler/Bağlayıcılar/Alanlar/Metin), düğümler artık içinde bulundukları alanın altında iç içe gösteriliyor, öğe başına göster/kilitle geçişleri ve panel artık ekranın kenarına tam yaslanarak yerleşiyor; araç çubuğunun konumu da özelleştirilebiliyor.
+
+### Düğüm düzenleme paneli
+Daha büyük bir simge, seçim rozeti, bölge/bağlantı/tür etiketleri, bir Etiket Görüntüleme modu (Her Zaman/Üzerine Gelince/Gizli) ve tıklandığında tuvali bağlı düğüme götüren bir Bağlantı Özeti içeren yeniden tasarlanmış özet kartı.
+
+### MCP araç entegrasyonu
+Ayarlar → MCP paneli artık bağlı bir AI ajanının çağırabileceği araçları ( list/get/create/update/patch/delete diagram) listeliyor.
+
+### Simge paketi marka logoları
+AWS, GCP, Azure ve Kubernetes simge paketleri, Ayarlar'da artık genel bir baş harf rozeti yerine gerçek marka logolarını gösteriyor.
+
 ### Bağlayıcı çoğullama
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

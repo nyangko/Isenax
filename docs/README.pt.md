@@ -158,6 +158,21 @@ Os ícones integrados trafegam apenas por id (nenhum dado base64 é enviado ao a
 
 ## Adicionado recentemente
 
+### Configurações redesenhadas
+Um diálogo de configurações com pesquisa (⌘K) e dois painéis substitui a antiga faixa de abas — agrupado em Atalhos/Panorâmica/Zoom, Exibição, Pacotes de Ícones e Extensões, com semântica de Cancelar/Salvar e um botão "Restaurar padrões" por seção.
+
+### Painel de Camadas
+Filtros de busca e tipo (Todos/Nós/Conectores/Áreas/Texto), nós agora aninhados sob a área em que se encontram, alternância de mostrar/bloquear por item, e o painel agora se encaixa rente à borda da tela, com uma posição de barra de ferramentas configurável.
+
+### Painel de edição de nó
+Cartão de resumo redesenhado com um ícone maior, selo de seleção, chips de zona/conexão/tipo, um modo de Exibição de Rótulo (Sempre/Ao Passar o Mouse/Oculto), e um Resumo de Conexão que leva a tela até o nó conectado ao ser clicado.
+
+### Integração de ferramentas MCP
+O painel Configurações → MCP agora lista as ferramentas (list/get/create/update/patch/delete diagram) que um agente de IA conectado pode chamar.
+
+### Logotipos de marca nos pacotes de ícones
+Os pacotes de ícones da AWS, GCP, Azure e Kubernetes agora exibem o logotipo real da marca em Configurações, em vez de um selo genérico com inicial.
+
 ### Multiplexação de conectores
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

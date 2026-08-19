@@ -158,6 +158,21 @@ Los iconos integrados viajan solo por id (no se envían datos base64 al agente),
 
 ## Recientemente añadido
 
+### Configuración rediseñada
+Un diálogo de configuración de dos paneles con búsqueda (⌘K) reemplaza la antigua franja de pestañas — agrupado en Atajos/Desplazamiento/Zoom, Pantalla, Paquetes de Iconos y Extensiones, con semántica de Cancelar/Guardar y un botón "Restablecer valores predeterminados" por sección.
+
+### Panel de Capas
+Filtros de búsqueda y tipo (Todos/Nodos/Conectores/Áreas/Texto), los nodos ahora aparecen anidados bajo el área en la que se encuentran, alternancia de mostrar/bloquear por elemento, y el panel ahora se acopla al borde de la pantalla con una posición de barra de herramientas configurable.
+
+### Panel de edición de nodo
+Tarjeta de resumen rediseñada con un icono más grande, una insignia de selección, chips de zona/conexión/tipo, un modo de Visualización de Etiqueta (Siempre/Al Pasar el Cursor/Oculta), y un Resumen de Conexión que centra el lienzo en el nodo conectado al hacer clic.
+
+### Integración de herramientas MCP
+El panel Configuración → MCP ahora lista las herramientas (list/get/create/update/patch/delete diagram) que un agente de IA conectado puede invocar.
+
+### Logotipos de marca en los paquetes de iconos
+Los paquetes de iconos de AWS, GCP, Azure y Kubernetes ahora muestran su logotipo de marca real en Configuración en lugar de una insignia genérica con inicial.
+
 ### Multiplexación de conectores
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

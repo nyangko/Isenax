@@ -158,6 +158,21 @@ Integrierte Icons werden nur per id übertragen (kein Base64 an den Agenten gese
 
 ## Kürzlich hinzugefügt
 
+### Neu gestaltete Einstellungen
+Ein durchsuchbarer (⌘K), zweispaltiger Einstellungsdialog ersetzt die alte Tableiste — gegliedert in Tastenkürzel/Verschieben/Zoom, Anzeige, Icon-Packs und Erweiterungen, mit Abbrechen/Speichern-Logik und einem „Auf Standard zurücksetzen“-Button pro Abschnitt.
+
+### Ebenen-Panel
+Such- und Typfilter (Alle/Knoten/Verbinder/Bereiche/Text), Knoten werden unter dem Bereich verschachtelt, in dem sie liegen, Anzeigen/Sperren-Umschalter pro Element, und das Panel dockt jetzt bündig am Bildschirmrand an, mit konfigurierbarer Symbolleistenposition.
+
+### Knoten-Bearbeitungspanel
+Neu gestaltete Übersichtskarte mit größerem Icon, Auswahl-Badge, Zonen-/Verbindungs-/Typ-Chips, einem Label-Anzeigemodus (Immer/Bei Hover/Ausgeblendet) und einer Verbindungsübersicht, die beim Anklicken die Arbeitsfläche zu einem verbundenen Knoten springen lässt.
+
+### MCP-Tool-Integration
+Das Panel Einstellungen → MCP listet jetzt die Tools (list/get/create/update/patch/delete diagram) auf, die ein verbundener KI-Agent aufrufen kann.
+
+### Marken-Logos der Icon-Packs
+Die Icon-Packs AWS, GCP, Azure und Kubernetes zeigen in den Einstellungen ihr echtes Marken-Logo statt eines generischen Initialen-Badges.
+
 ### Konnektor-Multiplexing
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

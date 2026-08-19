@@ -158,6 +158,21 @@ Les icônes intégrées ne voyagent que par id (aucune donnée base64 envoyée �
 
 ## Récemment ajouté
 
+### Refonte des Paramètres
+Une boîte de dialogue des paramètres à deux volets et consultable (⌘K) remplace l'ancienne barre d'onglets — regroupée en Raccourcis/Déplacement/Zoom, Affichage, Packs d'icônes et Extensions, avec une logique Annuler/Enregistrer et un bouton « Réinitialiser les valeurs par défaut » par section.
+
+### Panneau Calques
+Filtres de recherche et de type (Tous/Nœuds/Connecteurs/Zones/Texte), les nœuds imbriqués sous la zone qui les contient, des bascules d'affichage/verrouillage par élément, et le panneau se colle désormais au bord de l'écran avec une position de barre d'outils configurable.
+
+### Panneau d'édition de nœud
+Carte récapitulative repensée avec une icône plus grande, un badge de sélection, des puces de zone/connexion/type, un mode d'affichage des étiquettes (Toujours/Au survol/Masqué), et un résumé des connexions qui recentre le canevas sur un nœud connecté au clic.
+
+### Intégration des outils MCP
+Le panneau Paramètres → MCP liste désormais les outils (list/get/create/update/patch/delete diagram) qu'un agent IA connecté peut appeler.
+
+### Logos de marque des packs d'icônes
+Les packs d'icônes AWS, GCP, Azure et Kubernetes affichent leur véritable logo de marque dans les Paramètres au lieu d'un badge générique à initiale.
+
 ### Multiplexage des connecteurs
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

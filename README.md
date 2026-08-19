@@ -159,6 +159,21 @@ Built-in icons round-trip by id only (no base64 sent to the agent), and `update_
 
 ## Recently added
 
+### Redesigned Settings
+A searchable (⌘K), two-pane settings dialog replaces the old tab strip — grouped into Shortcuts/Pan/Zoom, Display, Icon Packs and Extensions, with Cancel/Save semantics and a "Reset to defaults" button per section.
+
+### Layers panel
+Search and type filters (All/Nodes/Connectors/Areas/Text), nodes nested under the area they sit inside, per-item show/lock toggles, and the panel now docks flush to the screen edge with a configurable toolbar position.
+
+### Node edit panel
+Redesigned summary card with a larger icon, selection badge, zone/connection/type chips, a Label Display mode (Always/On Hover/Hidden), and a Connection Summary that jumps the canvas to a connected node when clicked.
+
+### MCP tool integration
+The Settings → MCP panel now lists the tools ( list/get/create/update/patch/delete diagram) a connected AI agent can call.
+
+### Icon pack brand logos
+AWS, GCP, Azure and Kubernetes icon packs show their real brand logo in Settings instead of a generic initial badge.
+
 ### Connectors multiplexing
 <img src="demos/connectors.gif" alt="Multiplexed connectors demo" />
 

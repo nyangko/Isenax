@@ -158,6 +158,21 @@ Le icone integrate viaggiano solo tramite id (nessun dato base64 inviato all'age
 
 ## Aggiunto di recente
 
+### Impostazioni ridisegnate
+Una finestra di dialogo delle impostazioni a due riquadri e con ricerca (⌘K) sostituisce la vecchia barra di schede — organizzata in Scorciatoie/Pan/Zoom, Visualizzazione, Pacchetti di icone ed Estensioni, con la logica Annulla/Salva e un pulsante "Ripristina predefiniti" per ogni sezione.
+
+### Pannello Livelli
+Filtri di ricerca e per tipo (Tutti/Nodi/Connettori/Aree/Testo), nodi annidati sotto l'area in cui si trovano, interruttori mostra/blocca per ogni elemento, e il pannello ora si aggancia perfettamente al bordo dello schermo con una posizione della barra degli strumenti configurabile.
+
+### Pannello di modifica del nodo
+Scheda di riepilogo ridisegnata con un'icona più grande, un badge di selezione, chip per zona/connessione/tipo, una modalità Visualizzazione etichetta (Sempre/Al passaggio del mouse/Nascosta) e un Riepilogo connessioni che sposta la vista sul nodo collegato quando viene cliccato.
+
+### Integrazione degli strumenti MCP
+Il pannello Impostazioni → MCP ora elenca gli strumenti (list/get/create/update/patch/delete diagram) che un agente IA connesso può richiamare.
+
+### Loghi dei brand nei pacchetti di icone
+I pacchetti di icone AWS, GCP, Azure e Kubernetes mostrano ora il loro vero logo del brand nelle Impostazioni, al posto di un badge generico con iniziale.
+
 ### Multiplexing dei connettori
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

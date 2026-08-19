@@ -158,6 +158,21 @@ Ikon bawaan hanya dikirim melalui id (data base64 tidak dikirim ke agen), dan `u
 
 ## Baru ditambahkan
 
+### Pengaturan yang Didesain Ulang
+Dialog pengaturan dua panel yang dapat dicari (⌘K) menggantikan deretan tab lama — dikelompokkan menjadi Pintasan/Pan/Zoom, Tampilan, Paket Ikon, dan Ekstensi, dengan mekanisme Batal/Simpan dan tombol "Reset ke default" di setiap bagian.
+
+### Panel Layers
+Filter pencarian dan jenis (Semua/Node/Konektor/Area/Teks), node yang bersarang di bawah area tempatnya berada, tombol tampilkan/kunci per item, dan panel kini menempel rata ke tepi layar dengan posisi toolbar yang dapat diatur.
+
+### Panel edit node
+Kartu ringkasan yang didesain ulang dengan ikon yang lebih besar, badge seleksi, chip zona/koneksi/tipe, mode Tampilan Label (Selalu/Saat Hover/Tersembunyi), dan Ringkasan Koneksi yang memindahkan kanvas ke node yang terhubung saat diklik.
+
+### Integrasi alat MCP
+Panel Pengaturan → MCP kini menampilkan daftar alat (list/get/create/update/patch/delete diagram) yang dapat dipanggil oleh agen AI yang terhubung.
+
+### Logo merek paket ikon
+Paket ikon AWS, GCP, Azure, dan Kubernetes kini menampilkan logo merek aslinya di Pengaturan, bukan lagi badge inisial generik.
+
 ### Multiplexing konektor
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

@@ -158,6 +158,21 @@ Wbudowane ikony są przesyłane tylko przez id (dane base64 nie są wysyłane do
 
 ## Ostatnio dodane
 
+### Przeprojektowane ustawienia
+Przeszukiwalne (⌘K) okno ustawień w układzie dwupanelowym zastępuje dawny pasek zakładek — pogrupowane w Skróty/Przesuwanie/Zoom, Wyświetlanie, Pakiety ikon i Rozszerzenia, z logiką Anuluj/Zapisz oraz przyciskiem „Przywróć domyślne” w każdej sekcji.
+
+### Panel Warstwy
+Filtry wyszukiwania i typu (Wszystkie/Węzły/Łączniki/Obszary/Tekst), węzły zagnieżdżone pod obszarem, w którym się znajdują, przełączniki pokaż/zablokuj dla każdego elementu, a panel teraz przylega równo do krawędzi ekranu, z konfigurowalną pozycją paska narzędzi.
+
+### Panel edycji węzła
+Przeprojektowana karta podsumowania z większą ikoną, odznaką zaznaczenia, chipami strefy/połączenia/typu, trybem wyświetlania etykiety (Zawsze/Po najechaniu/Ukryta) oraz Podsumowaniem połączeń, które przenosi widok kanwy do połączonego węzła po kliknięciu.
+
+### Integracja narzędzi MCP
+Panel Ustawienia → MCP wyświetla teraz listę narzędzi (list/get/create/update/patch/delete diagram), które może wywołać podłączony agent AI.
+
+### Logo marek w pakietach ikon
+Pakiety ikon AWS, GCP, Azure i Kubernetes pokazują teraz w Ustawieniach prawdziwe logo marki zamiast ogólnej odznaki z inicjałem.
+
 ### Multipleksowanie łączników
 <img src="../demos/connectors.gif" alt="Multiplexed connectors demo" />
 

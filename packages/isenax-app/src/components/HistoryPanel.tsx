@@ -25,6 +25,32 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.7.0',
+    date: '2026-08-20',
+    items: [
+      ['레이어 패널', '에 검색창과 타입 필터 칩(전체/노드/연결/영역/텍스트)을 추가해 항목이 많아져도 빠르게 찾을 수 있음'],
+      ['레이어 패널', '이 영역(구역) 안에 속한 노드를 그 영역 아래에 중첩해서 보여주도록 그룹핑을 개선하고, 항목별 표시/잠금 토글과 목록 열고 닫힐 때의 슬라이드 애니메이션 추가'],
+      ['레이어 패널에서 항목을 잠그면', ' 캔버스에서 직접 클릭해도 선택되지 않도록 잠금이 실제로 적용됨 (기존에는 목록에서만 잠기고 캔버스 클릭 선택은 막지 못했음)'],
+      ['겹쳐 있는 커넥터', '를 클릭·드래그할 때 항상 맨 처음 것만 잡히던 문제, 드래그를 원래 자리로 되돌렸을 때 유령 웨이포인트가 남던 문제 수정'],
+      ['웨이포인트가 있는 커넥터 쌍', '의 그룹핑 기준을 앵커 개수 대신 시작·끝 앵커로 바꿔, 겹쳐 보이던 문제 수정'],
+      ['레이어 패널', '을 화면 가장자리에 완전히 붙여 도킹하고, 상단바 위치를 위/왼쪽 중에서 고를 수 있는 설정 추가'],
+      ['노드 편집 패널의 요약 카드', '를 리디자인 — 큰 아이콘, "● 선택됨" 배지, 구역/연결 수/타입 칩, "아이콘 변경" 버튼으로 구성. 라벨 표시 모드(항상/호버 시/숨김)와 연결 요약(입력/출력) 섹션 신규 추가'],
+      ['연결 요약의 입력/출력 목록', '에서 항목을 클릭하면 해당 연결 노드로 캔버스가 이동(센터링)하고 편집 패널도 그 노드로 바로 전환됨'],
+      ['라벨 표시 토글 버튼', '이 선택 상태에서도 잘 안 보이던 문제 수정 — 선택된 항목이 진한 배경의 필(pill) 모양으로 뚜렷하게 표시됨'],
+      ['레이어 패널의 검색/필터/구역 요약 관련 문구', '가 13개 언어 중 영어로만 표시되던 문제 수정 — 전체 언어 번역 완료'],
+      ['설정 화면', '을 검색 가능한(⌘K) 사이드바 방식의 2단 구성으로 개편 — 단축키/이동·확대, 화면 표시, 아이콘 팩, 확장 그룹으로 재편되며 기존 탭 방식을 대체. 취소 시 다이얼로그를 여는 동안 바꾼 내용이 원래대로 되돌아가고, 저장을 눌러야 실제로 반영되며, 각 섹션마다 "기본값으로 재설정" 버튼 추가'],
+      ['Skills 패널', ' 제거 — 자동 배치 기능과 그 토글이 설정 화면에서 사라짐'],
+      ['MCP 패널', '에 연결된 AI 에이전트가 호출할 수 있는 "사용 가능한 도구" 목록(다이어그램 조회/생성/수정/부분수정/삭제) 추가 — 켜기 토글 아래에 참고용으로 표시'],
+      ['커넥터 연결 방식 선택', ' — 클릭형/드래그형을 고르던 라디오 목록이 나란히 놓인 그림 카드 방식으로 바뀌고, 연결선 흐름 효과 미리보기 애니메이션 추가'],
+      ['상단바 위치 선택', '도 같은 그림 카드 방식으로 변경'],
+      ['확대/축소 설정 화면', ' — "커서 위치로 확대"와 "트랙패드 모드" 항목에 단순 스위치 대신 전/후 비교 그림과 제스처 그림 추가'],
+      ['이동(Pan) 설정 화면', ' — 클릭/길게 누르기/휠 클릭 등 이동 트리거 토글들을 촘촘한 격자 형태로 재배치하고, 키보드 이동 속도 슬라이더 양 끝에 "느림"/"빠름" 라벨 추가'],
+      ['아이콘 팩 목록', ' — AWS·GCP·Azure·Kubernetes 팩이 이니셜 배지 대신 실제 브랜드 로고로 표시되고, 기본 제공 Isoflow 팩도 고유 아이콘 배지 적용'],
+      ['노드 그림자·강조색 기능', ' 제거 — 지난 업데이트에서 노드 편집 패널에 추가됐던 그림자 토글과 강조색 선택기, 그리고 그로 인한 노드 외형 변화를 되돌림'],
+      ['툴바·단축키 목록 순서', ' — 이동(Pan) 도구가 선택 도구보다 앞에 오도록 순서 변경']
+    ]
+  },
+  {
     version: 'v1.6.1',
     date: '2026-08-14',
     items: [
@@ -152,6 +178,32 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.7.0',
+    date: '2026-08-20',
+    items: [
+      ['Layers panel search and type filter chips', ' added (All/Nodes/Connectors/Areas/Text) so items are easy to find as a diagram grows'],
+      ['Layers panel grouping', ' improved to nest nodes under the area (rectangle) they sit inside, plus per-item show/lock toggles and a slide animation when the list opens/closes'],
+      ['Locking an item in the Layers panel', ' now also blocks selecting it by clicking directly on the canvas — previously the lock only worked from the list'],
+      ['Overlapping connectors', ' fixed always grabbing the first one on click/drag, and a stray waypoint being left behind when a drag was returned to its starting point'],
+      ['Connector pairs with a waypoint', ' now group by their start/end anchors instead of anchor count, fixing overlap between grouped pairs'],
+      ['Layers panel', ' now docks flush to the screen edge, with a new setting to place the toolbar at the top or on the left'],
+      ['Node edit panel summary card', ' redesigned — larger icon, a "● Selected" badge, zone/connection-count/type chips, and an "Update icon" button; added a Label Display mode (Always/On Hover/Hidden) and a Connection Summary (Input/Output) section'],
+      ['Clicking an entry in the Connection Summary', ' now pans the canvas to that connected node and switches the edit panel to it'],
+      ['The Label Display toggle', "'s selected state was barely visible — now shown as a solid pill with strong contrast"],
+      ['Layers panel search/filter/zone-summary strings', ' were showing in English regardless of locale — now translated across all 13 supported languages'],
+      ['Settings redesigned', ' as a two-pane dialog — a searchable (⌘K) sidebar grouped into Shortcuts/Pan/Zoom, Display, Icon Packs, and Extensions replaces the old tab strip; Cancel now reverts anything changed while the dialog was open, Save commits it, and each section gets its own "Reset to defaults" button'],
+      ['Skills panel removed', ' — the auto-arrange layout tool and its toggle are gone from Settings'],
+      ['MCP panel', ' now lists the "Available Tools" a connected AI agent can call (list/get/create/update/patch/delete diagram), shown as a read-only reference under the enable toggle'],
+      ['Connector mode picker', ' — Click vs. Drag connection mode is now two illustrated side-by-side cards instead of a plain radio list, plus a small animated preview of the connector flow effect'],
+      ['Toolbar position picker', ' — same illustrated-card treatment for choosing where the toolbar docks'],
+      ['Zoom settings visuals', ' — Zoom to Cursor and Trackpad Mode now show small before/after and gesture illustrations instead of plain switches'],
+      ['Pan settings layout', ' — the pan-trigger toggles (click/hold/middle-click/etc.) are now arranged in a compact grid, and the keyboard pan-speed slider gets "Slow"/"Fast" end labels'],
+      ['Icon pack logos', ' — AWS, GCP, Azure, and Kubernetes packs now show their real brand logo in the pack list instead of a generic initial badge; the built-in Isoflow pack gets its own icon badge too'],
+      ['Node shadow and accent color removed', ' — the drop-shadow toggle and accent-color picker added to the node edit panel in the last update have been pulled back out, along with their effect on the node itself'],
+      ['Toolbar and hotkey list order', ' — the Pan tool now appears before Select in both the toolbar and the Settings hotkey list']
+    ]
+  },
   {
     version: 'v1.6.1',
     date: '2026-08-14',
