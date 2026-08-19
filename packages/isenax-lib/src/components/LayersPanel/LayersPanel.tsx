@@ -343,9 +343,15 @@ export const LayersPanel = () => {
   // no longer force-switches to the Edit tab -- the bottom summary bar shows
   // the selection inline, and the Edit tab is an explicit choice (the
   // Properties button below) rather than something clicking an item jumps to.
+  // ADD_ITEM is the exception: there's no canvas content to summarize yet,
+  // and the icon picker the user asked for by clicking "Add Item" only
+  // renders inside the Edit tab, so it must switch automatically.
   useEffect(() => {
     if (itemControls) {
       uiStateActions.setLayersPanelOpen(true);
+      if (itemControls.type === 'ADD_ITEM') {
+        setActiveTab('DETAIL');
+      }
     }
   }, [itemControls, uiStateActions]);
 
