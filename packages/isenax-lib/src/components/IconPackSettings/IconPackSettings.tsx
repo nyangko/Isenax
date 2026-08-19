@@ -10,9 +10,46 @@ import {
   Paper,
   CircularProgress,
   Alert,
-  Divider
+  Divider,
+  Avatar
 } from '@mui/material';
+import { IconStack2 } from '@tabler/icons-react';
 import { useTranslation } from 'src/stores/localeStore';
+import { ICON_PACK_BRAND_LOGOS } from 'src/config/iconPackBrandLogos';
+
+const PACK_BRAND_COLORS: Record<string, string> = {
+  aws: '#FF9900',
+  gcp: '#4285F4',
+  azure: '#0078D4',
+  kubernetes: '#326CE5'
+};
+
+// Each pack's own logo icon (extracted from its icons[0] entry, see
+// iconPackBrandLogos.ts) so the list is scannable by the real mark instead
+// of a generic placeholder. Falls back to an initial badge for any pack
+// name we don't have a logo for.
+const PackBadge = ({ name, displayName }: { name: string; displayName: string }) => {
+  const logo = ICON_PACK_BRAND_LOGOS[name];
+
+  return (
+    <Avatar
+      variant="rounded"
+      src={logo}
+      sx={{
+        width: 32,
+        height: 32,
+        fontSize: '0.8rem',
+        fontWeight: 700,
+        bgcolor: logo ? 'background.paper' : (PACK_BRAND_COLORS[name] ?? 'grey.500'),
+        border: logo ? 1 : 0,
+        borderColor: 'divider',
+        '& img': { objectFit: 'contain', p: 0.5 }
+      }}
+    >
+      {displayName.trim().charAt(0).toUpperCase() || '?'}
+    </Avatar>
+  );
+};
 
 export interface IconPackSettingsProps {
   lazyLoadingEnabled: boolean;
@@ -48,12 +85,8 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        {t('settings.iconPacks.title')}
-      </Typography>
-
       {/* Lazy Loading Toggle */}
-      <Paper variant="outlined" sx={{ p: 2, mt: 2 }}>
+      <Paper variant="outlined" sx={{ p: 2 }}>
         <FormControl component="fieldset" fullWidth>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box>
@@ -76,13 +109,18 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
       {/* Core Isoflow (Always Loaded) */}
       <Paper variant="outlined" sx={{ p: 2, mt: 2, bgcolor: 'action.hover' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box>
-            <Typography variant="body1" sx={{ fontWeight: 600 }}>
-              {t('settings.iconPacks.coreIsoflow')}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {t('settings.iconPacks.alwaysEnabled')}
-            </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Avatar variant="rounded" sx={{ width: 32, height: 32, bgcolor: 'grey.700' }}>
+              <IconStack2 size={18} />
+            </Avatar>
+            <Box>
+              <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                {t('settings.iconPacks.coreIsoflow')}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {t('settings.iconPacks.alwaysEnabled')}
+              </Typography>
+            </Box>
           </Box>
           <Checkbox checked disabled />
         </Box>
@@ -104,7 +142,9 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
           {packInfo.map((pack) => (
             <Paper key={pack.name} variant="outlined" sx={{ p: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box sx={{ flex: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
+                  <PackBadge name={pack.name} displayName={pack.displayName} />
+                  <Box>
                   <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {pack.displayName}
                   </Typography>
@@ -132,6 +172,7 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
                         {t('settings.iconPacks.notLoaded')}
                       </Typography>
                     )}
+                  </Box>
                   </Box>
                 </Box>
                 <Checkbox

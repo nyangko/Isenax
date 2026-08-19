@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "পেস্ট",
   },
   settings: {
+    shell: {
+      subtitle: "এডিটরের আচরণ ও প্রদর্শন কনফিগার করুন।",
+      searchPlaceholder: "সেটিংস খুঁজুন",
+      searchNoResults: "\"{query}\"-এর জন্য কোনো সেটিংস পাওয়া যায়নি।",
+      groupTasks: "কাজ",
+      groupDisplay: "প্রদর্শন",
+      groupResources: "রিসোর্স",
+      groupExtensions: "এক্সটেনশন",
+      save: "সংরক্ষণ করুন",
+      cancel: "বাতিল",
+      resetDefaults: "ডিফল্টে পুনরায় সেট করুন"
+    },
     zoom: {
       title: "জুম",
       description: "মাউস হুইল ব্যবহার করার সময় জুম আচরণ কনফিগার করুন।",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "সক্রিয় থাকলে, মাউস কার্সার অবস্থানে কেন্দ্রীভূত জুম ইন/আউট। নিষ্ক্রিয় থাকলে, জুম ক্যানভাসে কেন্দ্রীভূত।",
 
       trackpadMode: "ট্র্যাকপ্যাড মোড",
-      trackpadModeDesc: "সক্ষম থাকলে: দুই আঙুলের স্ক্রল ক্যানভাস প্যান করে, পিঞ্চ ব্রাউজারকে প্রভাবিত না করে জুম করে। নিষ্ক্রিয় থাকলে: স্ক্রল হুইল ক্যানভাস জুম করে (ডিফল্ট মাউস আচরণ)।"
+      trackpadModeDesc: "সক্ষম থাকলে: দুই আঙুলের স্ক্রল ক্যানভাস প্যান করে, পিঞ্চ ব্রাউজারকে প্রভাবিত না করে জুম করে। নিষ্ক্রিয় থাকলে: স্ক্রল হুইল ক্যানভাস জুম করে (ডিফল্ট মাউস আচরণ)।",
+      whenEnabled: "সক্ষম থাকলে",
+      scrollToPan: "স্ক্রল: প্যান",
+      gestureZoom: "আঙুলের অঙ্গভঙ্গি: জুম"
     },
     labels: {
       title: "লেবেল",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASD কী",
       ijklKeys: "IJKL কী",
       keyboardPanSpeed: "কীবোর্ড প্যান গতি",
+      speedSlow: "ধীর",
+      speedNormal: "স্বাভাবিক",
+      speedFast: "দ্রুত",
       note: "নোট: নিবেদিত প্যান টুলের পাশাপাশি প্যান বিকল্পগুলি কাজ করে"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} আইকন",
       lazyLoadingDisabledNote: "লেজি লোডিং নিষ্ক্রিয়। সমস্ত আইকন প্যাক স্টার্টআপে লোড করা হয়।",
       note: "আইকন প্যাকগুলি আপনার প্রয়োজন অনুসারে সক্রিয় বা নিষ্ক্রিয় করা যেতে পারে। নিষ্ক্রিয় প্যাকগুলি মেমরি ব্যবহার হ্রাস করবে এবং কর্মক্ষমতা উন্নত করবে।"
+    },
+    mcp: {
+      title: "MCP সার্ভার",
+      description: "একটি AI এজেন্ট (যেমন Claude) কে Model Context Protocol-এর মাধ্যমে আপনার ডায়াগ্রাম পড়তে ও সম্পাদনা করতে দিন।",
+      enable: "MCP সার্ভার সক্রিয় করুন",
+      available: "চলছে",
+      unavailable: "এই ডিপ্লয়মেন্টে MCP নিষ্ক্রিয় করা আছে।",
+      url: "URL",
+      token: "টোকেন",
+      clientConfig: "Claude Desktop / Claude Code কনফিগ — mcpServers-এ পেস্ট করুন",
+      copy: "কপি",
+      copied: "কপি হয়েছে",
+      availableTools: "উপলব্ধ টুল"
+    },
+    toolbar: {
+      title: "টুলবার",
+      description: "টুল মেনু (নির্বাচন, প্যান, নোড যোগ ইত্যাদি) কোথায় থাকবে তা বেছে নিন।",
+      position: "টুলবার অবস্থান",
+      positionTop: "উপরে",
+      positionLeft: "বামে"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "আইকন পরিবর্তন করুন",
       backToSettings: "সেটিংস",
       expandDescription: "বিবরণ দেখান",
-      collapseDescription: "বিবরণ লুকান"
+      collapseDescription: "বিবরণ লুকান",
+      untitled: "শিরোনামহীন",
+      selectedBadge: "নির্বাচিত",
+      connectionsChip: "সংযোগ",
+      typeNode: "নোড",
+      labelDisplayMode: "লেবেল প্রদর্শন",
+      labelDisplayAlways: "সর্বদা",
+      labelDisplayHover: "হোভারে",
+      labelDisplayHidden: "লুকানো",
+      connectionSummary: "সংযোগ সারাংশ",
+      connectionInput: "ইনপুট",
+      connectionOutput: "আউটপুট"
     },
     connector: {
       editTitle: "সংযোগকারী সম্পাদনা",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "লেয়ার",
+    tabLayers: "লেয়ার",
+    tabEdit: "সম্পাদনা",
+    emptyDetail: "ক্যানভাস বা তালিকা থেকে একটি আইটেম নির্বাচন করুন এখানে দেখতে বা সম্পাদনা করতে।",
+    emptyCanvas: "ক্যানভাসে এখনো কিছু নেই।",
+    groupNodes: "নোড",
+    groupConnectors: "সংযোগকারী",
+    groupRectangles: "এলাকা",
+    groupTextBoxes: "টেক্সট বক্স",
+    rectangleFallbackName: "এলাকা {number}",
+    searchPlaceholder: "খুঁজুন",
+    filterAll: "সব",
+    noSearchResults: "\"{query}\"-এর জন্য কোনো ফলাফল নেই।",
+    subTabStructure: "কাঠামো",
+    subTabConnections: "সংযোগ",
+    boundaryRowPrefix: "সীমানা",
+    labelRowPrefix: "লেবেল",
+    ungrouped: "অশ্রেণীবদ্ধ",
+    summaryConnectorCount: "সংযোগ",
+    summaryZone: "এলাকা",
+    summaryOpenProperties: "বৈশিষ্ট্য"
   }
 };
 

@@ -62,6 +62,19 @@ export const ToolMenu = () => {
       <Stack direction={toolbarPosition === 'LEFT' ? 'column' : 'row'} spacing={0.5} alignItems="center">
         {/* Main Tools */}
         <IconButton
+          name={`${t('settings.hotkeys.toolPan')}${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}
+          Icon={<PanToolIcon size={20} />}
+          onClick={() => {
+            uiStateStoreActions.setMode({
+              type: 'PAN',
+              showCursor: false
+            });
+
+            uiStateStoreActions.setItemControls(null);
+          }}
+          isActive={mode.type === 'PAN'}
+        />
+        <IconButton
           name={`${t('settings.hotkeys.toolSelect')}${hotkeys.select ? ` (${hotkeys.select.toUpperCase()})` : ''}`}
           Icon={<NearMeIcon size={20} />}
           onClick={() => {
@@ -99,19 +112,6 @@ export const ToolMenu = () => {
             });
           }}
           isActive={mode.type === 'FREEHAND_LASSO'}
-        />
-        <IconButton
-          name={`${t('settings.hotkeys.toolPan')}${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}
-          Icon={<PanToolIcon size={20} />}
-          onClick={() => {
-            uiStateStoreActions.setMode({
-              type: 'PAN',
-              showCursor: false
-            });
-
-            uiStateStoreActions.setItemControls(null);
-          }}
-          isActive={mode.type === 'PAN'}
         />
         <IconButton
           name={`${t('settings.hotkeys.toolAddItem')}${hotkeys.addItem ? ` (${hotkeys.addItem.toUpperCase()})` : ''}`}

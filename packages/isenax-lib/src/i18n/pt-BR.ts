@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Colar",
   },
   settings: {
+    shell: {
+      subtitle: "Configure o comportamento e a aparência do editor.",
+      searchPlaceholder: "Pesquisar configurações",
+      searchNoResults: "Nenhuma configuração encontrada para \"{query}\".",
+      groupTasks: "Ações",
+      groupDisplay: "Exibição",
+      groupResources: "Recursos",
+      groupExtensions: "Extensões",
+      save: "Salvar",
+      cancel: "Cancelar",
+      resetDefaults: "Restaurar padrões"
+    },
     zoom: {
       title: "Zoom",
       description: "Configurar o comportamento do zoom ao usar a roda do mouse.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "Quando habilitado, o zoom é centralizado na posição do cursor do mouse. Quando desabilitado, o zoom é centralizado na tela.",
 
       trackpadMode: "Modo Trackpad",
-      trackpadModeDesc: "Quando ativado: rolagem com dois dedos move a tela, pinça com zoom sem afetar o navegador. Quando desativado: a roda do mouse amplia a tela (comportamento padrão do mouse)."
+      trackpadModeDesc: "Quando ativado: rolagem com dois dedos move a tela, pinça com zoom sem afetar o navegador. Quando desativado: a roda do mouse amplia a tela (comportamento padrão do mouse).",
+      whenEnabled: "Quando ativado",
+      scrollToPan: "Rolagem: mover",
+      gestureZoom: "Gesto com os dedos: zoom"
     },
     labels: {
       title: "Rótulos",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "Teclas WASD",
       ijklKeys: "Teclas IJKL",
       keyboardPanSpeed: "Velocidade de movimentação com teclado",
+      speedSlow: "Lenta",
+      speedNormal: "Normal",
+      speedFast: "Rápida",
       note: "Nota: As opções de movimentação funcionam além da ferramenta de movimentação dedicada"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} ícones",
       lazyLoadingDisabledNote: "O carregamento sob demanda está desativado. Todos os pacotes de ícones são carregados na inicialização.",
       note: "Os pacotes de ícones podem ser ativados ou desativados conforme suas necessidades. Pacotes desativados reduzirão o uso de memória e melhorarão o desempenho."
+    },
+    mcp: {
+      title: "Servidor MCP",
+      description: "Permite que um agente de IA (ex.: Claude) leia e edite seus diagramas via Model Context Protocol.",
+      enable: "Ativar servidor MCP",
+      available: "Em execução",
+      unavailable: "O MCP está desativado nesta implantação.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Configuração do Claude Desktop / Claude Code — cole em mcpServers",
+      copy: "Copiar",
+      copied: "Copiado",
+      availableTools: "Ferramentas disponíveis"
+    },
+    toolbar: {
+      title: "Barra de ferramentas",
+      description: "Escolha onde o menu de ferramentas (seleção, pan, adicionar nó etc.) fica ancorado.",
+      position: "Posição da barra de ferramentas",
+      positionTop: "Topo",
+      positionLeft: "Esquerda"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Alterar ícone",
       backToSettings: "Configurações",
       expandDescription: "Mostrar descrição",
-      collapseDescription: "Ocultar descrição"
+      collapseDescription: "Ocultar descrição",
+      untitled: "Sem título",
+      selectedBadge: "Selecionado",
+      connectionsChip: "Conexões",
+      typeNode: "Nó",
+      labelDisplayMode: "Exibição do rótulo",
+      labelDisplayAlways: "Sempre",
+      labelDisplayHover: "Ao passar o mouse",
+      labelDisplayHidden: "Oculto",
+      connectionSummary: "Resumo de conexões",
+      connectionInput: "Entrada",
+      connectionOutput: "Saída"
     },
     connector: {
       editTitle: "Editar Conector",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Camadas",
+    tabLayers: "Camadas",
+    tabEdit: "Editar",
+    emptyDetail: "Selecione um item na tela ou na lista para visualizá-lo ou editá-lo aqui.",
+    emptyCanvas: "Ainda não há nada na tela.",
+    groupNodes: "Nós",
+    groupConnectors: "Conectores",
+    groupRectangles: "Áreas",
+    groupTextBoxes: "Caixas de texto",
+    rectangleFallbackName: "Área {number}",
+    searchPlaceholder: "Pesquisar",
+    filterAll: "Todos",
+    noSearchResults: "Nenhum resultado para \"{query}\".",
+    subTabStructure: "Estrutura",
+    subTabConnections: "Conexões",
+    boundaryRowPrefix: "Limite",
+    labelRowPrefix: "Rótulo",
+    ungrouped: "Sem grupo",
+    summaryConnectorCount: "Conexões",
+    summaryZone: "Área",
+    summaryOpenProperties: "Propriedades"
   }
 };
 

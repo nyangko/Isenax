@@ -1,15 +1,91 @@
 import React from 'react';
+import { Box, Typography, Paper, Radio, Stack } from '@mui/material';
 import {
-  Box,
-  Typography,
-  Paper,
-  RadioGroup,
-  FormControlLabel,
-  Radio
-} from '@mui/material';
+  IconPointer2,
+  IconHandGrab,
+  IconSquare,
+  IconTextSize,
+  IconPencil
+} from '@tabler/icons-react';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
 import { ToolbarPositionEnum } from 'src/types';
+
+const TOOL_ICONS = [IconPointer2, IconHandGrab, IconSquare, IconTextSize, IconPencil];
+
+const ToolChip = ({ Icon }: { Icon: React.ComponentType<{ size?: number }> }) => (
+  <Box
+    sx={{
+      width: 22,
+      height: 22,
+      borderRadius: 0.75,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      bgcolor: 'background.paper',
+      border: 1,
+      borderColor: 'divider'
+    }}
+  >
+    <Icon size={13} />
+  </Box>
+);
+
+const PositionCard = ({
+  selected,
+  onSelect,
+  label,
+  orientation
+}: {
+  selected: boolean;
+  onSelect: () => void;
+  label: string;
+  orientation: 'row' | 'column';
+}) => (
+  <Box
+    onClick={onSelect}
+    sx={{
+      flex: 1,
+      border: 1,
+      borderColor: selected ? 'primary.main' : 'divider',
+      borderRadius: 2,
+      p: 1.5,
+      cursor: 'pointer',
+      bgcolor: selected ? 'action.selected' : 'transparent'
+    }}
+  >
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
+      <Radio checked={selected} size="small" sx={{ p: 0 }} />
+      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+        {label}
+      </Typography>
+    </Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: orientation === 'row' ? 'column' : 'row',
+        gap: 0.75
+      }}
+    >
+      <Stack direction={orientation} spacing={0.5} sx={{ alignSelf: orientation === 'row' ? 'center' : 'stretch' }}>
+        {TOOL_ICONS.map((Icon, index) => (
+          <ToolChip key={index} Icon={Icon} />
+        ))}
+      </Stack>
+      <Box
+        sx={{
+          flex: 1,
+          minHeight: 60,
+          borderRadius: 1,
+          bgcolor: 'action.hover',
+          backgroundImage:
+            'linear-gradient(45deg, rgba(128,128,128,0.15) 25%, transparent 25%), linear-gradient(-45deg, rgba(128,128,128,0.15) 25%, transparent 25%)',
+          backgroundSize: '8px 8px'
+        }}
+      />
+    </Box>
+  </Box>
+);
 
 export const ToolbarSettings = () => {
   const toolbarPosition = useUiStateStore((state) => state.toolbarPosition);
@@ -17,36 +93,26 @@ export const ToolbarSettings = () => {
   const { t } = useTranslation();
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {t('settings.toolbar.title')}
-      </Typography>
-
+    <Box>
       <Paper sx={{ p: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
           {t('settings.toolbar.position')}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          {t('settings.toolbar.description')}
-        </Typography>
 
-        <RadioGroup
-          value={toolbarPosition}
-          onChange={(e) => {
-            setToolbarPosition(e.target.value as keyof typeof ToolbarPositionEnum);
-          }}
-        >
-          <FormControlLabel
-            value={ToolbarPositionEnum.TOP}
-            control={<Radio />}
+        <Stack direction="row" spacing={1.5} sx={{ mt: 1.5 }}>
+          <PositionCard
+            selected={toolbarPosition === ToolbarPositionEnum.TOP}
+            onSelect={() => setToolbarPosition(ToolbarPositionEnum.TOP)}
             label={t('settings.toolbar.positionTop')}
+            orientation="row"
           />
-          <FormControlLabel
-            value={ToolbarPositionEnum.LEFT}
-            control={<Radio />}
+          <PositionCard
+            selected={toolbarPosition === ToolbarPositionEnum.LEFT}
+            onSelect={() => setToolbarPosition(ToolbarPositionEnum.LEFT)}
             label={t('settings.toolbar.positionLeft')}
+            orientation="column"
           />
-        </RadioGroup>
+        </Stack>
       </Paper>
     </Box>
   );

@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Yapıştır",
   },
   settings: {
+    shell: {
+      subtitle: "Editörün davranışını ve görünümünü yapılandırın.",
+      searchPlaceholder: "Ayarlarda ara",
+      searchNoResults: "\"{query}\" için ayar bulunamadı.",
+      groupTasks: "İşlemler",
+      groupDisplay: "Görünüm",
+      groupResources: "Kaynaklar",
+      groupExtensions: "Uzantılar",
+      save: "Kaydet",
+      cancel: "İptal",
+      resetDefaults: "Varsayılanlara sıfırla"
+    },
     zoom: {
       title: "Yakınlaştırma",
       description: "Fare tekerleği kullanılırken yakınlaştırma davranışını yapılandırın.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "Etkinleştirildiğinde, fare imleci konumunda merkezlenmiş olarak yakınlaştırır/uzaklaştırır. Devre dışı bırakıldığında, yakınlaştırma tuvalde merkezlenir.",
 
       trackpadMode: "Trackpad Modu",
-      trackpadModeDesc: "Etkinleştirildiğinde: iki parmakla kaydırma tuvali hareket ettirir, kıstırma tarayıcıyı etkilemeden yakınlaştırır. Devre dışı bırakıldığında: fare tekerleği tuvali yakınlaştırır (varsayılan fare davranışı)."
+      trackpadModeDesc: "Etkinleştirildiğinde: iki parmakla kaydırma tuvali hareket ettirir, kıstırma tarayıcıyı etkilemeden yakınlaştırır. Devre dışı bırakıldığında: fare tekerleği tuvali yakınlaştırır (varsayılan fare davranışı).",
+      whenEnabled: "Etkinleştirildiğinde",
+      scrollToPan: "Kaydırma: taşıma",
+      gestureZoom: "Parmak hareketi: yakınlaştırma"
     },
     labels: {
       title: "Etiketler",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASD tuşları",
       ijklKeys: "IJKL tuşları",
       keyboardPanSpeed: "Klavye Kaydırma Hızı",
+      speedSlow: "Yavaş",
+      speedNormal: "Normal",
+      speedFast: "Hızlı",
       note: "Not: Kaydırma seçenekleri özel Kaydırma aracına ek olarak çalışır"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} simge",
       lazyLoadingDisabledNote: "Tembel yükleme devre dışı. Tüm simge paketleri başlangıçta yüklenir.",
       note: "Simge paketleri ihtiyaçlarınıza göre etkinleştirilebilir veya devre dışı bırakılabilir. Devre dışı bırakılan paketler bellek kullanımını azaltır ve performansı artırır."
+    },
+    mcp: {
+      title: "MCP Sunucusu",
+      description: "Bir AI aracısının (ör. Claude) Model Context Protocol üzerinden diyagramlarınızı okumasına ve düzenlemesine izin verin.",
+      enable: "MCP sunucusunu etkinleştir",
+      available: "Çalışıyor",
+      unavailable: "Bu dağıtımda MCP devre dışı.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Claude Desktop / Claude Code yapılandırması — mcpServers içine yapıştırın",
+      copy: "Kopyala",
+      copied: "Kopyalandı",
+      availableTools: "Kullanılabilir Araçlar"
+    },
+    toolbar: {
+      title: "Araç Çubuğu",
+      description: "Araç menüsünün (seçim, kaydırma, düğüm ekleme vb.) nerede duracağını seçin.",
+      position: "Araç Çubuğu Konumu",
+      positionTop: "Üst",
+      positionLeft: "Sol"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Simgeyi değiştir",
       backToSettings: "Ayarlar",
       expandDescription: "Açıklamayı göster",
-      collapseDescription: "Açıklamayı gizle"
+      collapseDescription: "Açıklamayı gizle",
+      untitled: "Başlıksız",
+      selectedBadge: "Seçili",
+      connectionsChip: "Bağlantılar",
+      typeNode: "Düğüm",
+      labelDisplayMode: "Etiket Görünümü",
+      labelDisplayAlways: "Her Zaman",
+      labelDisplayHover: "Üzerine Gelince",
+      labelDisplayHidden: "Gizli",
+      connectionSummary: "Bağlantı Özeti",
+      connectionInput: "Giriş",
+      connectionOutput: "Çıkış"
     },
     connector: {
       editTitle: "Bağlayıcıyı Düzenle",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Katmanlar",
+    tabLayers: "Katmanlar",
+    tabEdit: "Düzenle",
+    emptyDetail: "Burada görüntülemek veya düzenlemek için tuvalden ya da listeden bir öğe seçin.",
+    emptyCanvas: "Tuvalde henüz hiçbir şey yok.",
+    groupNodes: "Düğümler",
+    groupConnectors: "Bağlayıcılar",
+    groupRectangles: "Alanlar",
+    groupTextBoxes: "Metin Kutuları",
+    rectangleFallbackName: "Alan {number}",
+    searchPlaceholder: "Ara",
+    filterAll: "Tümü",
+    noSearchResults: "\"{query}\" için sonuç bulunamadı.",
+    subTabStructure: "Yapı",
+    subTabConnections: "Bağlantılar",
+    boundaryRowPrefix: "Sınır",
+    labelRowPrefix: "Etiket",
+    ungrouped: "Gruplanmamış",
+    summaryConnectorCount: "Bağlantılar",
+    summaryZone: "Alan",
+    summaryOpenProperties: "Özellikler"
   }
 };
 

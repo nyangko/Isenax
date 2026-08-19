@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "粘贴",
   },
   settings: {
+    shell: {
+      subtitle: "配置编辑器的行为和外观。",
+      searchPlaceholder: "搜索设置",
+      searchNoResults: "未找到与「{query}」匹配的设置。",
+      groupTasks: "操作",
+      groupDisplay: "显示",
+      groupResources: "资源",
+      groupExtensions: "扩展",
+      save: "保存",
+      cancel: "取消",
+      resetDefaults: "恢复默认值"
+    },
     zoom: {
       title: "缩放",
       description: "配置使用鼠标滚轮时的缩放行为。",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "启用时，以鼠标光标位置为中心进行缩放。禁用时，以画布中心进行缩放。",
 
       trackpadMode: "触控板模式",
-      trackpadModeDesc: "启用时：双指滚动可平移画布，双指捏合可缩放且不影响浏览器。禁用时：鼠标滚轮缩放画布（默认鼠标行为）。"
+      trackpadModeDesc: "启用时：双指滚动可平移画布，双指捏合可缩放且不影响浏览器。禁用时：鼠标滚轮缩放画布（默认鼠标行为）。",
+      whenEnabled: "启用时",
+      scrollToPan: "滚动：平移",
+      gestureZoom: "手指手势：缩放"
     },
     labels: {
       title: "标签",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASD 键",
       ijklKeys: "IJKL 键",
       keyboardPanSpeed: "键盘平移速度",
+      speedSlow: "慢",
+      speedNormal: "正常",
+      speedFast: "快",
       note: "注意：平移选项可与专用的平移工具一起使用"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} 个图标",
       lazyLoadingDisabledNote: "延迟加载已禁用。所有图标包将在启动时加载。",
       note: "可以根据需要启用或禁用图标包。禁用的图标包将减少内存使用并提高性能。"
+    },
+    mcp: {
+      title: "MCP 服务器",
+      description: "允许 AI 代理（如 Claude）通过 Model Context Protocol 读取和编辑你的图表。",
+      enable: "启用 MCP 服务器",
+      available: "运行中",
+      unavailable: "此部署中 MCP 已禁用。",
+      url: "URL",
+      token: "令牌",
+      clientConfig: "Claude Desktop / Claude Code 配置 — 粘贴到 mcpServers 中",
+      copy: "复制",
+      copied: "已复制",
+      availableTools: "可用工具"
+    },
+    toolbar: {
+      title: "工具栏",
+      description: "选择工具菜单（选择、平移、添加节点等）的停靠位置。",
+      position: "工具栏位置",
+      positionTop: "顶部",
+      positionLeft: "左侧"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "更改图标",
       backToSettings: "设置",
       expandDescription: "显示描述",
-      collapseDescription: "隐藏描述"
+      collapseDescription: "隐藏描述",
+      untitled: "无标题",
+      selectedBadge: "已选中",
+      connectionsChip: "连接",
+      typeNode: "节点",
+      labelDisplayMode: "标签显示",
+      labelDisplayAlways: "始终",
+      labelDisplayHover: "悬停时",
+      labelDisplayHidden: "隐藏",
+      connectionSummary: "连接摘要",
+      connectionInput: "输入",
+      connectionOutput: "输出"
     },
     connector: {
       editTitle: "编辑连接线",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "图层",
+    tabLayers: "图层",
+    tabEdit: "编辑",
+    emptyDetail: "从画布或列表中选择一个项目，即可在此处查看或编辑。",
+    emptyCanvas: "画布上还没有任何内容。",
+    groupNodes: "节点",
+    groupConnectors: "连接线",
+    groupRectangles: "区域",
+    groupTextBoxes: "文本框",
+    rectangleFallbackName: "区域 {number}",
+    searchPlaceholder: "搜索",
+    filterAll: "全部",
+    noSearchResults: "未找到与「{query}」匹配的结果。",
+    subTabStructure: "结构",
+    subTabConnections: "连接",
+    boundaryRowPrefix: "边界",
+    labelRowPrefix: "标签",
+    ungrouped: "未分组",
+    summaryConnectorCount: "连接数",
+    summaryZone: "区域",
+    summaryOpenProperties: "属性"
   }
 };
 

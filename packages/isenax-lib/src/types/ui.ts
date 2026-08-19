@@ -202,8 +202,6 @@ export interface UiState {
   toolbarPosition: keyof typeof ToolbarPositionEnum;
   iconPackManager: IconPackManagerProps | null;
   mcpManager: MCPManagerProps | null;
-  /** Skill ids the user has enabled in Settings; gates whether their action is offered. */
-  enabledSkills: string[];
   isAnythingCopied: boolean;
   mainMenuPortalTarget: HTMLElement | null;
   historyControlsPortalTarget: HTMLElement | null;
@@ -262,7 +260,6 @@ export interface UiStateActions {
   setToolbarPosition: (position: keyof typeof ToolbarPositionEnum) => void;
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
   setMcpManager: (mcpManager: MCPManagerProps | null) => void;
-  setEnabledSkills: (enabledSkills: string[]) => void;
   setIsAnythingCopied: (isAnythingCopied: boolean) => void;
   toggleLayerHidden: (id: string) => void;
   toggleLayerLocked: (id: string) => void;

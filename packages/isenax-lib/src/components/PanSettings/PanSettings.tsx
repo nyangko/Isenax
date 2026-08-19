@@ -11,6 +11,26 @@ import {
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
 
+const ToggleRow = ({
+  checked,
+  onChange,
+  label
+}: {
+  checked: boolean;
+  onChange: () => void;
+  label: string;
+}) => (
+  <FormControlLabel
+    sx={{ alignItems: 'flex-start', m: 0 }}
+    control={<Switch checked={checked} onChange={onChange} sx={{ mt: -0.5 }} />}
+    label={
+      <Typography variant="body2" sx={{ ml: 0.5 }}>
+        {label}
+      </Typography>
+    }
+  />
+);
+
 export const PanSettings = () => {
   const panSettings = useUiStateStore((state) => state.panSettings);
   const setPanSettings = useUiStateStore((state) => state.actions.setPanSettings);
@@ -33,75 +53,52 @@ export const PanSettings = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {t('settings.pan.title')}
-      </Typography>
-
+    <Box>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
           {t('settings.pan.mousePanOptions')}
         </Typography>
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.emptyAreaClickPan}
-              onChange={() => handleToggle('emptyAreaClickPan')}
-            />
-          }
-          label={t('settings.pan.emptyAreaClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.holdToPan}
-              onChange={() => handleToggle('holdToPan')}
-            />
-          }
-          label={t('settings.pan.holdToPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.middleClickPan}
-              onChange={() => handleToggle('middleClickPan')}
-            />
-          }
-          label={t('settings.pan.middleClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.rightClickPan}
-              onChange={() => handleToggle('rightClickPan')}
-            />
-          }
-          label={t('settings.pan.rightClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.ctrlClickPan}
-              onChange={() => handleToggle('ctrlClickPan')}
-            />
-          }
-          label={t('settings.pan.ctrlClickPan')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.altClickPan}
-              onChange={() => handleToggle('altClickPan')}
-            />
-          }
-          label={t('settings.pan.altClickPan')}
-        />
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+            columnGap: 3,
+            rowGap: 1.5,
+            mt: 1
+          }}
+        >
+          <ToggleRow
+            checked={panSettings.emptyAreaClickPan}
+            onChange={() => handleToggle('emptyAreaClickPan')}
+            label={t('settings.pan.emptyAreaClickPan')}
+          />
+          <ToggleRow
+            checked={panSettings.holdToPan}
+            onChange={() => handleToggle('holdToPan')}
+            label={t('settings.pan.holdToPan')}
+          />
+          <ToggleRow
+            checked={panSettings.middleClickPan}
+            onChange={() => handleToggle('middleClickPan')}
+            label={t('settings.pan.middleClickPan')}
+          />
+          <ToggleRow
+            checked={panSettings.rightClickPan}
+            onChange={() => handleToggle('rightClickPan')}
+            label={t('settings.pan.rightClickPan')}
+          />
+          <ToggleRow
+            checked={panSettings.ctrlClickPan}
+            onChange={() => handleToggle('ctrlClickPan')}
+            label={t('settings.pan.ctrlClickPan')}
+          />
+          <ToggleRow
+            checked={panSettings.altClickPan}
+            onChange={() => handleToggle('altClickPan')}
+            label={t('settings.pan.altClickPan')}
+          />
+        </Box>
       </Paper>
 
       <Paper sx={{ p: 2 }}>
@@ -109,35 +106,31 @@ export const PanSettings = () => {
           {t('settings.pan.keyboardPanOptions')}
         </Typography>
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.arrowKeysPan}
-              onChange={() => handleToggle('arrowKeysPan')}
-            />
-          }
-          label={t('settings.pan.arrowKeys')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.wasdPan}
-              onChange={() => handleToggle('wasdPan')}
-            />
-          }
-          label={t('settings.pan.wasdKeys')}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={panSettings.ijklPan}
-              onChange={() => handleToggle('ijklPan')}
-            />
-          }
-          label={t('settings.pan.ijklKeys')}
-        />
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr 1fr' },
+            columnGap: 3,
+            rowGap: 1.5,
+            mt: 1
+          }}
+        >
+          <ToggleRow
+            checked={panSettings.arrowKeysPan}
+            onChange={() => handleToggle('arrowKeysPan')}
+            label={t('settings.pan.arrowKeys')}
+          />
+          <ToggleRow
+            checked={panSettings.wasdPan}
+            onChange={() => handleToggle('wasdPan')}
+            label={t('settings.pan.wasdKeys')}
+          />
+          <ToggleRow
+            checked={panSettings.ijklPan}
+            onChange={() => handleToggle('ijklPan')}
+            label={t('settings.pan.ijklKeys')}
+          />
+        </Box>
 
         <Divider sx={{ my: 2 }} />
 
@@ -145,16 +138,23 @@ export const PanSettings = () => {
           {t('settings.pan.keyboardPanSpeed')}
         </Typography>
 
-        <Box sx={{ px: 2 }}>
+        <Box sx={{ px: 0.5 }}>
           <Slider
             value={panSettings.keyboardPanSpeed}
             onChange={(_, value) => handleSpeedChange(value as number)}
             min={5}
             max={50}
             step={5}
-            marks
             valueLabelDisplay="auto"
           />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: -1 }}>
+            <Typography variant="caption" color="text.secondary">
+              {t('settings.pan.speedSlow')}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {t('settings.pan.speedFast')}
+            </Typography>
+          </Box>
         </Box>
       </Paper>
 

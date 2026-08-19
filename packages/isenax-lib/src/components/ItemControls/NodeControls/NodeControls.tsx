@@ -16,7 +16,7 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { useTranslation } from 'src/stores/localeStore';
-import { getItemById, isWithinBounds } from 'src/utils';
+import { getItemById, isWithinBounds, getTilePosition, CoordsUtils } from 'src/utils';
 import { zoneBounds, zoneBoundsForLabels } from 'src/components/LayersPanel/LayersPanel';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { DeleteButton } from '../components/DeleteButton';
@@ -45,6 +45,8 @@ export const NodeControls = ({ id, embedded }: Props) => {
     return state.actions;
   });
   const isReadOnly = useUiStateStore((state) => state.editorMode !== 'EDITABLE');
+  const isFlat = useUiStateStore((state) => state.projectionMode === 'FLAT');
+  const zoom = useUiStateStore((state) => state.zoom);
   const viewItem = useViewItem(id);
   const modelItem = useModelItem(id);
   const { iconCategories } = useIconCategories();
@@ -80,8 +82,8 @@ export const NodeControls = ({ id, embedded }: Props) => {
   // last anchor the target (this node's input) -- same start->end convention
   // the arrowhead direction already follows (getConnectorDirectionIcon).
   const connections = useMemo(() => {
-    const inputs: string[] = [];
-    const outputs: string[] = [];
+    const inputs: { id: string; name: string }[] = [];
+    const outputs: { id: string; name: string }[] = [];
 
     scene.connectors.forEach((connector) => {
       if (connector.anchors.length < 2) return;
@@ -90,16 +92,33 @@ export const NodeControls = ({ id, embedded }: Props) => {
 
       if (first.ref?.item === id && last.ref?.item) {
         const name = getItemById(modelItems, last.ref.item)?.value.name;
-        if (name) outputs.push(name);
+        if (name) outputs.push({ id: last.ref.item, name });
       }
       if (last.ref?.item === id && first.ref?.item) {
         const name = getItemById(modelItems, first.ref.item)?.value.name;
-        if (name) inputs.push(name);
+        if (name) inputs.push({ id: first.ref.item, name });
       }
     });
 
     return { inputs, outputs };
   }, [scene.connectors, modelItems, id]);
+
+  const goToConnectedNode = useCallback((targetId: string) => {
+    const targetItem = getItemById(scene.items, targetId)?.value;
+    if (!targetItem) return;
+
+    const position = getTilePosition({
+      tile: targetItem.tile,
+      origin: 'CENTER',
+      flat: isFlat
+    });
+
+    uiStateActions.setScroll({
+      position: { x: -position.x * zoom, y: -position.y * zoom },
+      offset: CoordsUtils.zero()
+    });
+    uiStateActions.setItemControls({ type: 'ITEM', id: targetId });
+  }, [scene.items, isFlat, zoom, uiStateActions]);
 
   const onSwitchMode = useCallback((newMode: Mode) => {
     setMode(newMode);
@@ -285,9 +304,17 @@ export const NodeControls = ({ id, embedded }: Props) => {
                   </Typography>
                 </Stack>
                 <Stack spacing={0.5}>
-                  {connections.inputs.map((name, index) => (
-                    <Typography key={`${name}-${index}`} variant="body2" noWrap>
-                      {name}
+                  {connections.inputs.map((input) => (
+                    <Typography
+                      key={input.id}
+                      variant="body2"
+                      noWrap
+                      onClick={() => {
+                        goToConnectedNode(input.id);
+                      }}
+                      sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      {input.name}
                     </Typography>
                   ))}
                 </Stack>
@@ -309,9 +336,17 @@ export const NodeControls = ({ id, embedded }: Props) => {
                   </Typography>
                 </Stack>
                 <Stack spacing={0.5}>
-                  {connections.outputs.map((name, index) => (
-                    <Typography key={`${name}-${index}`} variant="body2" noWrap>
-                      {name}
+                  {connections.outputs.map((output) => (
+                    <Typography
+                      key={output.id}
+                      variant="body2"
+                      noWrap
+                      onClick={() => {
+                        goToConnectedNode(output.id);
+                      }}
+                      sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      {output.name}
                     </Typography>
                   ))}
                 </Stack>

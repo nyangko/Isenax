@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Wklej",
   },
   settings: {
+    shell: {
+      subtitle: "Skonfiguruj zachowanie i wygląd edytora.",
+      searchPlaceholder: "Szukaj ustawień",
+      searchNoResults: "Nie znaleziono ustawień dla \"{query}\".",
+      groupTasks: "Czynności",
+      groupDisplay: "Wyświetlanie",
+      groupResources: "Zasoby",
+      groupExtensions: "Rozszerzenia",
+      save: "Zapisz",
+      cancel: "Anuluj",
+      resetDefaults: "Przywróć domyślne"
+    },
     zoom: {
       title: "Powiększenie",
       description: "Skonfiguruj zachowanie powiększania podczas korzystania z kółka myszy.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "Po włączeniu funkcji powiększanie/pomniejszanie odbywa się w oparciu o położenie kursora myszy. Po wyłączeniu funkcji <strong>Powiększ do kursora</strong> odbywa się w oparciu o położenie obszaru roboczego.",
 
       trackpadMode: "Tryb Trackpada",
-      trackpadModeDesc: "Po włączeniu: przewijanie dwoma palcami przesuwa płótno, uszczypnięcie powiększa bez wpływu na przeglądarkę. Po wyłączeniu: kółko myszy powiększa płótno (domyślne zachowanie myszy)."
+      trackpadModeDesc: "Po włączeniu: przewijanie dwoma palcami przesuwa płótno, uszczypnięcie powiększa bez wpływu na przeglądarkę. Po wyłączeniu: kółko myszy powiększa płótno (domyślne zachowanie myszy).",
+      whenEnabled: "Po włączeniu",
+      scrollToPan: "Przewijanie: przesuwanie",
+      gestureZoom: "Gest palcami: powiększanie"
     },
     labels: {
       title: "Etykiety",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "Klawisze WASD",
       ijklKeys: "Klawisze IJKL",
       keyboardPanSpeed: "Szybkość przesuwu klawiatury",
+      speedSlow: "Wolno",
+      speedNormal: "Normalnie",
+      speedFast: "Szybko",
       note: "Uwaga: Opcje przesuwania działają dodatkowo w stosunku do dedykowanego narzędzia przesuwania."
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} icon",
       lazyLoadingDisabledNote: "Opóźnione ładowanie jest wyłączone. Wszystkie pakiety ikon są ładowane podczas uruchamiania.",
       note: "Pakiety ikon można włączać lub wyłączać w zależności od potrzeb. Wyłączone pakiety zmniejszają zużycie pamięci i poprawiają wydajność."
+    },
+    mcp: {
+      title: "Serwer MCP",
+      description: "Pozwól agentowi AI (np. Claude) odczytywać i edytować diagramy za pomocą Model Context Protocol.",
+      enable: "Włącz serwer MCP",
+      available: "Działa",
+      unavailable: "MCP jest wyłączone dla tego wdrożenia.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Konfiguracja Claude Desktop / Claude Code — wklej do mcpServers",
+      copy: "Kopiuj",
+      copied: "Skopiowano",
+      availableTools: "Dostępne narzędzia"
+    },
+    toolbar: {
+      title: "Pasek narzędzi",
+      description: "Wybierz, gdzie ma być zadokowane menu narzędzi (zaznaczanie, przesuwanie, dodawanie węzła itd.).",
+      position: "Pozycja paska narzędzi",
+      positionTop: "Góra",
+      positionLeft: "Lewo"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Zmień ikonę",
       backToSettings: "Ustawienia",
       expandDescription: "Pokaż opis",
-      collapseDescription: "Ukryj opis"
+      collapseDescription: "Ukryj opis",
+      untitled: "Bez nazwy",
+      selectedBadge: "Wybrano",
+      connectionsChip: "Połączenia",
+      typeNode: "Węzeł",
+      labelDisplayMode: "Wyświetlanie etykiety",
+      labelDisplayAlways: "Zawsze",
+      labelDisplayHover: "Po najechaniu",
+      labelDisplayHidden: "Ukryta",
+      connectionSummary: "Podsumowanie połączeń",
+      connectionInput: "Wejście",
+      connectionOutput: "Wyjście"
     },
     connector: {
       editTitle: "Edytuj łącznik",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Warstwy",
+    tabLayers: "Warstwy",
+    tabEdit: "Edytuj",
+    emptyDetail: "Wybierz element z płótna lub listy, aby go tutaj wyświetlić lub edytować.",
+    emptyCanvas: "Na płótnie nie ma jeszcze niczego.",
+    groupNodes: "Węzły",
+    groupConnectors: "Łączniki",
+    groupRectangles: "Obszary",
+    groupTextBoxes: "Pola tekstowe",
+    rectangleFallbackName: "Obszar {number}",
+    searchPlaceholder: "Szukaj",
+    filterAll: "Wszystko",
+    noSearchResults: "Brak wyników dla \"{query}\".",
+    subTabStructure: "Struktura",
+    subTabConnections: "Połączenia",
+    boundaryRowPrefix: "Granica",
+    labelRowPrefix: "Etykieta",
+    ungrouped: "Bez grupy",
+    summaryConnectorCount: "Połączenia",
+    summaryZone: "Obszar",
+    summaryOpenProperties: "Właściwości"
   }
 };
 

@@ -158,13 +158,28 @@ const locale: LocaleProps = {
     paste: "붙여넣기",
   },
   settings: {
+    shell: {
+      subtitle: "에디터 동작과 표시 방식을 설정합니다.",
+      searchPlaceholder: "설정 검색",
+      searchNoResults: "\"{query}\"에 대한 설정을 찾을 수 없습니다.",
+      groupTasks: "작업",
+      groupDisplay: "표시",
+      groupResources: "리소스",
+      groupExtensions: "확장",
+      save: "저장",
+      cancel: "취소",
+      resetDefaults: "기본값 복원"
+    },
     zoom: {
       title: "확대/축소",
       description: "마우스 휠을 사용할 때의 확대/축소 동작을 설정합니다.",
       zoomToCursor: "커서 기준 확대/축소",
       zoomToCursorDesc: "활성화하면 마우스 커서 위치를 중심으로 확대/축소됩니다. 비활성화하면 캔버스 중앙을 기준으로 확대/축소됩니다.",
       trackpadMode: "트랙패드 모드",
-      trackpadModeDesc: "활성화 시: 스크롤로 캔버스를 이동하고, 손가락으로 확대/축소 제스처를 사용합니다. 비활성화 시: 스크롤로 캔버스가 확대/축소됩니다(기본값). 트랙패드 사용에 적합합니다."
+      trackpadModeDesc: "활성화 시: 스크롤로 캔버스를 이동하고, 손가락으로 확대/축소 제스처를 사용합니다. 비활성화 시: 스크롤로 캔버스가 확대/축소됩니다(기본값). 트랙패드 사용에 적합합니다.",
+      whenEnabled: "활성화 시",
+      scrollToPan: "스크롤: 이동",
+      gestureZoom: "손가락 제스처: 확대/축소"
     },
     labels: {
       title: "라벨",
@@ -206,6 +221,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASD 키",
       ijklKeys: "IJKL 키",
       keyboardPanSpeed: "키보드 이동 속도",
+      speedSlow: "느림",
+      speedNormal: "보통",
+      speedFast: "빠름",
       note: "참고: 이동 옵션은 전용 이동 도구와 함께 작동합니다"
     },
     connector: {
@@ -248,15 +266,8 @@ const locale: LocaleProps = {
       token: "토큰",
       clientConfig: "Claude Desktop / Claude Code 설정 — mcpServers에 붙여넣으세요",
       copy: "복사",
-      copied: "복사됨"
-    },
-    skills: {
-      title: "스킬",
-      description: "현재 다이어그램에 실행할 수 있는 자동화 기능입니다.",
-      autoArrangeName: "자동 정렬",
-      autoArrangeDescription: "현재 뷰의 노드를 겹치지 않는 격자 형태로 재배치합니다.",
-      run: "실행",
-      noView: "먼저 뷰를 여세요."
+      copied: "복사됨",
+      availableTools: "사용 가능한 도구"
     },
     toolbar: {
       title: "툴바",
@@ -343,8 +354,6 @@ const locale: LocaleProps = {
       labelDisplayAlways: "항상",
       labelDisplayHover: "호버 시",
       labelDisplayHidden: "숨김",
-      shadow: "그림자",
-      accentColor: "강조 색상",
       connectionSummary: "연결 요약",
       connectionInput: "입력",
       connectionOutput: "출력"

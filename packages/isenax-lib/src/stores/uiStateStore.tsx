@@ -50,7 +50,6 @@ const initialState = () => {
           toolbarPosition: 'TOP', // Default to the horizontal top-right tool menu
           iconPackManager: null, // Will be set by Isoflow if provided
           mcpManager: null, // Will be set by Isoflow if provided
-          enabledSkills: [],
           isAnythingCopied: false,
           mainMenuPortalTarget: null,
           historyControlsPortalTarget: null,
@@ -202,9 +201,6 @@ const initialState = () => {
             setMcpManager: (mcpManager) => {
               set({ mcpManager });
             },
-            setEnabledSkills: (enabledSkills) => {
-              set({ enabledSkills });
-            },
             setIsAnythingCopied: (isAnythingCopied) => {
               set({ isAnythingCopied });
             },
@@ -243,8 +239,7 @@ const initialState = () => {
             connectorAnimationSpeed: state.connectorAnimationSpeed,
             expandLabels: state.expandLabels,
             projectionMode: state.projectionMode,
-            toolbarPosition: state.toolbarPosition,
-            enabledSkills: state.enabledSkills
+            toolbarPosition: state.toolbarPosition
           };
         }
       }

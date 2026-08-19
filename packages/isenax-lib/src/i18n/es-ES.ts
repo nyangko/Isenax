@@ -158,13 +158,28 @@ const locale: LocaleProps = {
     paste: "Pegar",
   },
   settings: {
+    shell: {
+      subtitle: "Configura el comportamiento y la apariencia del editor.",
+      searchPlaceholder: "Buscar ajustes",
+      searchNoResults: "No se encontraron ajustes para \"{query}\".",
+      groupTasks: "Acciones",
+      groupDisplay: "Visualización",
+      groupResources: "Recursos",
+      groupExtensions: "Extensiones",
+      save: "Guardar",
+      cancel: "Cancelar",
+      resetDefaults: "Restaurar valores predeterminados"
+    },
     zoom: {
       title: "Zoom",
       description: "Configura el comportamiento del zoom al usar la rueda del ratón.",
       zoomToCursor: "Zoom al cursor",
       zoomToCursorDesc: "Cuando está habilitado, el zoom se centra en la posición del cursor del ratón. Cuando está deshabilitado, el zoom se centra en el lienzo.",
       trackpadMode: "Modo Trackpad",
-      trackpadModeDesc: "Cuando está activado: desplazamiento con dos dedos mueve el lienzo, pellizcar hace zoom sin afectar el navegador. Cuando está desactivado: la rueda hace zoom en el lienzo (comportamiento predeterminado del ratón)."
+      trackpadModeDesc: "Cuando está activado: desplazamiento con dos dedos mueve el lienzo, pellizcar hace zoom sin afectar el navegador. Cuando está desactivado: la rueda hace zoom en el lienzo (comportamiento predeterminado del ratón).",
+      whenEnabled: "Cuando está activado",
+      scrollToPan: "Desplazar: mover",
+      gestureZoom: "Gesto con los dedos: zoom"
     },
     labels: {
       title: "Etiquetas",
@@ -206,6 +221,9 @@ const locale: LocaleProps = {
       wasdKeys: "Teclas WASD",
       ijklKeys: "Teclas IJKL",
       keyboardPanSpeed: "Velocidad de desplazamiento con teclado",
+      speedSlow: "Lenta",
+      speedNormal: "Normal",
+      speedFast: "Rápida",
       note: "Nota: Las opciones de desplazamiento funcionan además de la herramienta de desplazamiento dedicada"
     },
     connector: {
@@ -237,6 +255,26 @@ const locale: LocaleProps = {
       iconCount: "{count} iconos",
       lazyLoadingDisabledNote: "La carga diferida está desactivada. Todos los paquetes de iconos se cargan al iniciar.",
       note: "Los paquetes de iconos se pueden activar o desactivar según tus necesidades. Los paquetes desactivados reducirán el uso de memoria y mejorarán el rendimiento."
+    },
+    mcp: {
+      title: "Servidor MCP",
+      description: "Permite que un agente de IA (p. ej. Claude) lea y edite tus diagramas a través del Model Context Protocol.",
+      enable: "Activar servidor MCP",
+      available: "En ejecución",
+      unavailable: "MCP está deshabilitado para este despliegue.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Configuración de Claude Desktop / Claude Code — pega en mcpServers",
+      copy: "Copiar",
+      copied: "Copiado",
+      availableTools: "Herramientas disponibles"
+    },
+    toolbar: {
+      title: "Barra de herramientas",
+      description: "Elige dónde se ancla el menú de herramientas (selección, desplazamiento, añadir nodo, etc.).",
+      position: "Posición de la barra de herramientas",
+      positionTop: "Arriba",
+      positionLeft: "Izquierda"
     }
   },
   lazyLoadingWelcome: {
@@ -307,7 +345,18 @@ const locale: LocaleProps = {
       updateIcon: "Cambiar icono",
       backToSettings: "Configuración",
       expandDescription: "Mostrar descripción",
-      collapseDescription: "Ocultar descripción"
+      collapseDescription: "Ocultar descripción",
+      untitled: "Sin título",
+      selectedBadge: "Seleccionado",
+      connectionsChip: "Conexiones",
+      typeNode: "Nodo",
+      labelDisplayMode: "Mostrar etiqueta",
+      labelDisplayAlways: "Siempre",
+      labelDisplayHover: "Al pasar el cursor",
+      labelDisplayHidden: "Oculto",
+      connectionSummary: "Resumen de conexiones",
+      connectionInput: "Entrada",
+      connectionOutput: "Salida"
     },
     connector: {
       editTitle: "Editar conector",
@@ -355,16 +404,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Capas",
+    tabLayers: "Capas",
+    tabEdit: "Editar",
+    emptyDetail: "Selecciona un elemento del lienzo o la lista para verlo o editarlo aquí.",
+    emptyCanvas: "Aún no hay nada en el lienzo.",
+    groupNodes: "Nodos",
+    groupConnectors: "Conectores",
+    groupRectangles: "Áreas",
+    groupTextBoxes: "Cuadros de texto",
+    rectangleFallbackName: "Área {number}",
+    searchPlaceholder: "Buscar",
+    filterAll: "Todo",
+    noSearchResults: "Sin resultados para \"{query}\".",
+    subTabStructure: "Estructura",
+    subTabConnections: "Conexiones",
+    boundaryRowPrefix: "Límite",
+    labelRowPrefix: "Etiqueta",
+    ungrouped: "Sin agrupar",
+    summaryConnectorCount: "Conexiones",
+    summaryZone: "Área",
+    summaryOpenProperties: "Propiedades"
   }
 };
 

@@ -26,8 +26,8 @@ export const HotkeySettings = () => {
   const currentMapping = HOTKEY_PROFILES[hotkeyProfile];
 
   const tools = [
-    { name: t('settings.hotkeys.toolSelect'), key: currentMapping.select },
     { name: t('settings.hotkeys.toolPan'), key: currentMapping.pan },
+    { name: t('settings.hotkeys.toolSelect'), key: currentMapping.select },
     { name: t('settings.hotkeys.toolAddItem'), key: currentMapping.addItem },
     { name: t('settings.hotkeys.toolRectangle'), key: currentMapping.rectangle },
     { name: t('settings.hotkeys.toolConnector'), key: currentMapping.connector },
@@ -35,11 +35,7 @@ export const HotkeySettings = () => {
   ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {t('settings.hotkeys.title')}
-      </Typography>
-
+    <Box>
       <FormControl fullWidth sx={{ mb: 3 }}>
         <InputLabel>{t('settings.hotkeys.profile')}</InputLabel>
         <Select

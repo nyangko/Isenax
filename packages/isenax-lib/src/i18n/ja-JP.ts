@@ -158,13 +158,28 @@ const locale: LocaleProps = {
     paste: "貼り付け",
   },
   settings: {
+    shell: {
+      subtitle: "エディタの動作と表示方法を設定します。",
+      searchPlaceholder: "設定を検索",
+      searchNoResults: "「{query}」に一致する設定はありません。",
+      groupTasks: "操作",
+      groupDisplay: "表示",
+      groupResources: "リソース",
+      groupExtensions: "拡張機能",
+      save: "保存",
+      cancel: "キャンセル",
+      resetDefaults: "デフォルトに戻す"
+    },
     zoom: {
       title: "ズーム",
       description: "マウスホイール使用時のズーム動作を設定します。",
       zoomToCursor: "カーソル位置を基準にズーム",
       zoomToCursorDesc: "有効にすると、マウスカーソルの位置を中心にズームします。無効にすると、キャンバスの中央を基準にズームします。",
       trackpadMode: "トラックパッドモード",
-      trackpadModeDesc: "有効時: スクロールでキャンバスを移動し、ピンチ操作でズームします。無効時: スクロールでキャンバスがズームします（デフォルト）。トラックパッド使用時に適しています。"
+      trackpadModeDesc: "有効時: スクロールでキャンバスを移動し、ピンチ操作でズームします。無効時: スクロールでキャンバスがズームします（デフォルト）。トラックパッド使用時に適しています。",
+      whenEnabled: "有効時",
+      scrollToPan: "スクロール: 移動",
+      gestureZoom: "指のジェスチャー: ズーム"
     },
     labels: {
       title: "ラベル",
@@ -206,6 +221,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASDキー",
       ijklKeys: "IJKLキー",
       keyboardPanSpeed: "キーボード移動速度",
+      speedSlow: "遅い",
+      speedNormal: "普通",
+      speedFast: "速い",
       note: "注意: 移動オプションは専用の移動ツールに加えて機能します"
     },
     connector: {
@@ -237,6 +255,26 @@ const locale: LocaleProps = {
       iconCount: "アイコン {count}個",
       lazyLoadingDisabledNote: "遅延読み込みは無効です。すべてのアイコンパックが起動時に読み込まれます。",
       note: "必要に応じてアイコンパックの有効・無効を切り替えられます。無効にしたパックはメモリ使用量を減らし、パフォーマンスを向上させます。"
+    },
+    mcp: {
+      title: "MCPサーバー",
+      description: "AIエージェント（Claudeなど）がModel Context Protocol経由でダイアグラムを読み取り・編集できるようにします。",
+      enable: "MCPサーバーを有効化",
+      available: "実行中",
+      unavailable: "この環境ではMCPが無効になっています。",
+      url: "URL",
+      token: "トークン",
+      clientConfig: "Claude Desktop / Claude Code 設定 — mcpServers に貼り付けてください",
+      copy: "コピー",
+      copied: "コピーしました",
+      availableTools: "利用可能なツール"
+    },
+    toolbar: {
+      title: "ツールバー",
+      description: "ツールメニュー（選択、パン、ノード追加など）の表示位置を選びます。",
+      position: "ツールバーの位置",
+      positionTop: "上",
+      positionLeft: "左"
     }
   },
   lazyLoadingWelcome: {
@@ -307,7 +345,18 @@ const locale: LocaleProps = {
       updateIcon: "アイコンを変更",
       backToSettings: "設定",
       expandDescription: "説明を表示",
-      collapseDescription: "説明を非表示"
+      collapseDescription: "説明を非表示",
+      untitled: "無題",
+      selectedBadge: "選択中",
+      connectionsChip: "接続",
+      typeNode: "ノード",
+      labelDisplayMode: "ラベル表示",
+      labelDisplayAlways: "常時",
+      labelDisplayHover: "ホバー時",
+      labelDisplayHidden: "非表示",
+      connectionSummary: "接続サマリー",
+      connectionInput: "入力",
+      connectionOutput: "出力"
     },
     connector: {
       editTitle: "コネクタを編集",
@@ -355,16 +404,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "レイヤー",
+    tabLayers: "レイヤー",
+    tabEdit: "編集",
+    emptyDetail: "キャンバスまたはリストから項目を選択すると、ここで表示・編集できます。",
+    emptyCanvas: "キャンバスにはまだ何もありません。",
+    groupNodes: "ノード",
+    groupConnectors: "コネクタ",
+    groupRectangles: "エリア",
+    groupTextBoxes: "テキストボックス",
+    rectangleFallbackName: "エリア {number}",
+    searchPlaceholder: "検索",
+    filterAll: "すべて",
+    noSearchResults: "「{query}」に一致する結果はありません。",
+    subTabStructure: "構造",
+    subTabConnections: "接続",
+    boundaryRowPrefix: "境界",
+    labelRowPrefix: "ラベル",
+    ungrouped: "未分類",
+    summaryConnectorCount: "接続数",
+    summaryZone: "エリア",
+    summaryOpenProperties: "プロパティ"
   }
 };
 

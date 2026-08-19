@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Coller",
   },
   settings: {
+    shell: {
+      subtitle: "Configurez le comportement et l'apparence de l'éditeur.",
+      searchPlaceholder: "Rechercher un réglage",
+      searchNoResults: "Aucun réglage trouvé pour « {query} ».",
+      groupTasks: "Actions",
+      groupDisplay: "Affichage",
+      groupResources: "Ressources",
+      groupExtensions: "Extensions",
+      save: "Enregistrer",
+      cancel: "Annuler",
+      resetDefaults: "Réinitialiser"
+    },
     zoom: {
       title: "Zoom",
       description: "Configurer le comportement du zoom lors de l'utilisation de la molette de la souris.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "Lorsqu'il est activé, le zoom est centré sur la position du curseur de la souris. Lorsqu'il est désactivé, le zoom est centré sur le canevas.",
 
       trackpadMode: "Mode Trackpad",
-      trackpadModeDesc: "Lorsqu'il est activé : le défilement à deux doigts déplace le canevas, le pincement effectue un zoom sans affecter le navigateur. Lorsqu'il est désactivé : la molette effectue un zoom sur le canevas (comportement par défaut de la souris)."
+      trackpadModeDesc: "Lorsqu'il est activé : le défilement à deux doigts déplace le canevas, le pincement effectue un zoom sans affecter le navigateur. Lorsqu'il est désactivé : la molette effectue un zoom sur le canevas (comportement par défaut de la souris).",
+      whenEnabled: "Lorsqu'activé",
+      scrollToPan: "Défilement : déplacer",
+      gestureZoom: "Geste des doigts : zoom"
     },
     labels: {
       title: "Étiquettes",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "Touches WASD",
       ijklKeys: "Touches IJKL",
       keyboardPanSpeed: "Vitesse de déplacement au clavier",
+      speedSlow: "Lente",
+      speedNormal: "Normale",
+      speedFast: "Rapide",
       note: "Remarque : Les options de déplacement fonctionnent en plus de l'outil de déplacement dédié"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} icônes",
       lazyLoadingDisabledNote: "Le chargement paresseux est désactivé. Tous les packs d'icônes sont chargés au démarrage.",
       note: "Les packs d'icônes peuvent être activés ou désactivés selon vos besoins. Les packs désactivés réduiront l'utilisation de la mémoire et amélioreront les performances."
+    },
+    mcp: {
+      title: "Serveur MCP",
+      description: "Permet à un agent IA (par ex. Claude) de lire et modifier vos diagrammes via le Model Context Protocol.",
+      enable: "Activer le serveur MCP",
+      available: "En cours d'exécution",
+      unavailable: "MCP est désactivé pour ce déploiement.",
+      url: "URL",
+      token: "Jeton",
+      clientConfig: "Configuration Claude Desktop / Claude Code — à coller dans mcpServers",
+      copy: "Copier",
+      copied: "Copié",
+      availableTools: "Outils disponibles"
+    },
+    toolbar: {
+      title: "Barre d'outils",
+      description: "Choisissez où ancrer le menu d'outils (sélection, déplacement, ajout de nœud, etc.).",
+      position: "Position de la barre d'outils",
+      positionTop: "Haut",
+      positionLeft: "Gauche"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Changer l'icône",
       backToSettings: "Paramètres",
       expandDescription: "Afficher la description",
-      collapseDescription: "Masquer la description"
+      collapseDescription: "Masquer la description",
+      untitled: "Sans titre",
+      selectedBadge: "Sélectionné",
+      connectionsChip: "Connexions",
+      typeNode: "Nœud",
+      labelDisplayMode: "Affichage de l'étiquette",
+      labelDisplayAlways: "Toujours",
+      labelDisplayHover: "Au survol",
+      labelDisplayHidden: "Masqué",
+      connectionSummary: "Résumé des connexions",
+      connectionInput: "Entrée",
+      connectionOutput: "Sortie"
     },
     connector: {
       editTitle: "Modifier le connecteur",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Calques",
+    tabLayers: "Calques",
+    tabEdit: "Modifier",
+    emptyDetail: "Sélectionnez un élément dans le canevas ou la liste pour l'afficher ou le modifier ici.",
+    emptyCanvas: "Rien sur le canevas pour l'instant.",
+    groupNodes: "Nœuds",
+    groupConnectors: "Connecteurs",
+    groupRectangles: "Zones",
+    groupTextBoxes: "Zones de texte",
+    rectangleFallbackName: "Zone {number}",
+    searchPlaceholder: "Rechercher",
+    filterAll: "Tout",
+    noSearchResults: "Aucun résultat pour « {query} ».",
+    subTabStructure: "Structure",
+    subTabConnections: "Connexions",
+    boundaryRowPrefix: "Limite",
+    labelRowPrefix: "Étiquette",
+    ungrouped: "Non groupé",
+    summaryConnectorCount: "Connexions",
+    summaryZone: "Zone",
+    summaryOpenProperties: "Propriétés"
   }
 };
 

@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "पेस्ट करें",
   },
   settings: {
+    shell: {
+      subtitle: "एडिटर के व्यवहार और दिखावट को कॉन्फ़िगर करें।",
+      searchPlaceholder: "सेटिंग्स खोजें",
+      searchNoResults: "\"{query}\" के लिए कोई सेटिंग नहीं मिली।",
+      groupTasks: "कार्य",
+      groupDisplay: "प्रदर्शन",
+      groupResources: "संसाधन",
+      groupExtensions: "एक्सटेंशन",
+      save: "सहेजें",
+      cancel: "रद्द करें",
+      resetDefaults: "डिफ़ॉल्ट पर रीसेट करें"
+    },
     zoom: {
       title: "ज़ूम",
       description: "माउस व्हील का उपयोग करते समय ज़ूम व्यवहार को कॉन्फ़िगर करें।",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "सक्षम होने पर, माउस कर्सर की स्थिति पर केंद्रित ज़ूम इन/आउट। अक्षम होने पर, ज़ूम कैनवास पर केंद्रित होता है।",
 
       trackpadMode: "ट्रैकपैड मोड",
-      trackpadModeDesc: "सक्षम होने पर: दो उंगलियों से स्क्रॉल करने पर कैनवास पैन होता है, पिंच करने पर ब्राउज़र को प्रभावित किए बिना ज़ूम होता है। अक्षम होने पर: माउस व्हील से कैनवास ज़ूम होता है (डिफ़ॉल्ट माउस व्यवहार)।"
+      trackpadModeDesc: "सक्षम होने पर: दो उंगलियों से स्क्रॉल करने पर कैनवास पैन होता है, पिंच करने पर ब्राउज़र को प्रभावित किए बिना ज़ूम होता है। अक्षम होने पर: माउस व्हील से कैनवास ज़ूम होता है (डिफ़ॉल्ट माउस व्यवहार)।",
+      whenEnabled: "सक्षम होने पर",
+      scrollToPan: "स्क्रॉल: पैन",
+      gestureZoom: "उंगली इशारा: ज़ूम"
     },
     labels: {
       title: "लेबल",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASD कुंजी",
       ijklKeys: "IJKL कुंजी",
       keyboardPanSpeed: "कीबोर्ड पैन गति",
+      speedSlow: "धीमा",
+      speedNormal: "सामान्य",
+      speedFast: "तेज़",
       note: "नोट: समर्पित पैन उपकरण के अलावा पैन विकल्प काम करते हैं"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} आइकन",
       lazyLoadingDisabledNote: "लेज़ी लोडिंग अक्षम है। सभी आइकन पैक स्टार्टअप पर लोड किए जाते हैं।",
       note: "आइकन पैक आपकी आवश्यकताओं के आधार पर सक्षम या अक्षम किए जा सकते हैं। अक्षम पैक मेमोरी उपयोग को कम करेंगे और प्रदर्शन में सुधार करेंगे।"
+    },
+    mcp: {
+      title: "MCP सर्वर",
+      description: "एक AI एजेंट (जैसे Claude) को Model Context Protocol के ज़रिए आपके डायग्राम पढ़ने और संपादित करने दें।",
+      enable: "MCP सर्वर सक्षम करें",
+      available: "चल रहा है",
+      unavailable: "इस डिप्लॉयमेंट में MCP अक्षम है।",
+      url: "URL",
+      token: "टोकन",
+      clientConfig: "Claude Desktop / Claude Code कॉन्फ़िग — mcpServers में पेस्ट करें",
+      copy: "कॉपी करें",
+      copied: "कॉपी हो गया",
+      availableTools: "उपलब्ध टूल"
+    },
+    toolbar: {
+      title: "टूलबार",
+      description: "टूल मेनू (चयन, पैन, नोड जोड़ें आदि) कहां दिखाई दे, चुनें।",
+      position: "टूलबार स्थिति",
+      positionTop: "ऊपर",
+      positionLeft: "बाएं"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "आइकन बदलें",
       backToSettings: "सेटिंग्स",
       expandDescription: "विवरण दिखाएं",
-      collapseDescription: "विवरण छिपाएं"
+      collapseDescription: "विवरण छिपाएं",
+      untitled: "शीर्षकहीन",
+      selectedBadge: "चयनित",
+      connectionsChip: "कनेक्शन",
+      typeNode: "नोड",
+      labelDisplayMode: "लेबल प्रदर्शन",
+      labelDisplayAlways: "हमेशा",
+      labelDisplayHover: "होवर पर",
+      labelDisplayHidden: "छिपा हुआ",
+      connectionSummary: "कनेक्शन सारांश",
+      connectionInput: "इनपुट",
+      connectionOutput: "आउटपुट"
     },
     connector: {
       editTitle: "कनेक्टर संपादित करें",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "लेयर",
+    tabLayers: "लेयर",
+    tabEdit: "संपादित करें",
+    emptyDetail: "यहां देखने या संपादित करने के लिए कैनवास या सूची से एक आइटम चुनें।",
+    emptyCanvas: "कैनवास पर अभी कुछ नहीं है।",
+    groupNodes: "नोड्स",
+    groupConnectors: "कनेक्टर्स",
+    groupRectangles: "क्षेत्र",
+    groupTextBoxes: "टेक्स्ट बॉक्स",
+    rectangleFallbackName: "क्षेत्र {number}",
+    searchPlaceholder: "खोजें",
+    filterAll: "सभी",
+    noSearchResults: "\"{query}\" के लिए कोई परिणाम नहीं।",
+    subTabStructure: "संरचना",
+    subTabConnections: "कनेक्शन",
+    boundaryRowPrefix: "सीमा",
+    labelRowPrefix: "लेबल",
+    ungrouped: "अवर्गीकृत",
+    summaryConnectorCount: "कनेक्शन",
+    summaryZone: "क्षेत्र",
+    summaryOpenProperties: "गुण"
   }
 };
 

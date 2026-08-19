@@ -185,9 +185,12 @@ export const themeConfig: ThemeOptions = {
     },
     MuiToggleButtonGroup: {
       styleOverrides: {
-        root: {
-          gap: 4
-        },
+        root: ({ theme }) => ({
+          gap: 4,
+          padding: 3,
+          backgroundColor: theme.palette.grey[100],
+          borderRadius: 999
+        }),
         grouped: {
           margin: 0,
           border: 0,
@@ -201,12 +204,14 @@ export const themeConfig: ThemeOptions = {
           border: 0,
           borderRadius: 999,
           color: theme.palette.text.secondary,
+          fontWeight: 500,
           '&.Mui-selected': {
-            backgroundColor: theme.palette.grey[200],
-            color: theme.palette.text.primary
+            backgroundColor: theme.palette.text.primary,
+            color: theme.palette.background.paper,
+            fontWeight: 600
           },
           '&.Mui-selected:hover': {
-            backgroundColor: theme.palette.grey[300]
+            backgroundColor: theme.palette.text.primary
           }
         })
       }

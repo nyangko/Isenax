@@ -166,6 +166,18 @@ export interface LocaleProps {
     paste: string;
   };
   settings: {
+    shell: {
+      subtitle: string;
+      searchPlaceholder: string;
+      searchNoResults: string;
+      groupTasks: string;
+      groupDisplay: string;
+      groupResources: string;
+      groupExtensions: string;
+      save: string;
+      cancel: string;
+      resetDefaults: string;
+    };
     zoom: {
       title: string;
       description: string;
@@ -173,6 +185,9 @@ export interface LocaleProps {
       zoomToCursorDesc: string;
       trackpadMode: string;
       trackpadModeDesc: string;
+      whenEnabled: string;
+      scrollToPan: string;
+      gestureZoom: string;
     };
     labels: {
       title: string;
@@ -214,6 +229,9 @@ export interface LocaleProps {
       wasdKeys: string;
       ijklKeys: string;
       keyboardPanSpeed: string;
+      speedSlow: string;
+      speedNormal: string;
+      speedFast: string;
       note: string;
     };
     connector: {
@@ -246,9 +264,7 @@ export interface LocaleProps {
       lazyLoadingDisabledNote: string;
       note: string;
     };
-    // Optional: only en-US/ko-KR ship these so far; other locales fall back
-    // to the raw key until the i18n completeness pass fills them in.
-    mcp?: {
+    mcp: {
       title: string;
       description: string;
       enable: string;
@@ -259,16 +275,9 @@ export interface LocaleProps {
       clientConfig: string;
       copy: string;
       copied: string;
+      availableTools: string;
     };
-    skills?: {
-      title: string;
-      description: string;
-      autoArrangeName: string;
-      autoArrangeDescription: string;
-      run: string;
-      noView: string;
-    };
-    toolbar?: {
+    toolbar: {
       title: string;
       description: string;
       position: string;
@@ -309,21 +318,17 @@ export interface LocaleProps {
       backToSettings: string;
       expandDescription: string;
       collapseDescription: string;
-      // Optional: only en-US/ko-KR ship these so far; other locales fall
-      // back to the raw key until the i18n completeness pass fills them in.
-      untitled?: string;
-      selectedBadge?: string;
-      connectionsChip?: string;
-      typeNode?: string;
-      labelDisplayMode?: string;
-      labelDisplayAlways?: string;
-      labelDisplayHover?: string;
-      labelDisplayHidden?: string;
-      shadow?: string;
-      accentColor?: string;
-      connectionSummary?: string;
-      connectionInput?: string;
-      connectionOutput?: string;
+      untitled: string;
+      selectedBadge: string;
+      connectionsChip: string;
+      typeNode: string;
+      labelDisplayMode: string;
+      labelDisplayAlways: string;
+      labelDisplayHover: string;
+      labelDisplayHidden: string;
+      connectionSummary: string;
+      connectionInput: string;
+      connectionOutput: string;
     };
     connector: {
       editTitle: string;
@@ -381,19 +386,17 @@ export interface LocaleProps {
     groupRectangles: string;
     groupTextBoxes: string;
     rectangleFallbackName: string;
-    // Optional: only en-US/ko-KR ship these so far; other locales fall back
-    // to the raw key until the i18n completeness pass fills them in.
-    searchPlaceholder?: string;
-    filterAll?: string;
-    noSearchResults?: string;
-    subTabStructure?: string;
-    subTabConnections?: string;
-    boundaryRowPrefix?: string;
-    labelRowPrefix?: string;
-    ungrouped?: string;
-    summaryConnectorCount?: string;
-    summaryZone?: string;
-    summaryOpenProperties?: string;
+    searchPlaceholder: string;
+    filterAll: string;
+    noSearchResults: string;
+    subTabStructure: string;
+    subTabConnections: string;
+    boundaryRowPrefix: string;
+    labelRowPrefix: string;
+    ungrouped: string;
+    summaryConnectorCount: string;
+    summaryZone: string;
+    summaryOpenProperties: string;
   };
   // other namespaces can be added here
 }

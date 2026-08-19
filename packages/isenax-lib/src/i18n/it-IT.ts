@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Incolla",
   },
   settings: {
+    shell: {
+      subtitle: "Configura il comportamento e l'aspetto dell'editor.",
+      searchPlaceholder: "Cerca impostazioni",
+      searchNoResults: "Nessuna impostazione trovata per \"{query}\".",
+      groupTasks: "Azioni",
+      groupDisplay: "Visualizzazione",
+      groupResources: "Risorse",
+      groupExtensions: "Estensioni",
+      save: "Salva",
+      cancel: "Annulla",
+      resetDefaults: "Ripristina predefiniti"
+    },
     zoom: {
       title: "Zoom",
       description: "Configura il comportamento dello zoom quando si usa la rotella del mouse.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "Se abilitato, ingrandisci o riduci centrando sul cursore del mouse. Se disabilitato, lo zoom è centrato sulla tela.",
 
       trackpadMode: "Modalità Trackpad",
-      trackpadModeDesc: "Quando abilitato: lo scorrimento con due dita sposta la tela, il pizzico ingrandisce senza influire sul browser. Quando disabilitato: la rotellina del mouse ingrandisce la tela (comportamento predefinito del mouse)."
+      trackpadModeDesc: "Quando abilitato: lo scorrimento con due dita sposta la tela, il pizzico ingrandisce senza influire sul browser. Quando disabilitato: la rotellina del mouse ingrandisce la tela (comportamento predefinito del mouse).",
+      whenEnabled: "Quando abilitato",
+      scrollToPan: "Scorrimento: sposta",
+      gestureZoom: "Gesto con le dita: zoom"
     },
     labels: {
       title: "Etichette",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "Tasti WASD",
       ijklKeys: "Tasti IJKL",
       keyboardPanSpeed: "Velocità panoramica tastiera",
+      speedSlow: "Lenta",
+      speedNormal: "Normale",
+      speedFast: "Veloce",
       note: "Nota: Le opzioni di panoramica funzionano insieme allo strumento Panoramica dedicato"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} icone",
       lazyLoadingDisabledNote: "Il caricamento ritardato è disabilitato. Tutti i pacchetti di icone vengono caricati all'avvio.",
       note: "I pacchetti di icone possono essere abilitati o disabilitati in base alle tue esigenze. I pacchetti disabilitati riducono l'uso di memoria e migliorano le prestazioni."
+    },
+    mcp: {
+      title: "Server MCP",
+      description: "Consenti a un agente IA (es. Claude) di leggere e modificare i tuoi diagrammi tramite il Model Context Protocol.",
+      enable: "Abilita server MCP",
+      available: "In esecuzione",
+      unavailable: "MCP è disabilitato per questa distribuzione.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Configurazione Claude Desktop / Claude Code — incolla in mcpServers",
+      copy: "Copia",
+      copied: "Copiato",
+      availableTools: "Strumenti disponibili"
+    },
+    toolbar: {
+      title: "Barra degli strumenti",
+      description: "Scegli dove ancorare il menu degli strumenti (selezione, spostamento, aggiungi nodo, ecc.).",
+      position: "Posizione barra degli strumenti",
+      positionTop: "In alto",
+      positionLeft: "A sinistra"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Cambia icona",
       backToSettings: "Impostazioni",
       expandDescription: "Mostra descrizione",
-      collapseDescription: "Nascondi descrizione"
+      collapseDescription: "Nascondi descrizione",
+      untitled: "Senza titolo",
+      selectedBadge: "Selezionato",
+      connectionsChip: "Connessioni",
+      typeNode: "Nodo",
+      labelDisplayMode: "Visualizzazione etichetta",
+      labelDisplayAlways: "Sempre",
+      labelDisplayHover: "Al passaggio",
+      labelDisplayHidden: "Nascosta",
+      connectionSummary: "Riepilogo connessioni",
+      connectionInput: "Ingresso",
+      connectionOutput: "Uscita"
     },
     connector: {
       editTitle: "Modifica connettore",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Livelli",
+    tabLayers: "Livelli",
+    tabEdit: "Modifica",
+    emptyDetail: "Seleziona un elemento dalla tela o dall'elenco per visualizzarlo o modificarlo qui.",
+    emptyCanvas: "Ancora nulla sulla tela.",
+    groupNodes: "Nodi",
+    groupConnectors: "Connettori",
+    groupRectangles: "Aree",
+    groupTextBoxes: "Caselle di testo",
+    rectangleFallbackName: "Area {number}",
+    searchPlaceholder: "Cerca",
+    filterAll: "Tutto",
+    noSearchResults: "Nessun risultato per \"{query}\".",
+    subTabStructure: "Struttura",
+    subTabConnections: "Connessioni",
+    boundaryRowPrefix: "Confine",
+    labelRowPrefix: "Etichetta",
+    ungrouped: "Non raggruppato",
+    summaryConnectorCount: "Connessioni",
+    summaryZone: "Area",
+    summaryOpenProperties: "Proprietà"
   }
 };
 

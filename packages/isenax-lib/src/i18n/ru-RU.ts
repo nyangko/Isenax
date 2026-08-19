@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Вставить",
   },
   settings: {
+    shell: {
+      subtitle: "Настройте поведение и внешний вид редактора.",
+      searchPlaceholder: "Поиск настроек",
+      searchNoResults: "Настройки для «{query}» не найдены.",
+      groupTasks: "Действия",
+      groupDisplay: "Отображение",
+      groupResources: "Ресурсы",
+      groupExtensions: "Расширения",
+      save: "Сохранить",
+      cancel: "Отмена",
+      resetDefaults: "Сбросить настройки"
+    },
     zoom: {
       title: "Масштаб",
       description: "Настройте поведение масштабирования при использовании колесика мыши.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "При включении масштабирование центрируется на позиции курсора мыши. При выключении масштабирование центрируется на холсте.",
 
       trackpadMode: "Режим трекпада",
-      trackpadModeDesc: "При включении: прокрутка двумя пальцами перемещает холст, сжатие масштабирует без влияния на браузер. При выключении: колесико мыши масштабирует холст (стандартное поведение мыши)."
+      trackpadModeDesc: "При включении: прокрутка двумя пальцами перемещает холст, сжатие масштабирует без влияния на браузер. При выключении: колесико мыши масштабирует холст (стандартное поведение мыши).",
+      whenEnabled: "При включении",
+      scrollToPan: "Прокрутка: перемещение",
+      gestureZoom: "Жест пальцами: масштаб"
     },
     labels: {
       title: "Метки",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "Клавиши WASD",
       ijklKeys: "Клавиши IJKL",
       keyboardPanSpeed: "Скорость перемещения клавиатурой",
+      speedSlow: "Медленно",
+      speedNormal: "Обычно",
+      speedFast: "Быстро",
       note: "Примечание: Параметры перемещения работают в дополнение к специальному инструменту перемещения"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} иконок",
       lazyLoadingDisabledNote: "Ленивая загрузка отключена. Все пакеты иконок загружаются при запуске.",
       note: "Пакеты иконок могут быть включены или отключены в зависимости от ваших потребностей. Отключенные пакеты уменьшат использование памяти и улучшат производительность."
+    },
+    mcp: {
+      title: "MCP-сервер",
+      description: "Разрешить ИИ-агенту (например, Claude) читать и редактировать ваши диаграммы через Model Context Protocol.",
+      enable: "Включить MCP-сервер",
+      available: "Работает",
+      unavailable: "MCP отключён для этого развёртывания.",
+      url: "URL",
+      token: "Токен",
+      clientConfig: "Конфигурация Claude Desktop / Claude Code — вставьте в mcpServers",
+      copy: "Копировать",
+      copied: "Скопировано",
+      availableTools: "Доступные инструменты"
+    },
+    toolbar: {
+      title: "Панель инструментов",
+      description: "Выберите, где закрепить меню инструментов (выбор, перемещение, добавление узла и т. д.).",
+      position: "Расположение панели инструментов",
+      positionTop: "Сверху",
+      positionLeft: "Слева"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Изменить значок",
       backToSettings: "Настройки",
       expandDescription: "Показать описание",
-      collapseDescription: "Скрыть описание"
+      collapseDescription: "Скрыть описание",
+      untitled: "Без названия",
+      selectedBadge: "Выбрано",
+      connectionsChip: "Соединения",
+      typeNode: "Узел",
+      labelDisplayMode: "Отображение подписи",
+      labelDisplayAlways: "Всегда",
+      labelDisplayHover: "При наведении",
+      labelDisplayHidden: "Скрыто",
+      connectionSummary: "Сводка соединений",
+      connectionInput: "Вход",
+      connectionOutput: "Выход"
     },
     connector: {
       editTitle: "Редактировать соединитель",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
-    tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    title: "Слои",
+    tabLayers: "Слои",
+    tabEdit: "Изменить",
+    emptyDetail: "Выберите элемент на холсте или в списке, чтобы просмотреть или изменить его здесь.",
+    emptyCanvas: "На холсте пока ничего нет.",
+    groupNodes: "Узлы",
+    groupConnectors: "Соединители",
+    groupRectangles: "Области",
+    groupTextBoxes: "Текстовые поля",
+    rectangleFallbackName: "Область {number}",
+    searchPlaceholder: "Поиск",
+    filterAll: "Все",
+    noSearchResults: "Нет результатов для «{query}».",
+    subTabStructure: "Структура",
+    subTabConnections: "Соединения",
+    boundaryRowPrefix: "Граница",
+    labelRowPrefix: "Подпись",
+    ungrouped: "Без группы",
+    summaryConnectorCount: "Соединения",
+    summaryZone: "Область",
+    summaryOpenProperties: "Свойства"
   }
 };
 

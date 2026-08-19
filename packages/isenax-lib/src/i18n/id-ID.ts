@@ -158,6 +158,18 @@ const locale: LocaleProps = {
     paste: "Tempel",
   },
   settings: {
+    shell: {
+      subtitle: "Konfigurasikan perilaku dan tampilan editor.",
+      searchPlaceholder: "Cari pengaturan",
+      searchNoResults: "Tidak ada pengaturan yang ditemukan untuk \"{query}\".",
+      groupTasks: "Tindakan",
+      groupDisplay: "Tampilan",
+      groupResources: "Sumber Daya",
+      groupExtensions: "Ekstensi",
+      save: "Simpan",
+      cancel: "Batal",
+      resetDefaults: "Setel ulang ke default"
+    },
     zoom: {
       title: "Zoom",
       description: "Konfigurasi perilaku zoom saat menggunakan roda mouse.",
@@ -165,7 +177,10 @@ const locale: LocaleProps = {
       zoomToCursorDesc: "Saat diaktifkan, zoom masuk/keluar terpusat pada posisi kursor mouse. Saat dinonaktifkan, zoom terpusat pada kanvas.",
 
       trackpadMode: "Mode Trackpad",
-      trackpadModeDesc: "Saat diaktifkan: gulir dua jari menggeser kanvas, cubit untuk memperbesar tanpa mempengaruhi browser. Saat dinonaktifkan: roda gulir memperbesar kanvas (perilaku mouse default)."
+      trackpadModeDesc: "Saat diaktifkan: gulir dua jari menggeser kanvas, cubit untuk memperbesar tanpa mempengaruhi browser. Saat dinonaktifkan: roda gulir memperbesar kanvas (perilaku mouse default).",
+      whenEnabled: "Saat diaktifkan",
+      scrollToPan: "Gulir: geser",
+      gestureZoom: "Gestur jari: perbesar"
     },
     labels: {
       title: "Label",
@@ -207,6 +222,9 @@ const locale: LocaleProps = {
       wasdKeys: "Tombol WASD",
       ijklKeys: "Tombol IJKL",
       keyboardPanSpeed: "Kecepatan Geser Keyboard",
+      speedSlow: "Lambat",
+      speedNormal: "Normal",
+      speedFast: "Cepat",
       note: "Catatan: Opsi geser berfungsi selain alat Geser khusus"
     },
     connector: {
@@ -238,6 +256,26 @@ const locale: LocaleProps = {
       iconCount: "{count} ikon",
       lazyLoadingDisabledNote: "Lazy loading dinonaktifkan. Semua paket ikon dimuat saat startup.",
       note: "Paket ikon dapat diaktifkan atau dinonaktifkan sesuai kebutuhan Anda. Paket yang dinonaktifkan akan mengurangi penggunaan memori dan meningkatkan performa."
+    },
+    mcp: {
+      title: "Server MCP",
+      description: "Izinkan agen AI (mis. Claude) membaca dan mengedit diagram Anda melalui Model Context Protocol.",
+      enable: "Aktifkan server MCP",
+      available: "Berjalan",
+      unavailable: "MCP dinonaktifkan untuk deployment ini.",
+      url: "URL",
+      token: "Token",
+      clientConfig: "Konfigurasi Claude Desktop / Claude Code — tempel ke mcpServers",
+      copy: "Salin",
+      copied: "Disalin",
+      availableTools: "Alat yang Tersedia"
+    },
+    toolbar: {
+      title: "Bilah Alat",
+      description: "Pilih di mana menu alat (pilih, geser, tambah node, dll.) ditempatkan.",
+      position: "Posisi Bilah Alat",
+      positionTop: "Atas",
+      positionLeft: "Kiri"
     }
   },
   lazyLoadingWelcome: {
@@ -308,7 +346,18 @@ const locale: LocaleProps = {
       updateIcon: "Ubah ikon",
       backToSettings: "Pengaturan",
       expandDescription: "Tampilkan deskripsi",
-      collapseDescription: "Sembunyikan deskripsi"
+      collapseDescription: "Sembunyikan deskripsi",
+      untitled: "Tanpa Judul",
+      selectedBadge: "Terpilih",
+      connectionsChip: "Koneksi",
+      typeNode: "Node",
+      labelDisplayMode: "Tampilan Label",
+      labelDisplayAlways: "Selalu",
+      labelDisplayHover: "Saat Hover",
+      labelDisplayHidden: "Tersembunyi",
+      connectionSummary: "Ringkasan Koneksi",
+      connectionInput: "Input",
+      connectionOutput: "Output"
     },
     connector: {
       editTitle: "Edit Konektor",
@@ -356,16 +405,27 @@ const locale: LocaleProps = {
     }
   },
   layersPanel: {
-    title: "Layers",
-    tabLayers: "Layers",
+    title: "Lapisan",
+    tabLayers: "Lapisan",
     tabEdit: "Edit",
-    emptyDetail: "Select an item from the canvas or the list to view or edit it here.",
-    emptyCanvas: "Nothing on the canvas yet.",
-    groupNodes: "Nodes",
-    groupConnectors: "Connectors",
-    groupRectangles: "Areas",
-    groupTextBoxes: "Text Boxes",
-    rectangleFallbackName: "Area {number}"
+    emptyDetail: "Pilih item dari kanvas atau daftar untuk melihat atau mengeditnya di sini.",
+    emptyCanvas: "Belum ada apa pun di kanvas.",
+    groupNodes: "Node",
+    groupConnectors: "Konektor",
+    groupRectangles: "Area",
+    groupTextBoxes: "Kotak Teks",
+    rectangleFallbackName: "Area {number}",
+    searchPlaceholder: "Cari",
+    filterAll: "Semua",
+    noSearchResults: "Tidak ada hasil untuk \"{query}\".",
+    subTabStructure: "Struktur",
+    subTabConnections: "Koneksi",
+    boundaryRowPrefix: "Batas",
+    labelRowPrefix: "Label",
+    ungrouped: "Tidak Dikelompokkan",
+    summaryConnectorCount: "Koneksi",
+    summaryZone: "Area",
+    summaryOpenProperties: "Properti"
   }
 };
 

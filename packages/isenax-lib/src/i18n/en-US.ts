@@ -158,13 +158,28 @@ const locale: LocaleProps = {
     paste: "Paste",
   },
   settings: {
+    shell: {
+      subtitle: "Configure how the editor behaves and looks.",
+      searchPlaceholder: "Search settings",
+      searchNoResults: "No settings found for \"{query}\".",
+      groupTasks: "Actions",
+      groupDisplay: "Display",
+      groupResources: "Resources",
+      groupExtensions: "Extensions",
+      save: "Save",
+      cancel: "Cancel",
+      resetDefaults: "Reset to defaults"
+    },
     zoom: {
       title: "Zoom",
       description: "Configure zoom behavior when using the mouse wheel.",
       zoomToCursor: "Zoom to Cursor",
       zoomToCursorDesc: "When enabled, zoom in/out centered on the mouse cursor position. When disabled, zoom is centered on the canvas.",
       trackpadMode: "Trackpad Mode",
-      trackpadModeDesc: "When enabled: scrolling pans the canvas and pinch-to-zoom controls canvas zoom. When disabled: scrolling zooms the canvas (default). Best used with a trackpad."
+      trackpadModeDesc: "When enabled: scrolling pans the canvas and pinch-to-zoom controls canvas zoom. When disabled: scrolling zooms the canvas (default). Best used with a trackpad.",
+      whenEnabled: "When enabled",
+      scrollToPan: "Scroll: pan",
+      gestureZoom: "Finger gesture: zoom"
     },
     labels: {
       title: "Labels",
@@ -206,6 +221,9 @@ const locale: LocaleProps = {
       wasdKeys: "WASD keys",
       ijklKeys: "IJKL keys",
       keyboardPanSpeed: "Keyboard Pan Speed",
+      speedSlow: "Slow",
+      speedNormal: "Normal",
+      speedFast: "Fast",
       note: "Note: Pan options work in addition to the dedicated Pan tool"
     },
     connector: {
@@ -248,15 +266,8 @@ const locale: LocaleProps = {
       token: "Token",
       clientConfig: "Claude Desktop / Claude Code config — paste into mcpServers",
       copy: "Copy",
-      copied: "Copied"
-    },
-    skills: {
-      title: "Skills",
-      description: "Automations you can run on the current diagram.",
-      autoArrangeName: "Auto-arrange",
-      autoArrangeDescription: "Repack the current view's nodes onto a tidy, non-overlapping grid.",
-      run: "Run",
-      noView: "Open a view first."
+      copied: "Copied",
+      availableTools: "Available Tools"
     },
     toolbar: {
       title: "Toolbar",
@@ -343,8 +354,6 @@ const locale: LocaleProps = {
       labelDisplayAlways: "Always",
       labelDisplayHover: "On Hover",
       labelDisplayHidden: "Hidden",
-      shadow: "Shadow",
-      accentColor: "Accent Color",
       connectionSummary: "Connection Summary",
       connectionInput: "Input",
       connectionOutput: "Output"

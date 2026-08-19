@@ -11,9 +11,7 @@ export const viewItemSchema = z.object({
   // ALWAYS (default when unset) matches existing behavior -- the name/
   // description label always shows when present. HOVER only shows it while
   // the node is moused over; HIDDEN never renders it regardless of content.
-  labelDisplayMode: z.enum(['ALWAYS', 'HOVER', 'HIDDEN']).optional(),
-  shadowEnabled: z.boolean().optional(),
-  accentColor: z.string().optional()
+  labelDisplayMode: z.enum(['ALWAYS', 'HOVER', 'HIDDEN']).optional()
 });
 
 export const viewSchema = z.object({

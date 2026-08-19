@@ -139,27 +139,11 @@ export const Node = memo(({ node, order }: Props) => {
               alignItems: 'center'
             }}
           >
-            {node.accentColor && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: PROJECTED_TILE_SIZE.width * 0.9,
-                  height: PROJECTED_TILE_SIZE.width * 0.9,
-                  borderRadius: '50%',
-                  bgcolor: node.accentColor,
-                  opacity: 0.18,
-                  zIndex: -1
-                }}
-              />
-            )}
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
-                filter: node.shadowEnabled
-                  ? 'drop-shadow(0 6px 8px rgba(0,0,0,0.35))'
-                  : undefined
+                alignItems: 'center'
               }}
             >
               {iconComponent}
