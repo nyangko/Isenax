@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.7.0](https://github.com/nyangko/Isenax/compare/v1.6.1...v1.7.0) (2026-08-20)
+
+### Features
+
+* add icons, search, and type filters to the Layers panel ([6d80129](https://github.com/nyangko/Isenax/commit/6d80129da770bdd03cbe1d21944364f0f184a544)), closes [#52](https://github.com/nyangko/Isenax/issues/52)
+* dock the layers panel flush to the edge, add a toolbar position setting ([eaf6cc0](https://github.com/nyangko/Isenax/commit/eaf6cc0ead0b8b0a231e2671124ecddc61d84f14)), closes [#56](https://github.com/nyangko/Isenax/issues/56) [#57](https://github.com/nyangko/Isenax/issues/57)
+* enforce Layers panel lock against canvas click-selection ([a2afa96](https://github.com/nyangko/Isenax/commit/a2afa9684afc1d4b3a34376b727869cbf2c6b948)), closes [#53](https://github.com/nyangko/Isenax/issues/53) [#53](https://github.com/nyangko/Isenax/issues/53)
+* redesign node edit panel summary card, add appearance/connection controls ([4c88fb7](https://github.com/nyangko/Isenax/commit/4c88fb7fb7ca1147b925e3a4461289b61a6ec710)), closes [#58](https://github.com/nyangko/Isenax/issues/58)
+* redesign Settings dialog, replace Skills panel with MCP tool list ([d0ac1b1](https://github.com/nyangko/Isenax/commit/d0ac1b10cb165033ed3e9a1f682b1292e6d0cc28))
+* zone grouping, visibility/lock toggles, and slide animation for Layers panel ([078c303](https://github.com/nyangko/Isenax/commit/078c303a5ec1feadc26e951f891fa7e0ed7a0987)), closes [#53](https://github.com/nyangko/Isenax/issues/53) [#52](https://github.com/nyangko/Isenax/issues/52)
+
+### Bug Fixes
+
+* auto-switch Layers panel to Edit tab when placing a new item ([ae9be90](https://github.com/nyangko/Isenax/commit/ae9be90cedf9d6435af4d7b88e6ea69ad97a2a0f))
+* disambiguate overlapping-connector clicks and prune stray drag anchors ([5c54c33](https://github.com/nyangko/Isenax/commit/5c54c334df7d04496722af855f0955998074945d)), closes [#55](https://github.com/nyangko/Isenax/issues/55)
+* group connectors with waypoints by first/last anchor, not anchor count ([bd5df3c](https://github.com/nyangko/Isenax/commit/bd5df3c42f3846a0a3ce692f683d81ca68b493dd)), closes [#54](https://github.com/nyangko/Isenax/issues/54)
+
+### Documentation
+
+* log v1.7.0 changes in app changelog and README, all languages ([bbe2d3f](https://github.com/nyangko/Isenax/commit/bbe2d3fc73c7fbd61ae197a993524c5b49f5de30))
+* split in-app changelog into v1.6.0 and v1.6.1, finalize dates ([72ff9d8](https://github.com/nyangko/Isenax/commit/72ff9d8f502a387db6ce94816ebec46b70583031))
+
 ## [1.6.1](https://github.com/nyangko/Isenax/compare/v1.6.0...v1.6.1) (2026-08-14)
 
 ### Bug Fixes
