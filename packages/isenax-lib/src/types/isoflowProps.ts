@@ -36,6 +36,9 @@ export interface LocaleProps {
   viewControls: {
     switchToFlatView: string;
     switchToIsometricView: string;
+    backToParentView: string;
+    childViewHintTitle: string;
+    childViewHintBody: string;
   };
   helpDialog: {
     title: string;
@@ -153,6 +156,9 @@ export interface LocaleProps {
     duplicateNode: string;
     duplicateRectangle: string;
     duplicateText: string;
+    childViewName: string;
+    createChildView: string;
+    openChildView: string;
     editNode: string;
     deleteNode: string;
     editRectangle: string;

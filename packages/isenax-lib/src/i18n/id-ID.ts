@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Kembali ke tampilan induk",
+    childViewHintTitle: "Anda berada di tampilan detail",
+    childViewHintBody: "Ketuk tombol di atas untuk kembali ke tampilan induk.",
     switchToFlatView: "Beralih ke tampilan datar",
     switchToIsometricView: "Beralih ke tampilan isometrik"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Duplikat Node",
     duplicateRectangle: "Duplikat Persegi Panjang",
     duplicateText: "Duplikat Teks",
+    childViewName: "Detail {name}",
+    createChildView: "Buat Tampilan Turunan",
+    openChildView: "Buka Tampilan Turunan",
     editNode: "Edit Node",
     deleteNode: "Hapus Node",
     editRectangle: "Edit Persegi Panjang",

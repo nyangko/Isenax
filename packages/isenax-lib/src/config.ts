@@ -39,7 +39,7 @@ export const DEFAULT_COLOR: Colors[0] = {
 export const DEFAULT_FONT_FAMILY = 'Roboto, Arial, sans-serif';
 
 export const VIEW_DEFAULTS: Required<
-  Omit<View, 'id' | 'description' | 'lastUpdated'>
+  Omit<View, 'id' | 'description' | 'lastUpdated' | 'parentViewId' | 'anchorItemId'>
 > = {
   name: 'Untitled view',
   items: [],
@@ -48,7 +48,7 @@ export const VIEW_DEFAULTS: Required<
   textBoxes: []
 };
 
-export const VIEW_ITEM_DEFAULTS: Required<Omit<ViewItem, 'id' | 'tile'>> = {
+export const VIEW_ITEM_DEFAULTS: Required<Omit<ViewItem, 'id' | 'tile' | 'anchor'>> = {
   labelHeight: 80,
   labelDisplayMode: 'ALWAYS'
 };

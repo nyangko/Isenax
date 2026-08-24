@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Üst görünüme dön",
+    childViewHintTitle: "Bir detay görünümündesiniz",
+    childViewHintBody: "Üst görünüme dönmek için yukarıdaki düğmeye dokunun.",
     switchToFlatView: "Düz görünüme geç",
     switchToIsometricView: "İzometrik görünüme geç"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Düğümü Çoğalt",
     duplicateRectangle: "Dikdörtgeni Çoğalt",
     duplicateText: "Metni Çoğalt",
+    childViewName: "{name} Detayı",
+    createChildView: "Alt Görünüm Oluştur",
+    openChildView: "Alt Görünümü Aç",
     editNode: "Düğümü Düzenle",
     deleteNode: "Düğümü Sil",
     editRectangle: "Dikdörtgeni Düzenle",

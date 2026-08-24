@@ -19,17 +19,20 @@ import {
 import {
   IconX as CloseIcon,
   IconChevronDown as ChevronDownIcon,
+  IconChevronLeft as BackIcon,
   IconSearch as SearchIcon,
   IconEye as EyeIcon,
   IconEyeOff as EyeOffIcon,
   IconLock as LockIcon,
   IconLockOpen as LockOpenIcon,
   IconSquare as BoundaryIcon,
-  IconTypography as LabelIcon
+  IconTypography as LabelIcon,
+  IconStack as ChildViewIcon
 } from '@tabler/icons-react';
 import { useScene } from 'src/hooks/useScene';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { useModelStore } from 'src/stores/modelStore';
+import { useView } from 'src/hooks/useView';
 import { useIcon } from 'src/hooks/useIcon';
 import { useConnector } from 'src/hooks/useConnector';
 import { useTextBox } from 'src/hooks/useTextBox';
@@ -37,7 +40,7 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
 import { getConnectorLabels, getItemById, isWithinBounds } from 'src/utils';
 import { ItemControlsManager } from 'src/components/ItemControls/ItemControlsManager';
-import { ViewItem, Rectangle as RectangleType } from 'src/types';
+import { ViewItem, Rectangle as RectangleType, ItemControls } from 'src/types';
 
 type TabValue = 'LIST' | 'DETAIL';
 type StructureTab = 'STRUCTURE' | 'CONNECTIONS';
@@ -96,7 +99,28 @@ const NodeRow = ({
 }: RowProps & { id: string; connectorCount: number }) => {
   const modelItem = useModelItem(id);
   const { icon } = useIcon(modelItem?.icon);
+  const scene = useScene();
+  const { changeView } = useView();
+  const model = useModelStore((state) => state);
+  const { t } = useTranslation('contextMenu');
   if (!modelItem) return null;
+
+  const openOrCreateChildView = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (modelItem.childViewId) {
+      changeView(modelItem.childViewId, model);
+      return;
+    }
+    try {
+      const viewName = t('childViewName').replace('{name}', modelItem.name);
+      const result = scene.createChildView(id, viewName);
+      if (result) changeView(result.newViewId, result.state.model);
+    } catch (error) {
+      // Circular reference (item already anchors an ancestor view) -- same
+      // minimal fallback as the context menu's identical action.
+      console.warn(error);
+    }
+  };
 
   return (
     <ListItemButton selected={isSelected} onClick={onSelect} dense sx={{ pr: 0.5 }}>
@@ -112,6 +136,14 @@ const NodeRow = ({
       <Typography variant="caption" color="text.disabled" sx={{ mr: 0.5, flexShrink: 0 }}>
         · {connectorCount}
       </Typography>
+      <MUIIconButton
+        size="small"
+        aria-label={modelItem.childViewId ? t('openChildView') : t('createChildView')}
+        onClick={openOrCreateChildView}
+        sx={{ flexShrink: 0 }}
+      >
+        <ChildViewIcon size={16} />
+      </MUIIconButton>
       <LayerRowActions id={id} />
     </ListItemButton>
   );
@@ -324,20 +356,35 @@ export const zoneBoundsForLabels = (rectangle: RectangleType) => {
   ];
 };
 
+const CHILD_VIEW_HINT_STORAGE_KEY = 'isenax_child_view_nav_hint_dismissed';
+
 export const LayersPanel = () => {
-  const { items, connectors, rectangles, textBoxes, colors } = useScene();
+  const { items, connectors, rectangles, textBoxes, colors, currentView } = useScene();
   const modelItems = useModelStore((state) => state.items);
+  const model = useModelStore((state) => state);
+  const { changeView } = useView();
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
+  // Clicking an already-selected row deselects it instead of re-selecting the
+  // same thing -- otherwise there's no way to clear a selection from the panel.
+  const selectOrToggle = (next: ItemControls, isSelected: boolean) => {
+    uiStateActions.setItemControls(isSelected ? null : next);
+  };
   const { t } = useTranslation('layersPanel');
+  const { t: tViewControls } = useTranslation('viewControls');
   const [activeTab, setActiveTab] = useState<TabValue>('LIST');
   const [structureTab, setStructureTab] = useState<StructureTab>('STRUCTURE');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('ALL');
+  const [childViewHintDismissed, setChildViewHintDismissed] = useState(true);
+
+  const parentView = currentView.parentViewId
+    ? model.views.find((v) => v.id === currentView.parentViewId)
+    : undefined;
 
   // Selecting an item (canvas or list) makes sure the panel is visible, but
   // no longer force-switches to the Edit tab -- the bottom summary bar shows
@@ -354,6 +401,22 @@ export const LayersPanel = () => {
       }
     }
   }, [itemControls, uiStateActions]);
+
+  // Entering a drill-down view surfaces this panel automatically (its header
+  // becomes the "back to parent view" control -- no separate floating canvas
+  // overlay) -- same auto-open pattern as itemControls above. The one-shot
+  // hint underneath only ever shows once per browser, same as the other
+  // canvas hints.
+  useEffect(() => {
+    if (!currentView.parentViewId) return;
+    uiStateActions.setLayersPanelOpen(true);
+    setChildViewHintDismissed(localStorage.getItem(CHILD_VIEW_HINT_STORAGE_KEY) === 'true');
+  }, [currentView.id, currentView.parentViewId, uiStateActions]);
+
+  const dismissChildViewHint = () => {
+    localStorage.setItem(CHILD_VIEW_HINT_STORAGE_KEY, 'true');
+    setChildViewHintDismissed(true);
+  };
 
   const totalCount = items.length + connectors.length + rectangles.length + textBoxes.length;
 
@@ -486,9 +549,25 @@ export const LayersPanel = () => {
           flexShrink: 0
         }}
       >
-        <Typography variant="subtitle2" color="text.primary">
-          {t('title')} · {totalCount}
-        </Typography>
+        {parentView ? (
+          <Button
+            aria-label={tViewControls('backToParentView')}
+            onClick={() => changeView(parentView.id, model)}
+            startIcon={<BackIcon size={16} />}
+            size="small"
+            variant="text"
+            color="inherit"
+            sx={{ textTransform: 'none', ml: -1 }}
+          >
+            <Typography variant="subtitle2" noWrap>
+              {currentView.name}
+            </Typography>
+          </Button>
+        ) : (
+          <Typography variant="subtitle2" color="text.primary">
+            {t('title')}
+          </Typography>
+        )}
         <MUIIconButton
           size="small"
           aria-label={t('title')}
@@ -500,6 +579,29 @@ export const LayersPanel = () => {
           <CloseIcon size={18} />
         </MUIIconButton>
       </Box>
+
+      {parentView && !childViewHintDismissed && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 1,
+            px: 2,
+            py: 1,
+            bgcolor: 'action.hover',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+            flexShrink: 0
+          }}
+        >
+          <Typography variant="caption" color="text.secondary" sx={{ flex: 1 }}>
+            {tViewControls('childViewHintBody')}
+          </Typography>
+          <MUIIconButton size="small" onClick={dismissChildViewHint} sx={{ mt: -0.5, mr: -0.5 }}>
+            <CloseIcon size={14} />
+          </MUIIconButton>
+        </Box>
+      )}
 
       <Tabs
         value={activeTab}
@@ -612,7 +714,7 @@ export const LayersPanel = () => {
                         connectorCount={connectorCountByItemId.get(item.id) ?? 0}
                         isSelected={isNodeSelected(item.id)}
                         onSelect={() => {
-                          uiStateActions.setItemControls({ type: 'ITEM', id: item.id });
+                          selectOrToggle({ type: 'ITEM', id: item.id }, isNodeSelected(item.id));
                         }}
                       />
                     ))}
@@ -622,7 +724,10 @@ export const LayersPanel = () => {
                         zoneName={zone.name}
                         isSelected={isRectangleSelected(zone.rectangle.id)}
                         onSelect={() => {
-                          uiStateActions.setItemControls({ type: 'RECTANGLE', id: zone.rectangle.id });
+                          selectOrToggle(
+                            { type: 'RECTANGLE', id: zone.rectangle.id },
+                            isRectangleSelected(zone.rectangle.id)
+                          );
                         }}
                       />
                     )}
@@ -632,7 +737,10 @@ export const LayersPanel = () => {
                         zoneName={zone.name}
                         isSelected={isTextBoxSelected(zone.textBoxId)}
                         onSelect={() => {
-                          uiStateActions.setItemControls({ type: 'TEXTBOX', id: zone.textBoxId as string });
+                          selectOrToggle(
+                            { type: 'TEXTBOX', id: zone.textBoxId as string },
+                            isTextBoxSelected(zone.textBoxId as string)
+                          );
                         }}
                       />
                     )}
@@ -660,7 +768,7 @@ export const LayersPanel = () => {
                         connectorCount={connectorCountByItemId.get(item.id) ?? 0}
                         isSelected={isNodeSelected(item.id)}
                         onSelect={() => {
-                          uiStateActions.setItemControls({ type: 'ITEM', id: item.id });
+                          selectOrToggle({ type: 'ITEM', id: item.id }, isNodeSelected(item.id));
                         }}
                       />
                     ))}
@@ -670,7 +778,7 @@ export const LayersPanel = () => {
                         id={textBox.id}
                         isSelected={isTextBoxSelected(textBox.id)}
                         onSelect={() => {
-                          uiStateActions.setItemControls({ type: 'TEXTBOX', id: textBox.id });
+                          selectOrToggle({ type: 'TEXTBOX', id: textBox.id }, isTextBoxSelected(textBox.id));
                         }}
                       />
                     ))}
@@ -687,11 +795,10 @@ export const LayersPanel = () => {
                   index={index}
                   isSelected={isConnectorSelected(connector.id)}
                   onSelect={() => {
-                    uiStateActions.setItemControls({
-                      type: 'CONNECTOR_GROUP',
-                      ids: [connector.id],
-                      focusedId: connector.id
-                    });
+                    selectOrToggle(
+                      { type: 'CONNECTOR_GROUP', ids: [connector.id], focusedId: connector.id },
+                      isConnectorSelected(connector.id)
+                    );
                   }}
                 />
               ))}

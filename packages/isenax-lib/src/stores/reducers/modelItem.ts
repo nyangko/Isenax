@@ -31,6 +31,11 @@ export const createModelItem = (
 export const deleteModelItem = (id: string, state: State): State => {
   const modelItem = getItemByIdOrThrow(state.model.items, id);
 
+  // An item with a drill-down view would leave that view orphaned (no way to
+  // tell what it's the detail of) -- no-op until the child view is removed,
+  // same guard pattern as the anchor ViewItem delete guard.
+  if (modelItem.value.childViewId) return state;
+
   const newState = produce(state, (draft) => {
     delete draft.model.items[modelItem.index];
   });

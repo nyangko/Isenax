@@ -7,11 +7,13 @@ import {
   IconRectangle as AddRectangleIcon,
   IconRoute as AddConnectorIcon,
   IconPencil as EditIcon,
-  IconTrash as DeleteIcon
+  IconTrash as DeleteIcon,
+  IconStack as ChildViewIcon
 } from '@tabler/icons-react';
 import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
-import { generateId, findNearestUnoccupiedTile } from 'src/utils';
+import { generateId, findNearestUnoccupiedTile, getItemById } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
+import { useView } from 'src/hooks/useView';
 import { useModelStore } from 'src/stores/modelStore';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
 import { useTranslation } from 'src/stores/localeStore';
@@ -35,6 +37,7 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
     return state.actions;
   });
   const uiStateApi = useUiStateStoreApi();
+  const { changeView } = useView();
 
   const [ menuItemsBeforeClosing, setMenuItemsBeforeClosing ] = useState<
     { label?: string; onClick?: () => void; Icon?: React.ReactNode; shortcut?: string; isDivider?: boolean }[]
@@ -221,8 +224,15 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
         } :
         undefined;
 
+      const viewItem =
+        type === 'ITEM'
+          ? getItemById(scene.items, contextMenu.item.id)?.value
+          : undefined;
+
       const deleteItem =
-        type === 'ITEM' ? {
+        // Anchor items mark "this view is the detail of that item" and can't
+        // be deleted -- hide the option entirely rather than show it and no-op.
+        type === 'ITEM' && !viewItem?.anchor ? {
           label: t('deleteNode'),
           Icon: <DeleteIcon size={20} />,
           onClick: () => {
@@ -253,6 +263,34 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
 
       if (type === 'ITEM') {
         const nodeId = contextMenu.item.id;
+        const modelItem = getItemById(model.items, nodeId)?.value;
+
+        if (modelItem) {
+          itemMenuItems.push({
+            label: modelItem.childViewId ? t('openChildView') : t('createChildView'),
+            Icon: <ChildViewIcon size={20} />,
+            onClick: () => {
+              if (modelItem.childViewId) {
+                changeView(modelItem.childViewId, model);
+                onClose();
+                return;
+              }
+
+              try {
+                const viewName = t('childViewName').replace('{name}', modelItem.name);
+                const result = scene.createChildView(nodeId, viewName);
+                if (result) changeView(result.newViewId, result.state.model);
+              } catch (error) {
+                // Circular reference (item already anchors an ancestor view) --
+                // no toast/alert system in the app yet, so this is the minimal
+                // safe fallback until one exists.
+                console.warn(error);
+              }
+              onClose();
+            }
+          });
+          itemMenuItems.push({ isDivider: true });
+        }
 
         // Add Connector is the most common thing to do from a node, so it
         // leads the menu, set off from the edit/copy/duplicate/delete actions below.

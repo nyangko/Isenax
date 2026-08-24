@@ -59,4 +59,24 @@ describe('Model item reducers works correctly', () => {
 
     expect(deletedItem).toThrow();
   });
+
+  test('Item with a child view is not deleted (orphan guard)', () => {
+    const nodeId = 'node1';
+    const stateWithChildView = {
+      model: {
+        ...modelFixture,
+        items: modelFixture.items.map((item) =>
+          item.id === nodeId ? { ...item, childViewId: 'childView1' } : item
+        )
+      },
+      scene
+    };
+
+    const newState = deleteModelItem(nodeId, stateWithChildView);
+
+    expect(newState).toBe(stateWithChildView);
+    expect(getItemByIdOrThrow(newState.model.items, nodeId).value.childViewId).toBe(
+      'childView1'
+    );
+  });
 });

@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Back to parent view",
+    childViewHintTitle: "You're in a detail view",
+    childViewHintBody: "Tap the button above to go back to the parent view.",
     switchToFlatView: "Switch to flat view",
     switchToIsometricView: "Switch to isometric view"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Duplicate Node",
     duplicateRectangle: "Duplicate Rectangle",
     duplicateText: "Duplicate Text",
+    childViewName: "{name} Detail",
+    createChildView: "Create Child View",
+    openChildView: "Open Child View",
     editNode: "Edit Node",
     deleteNode: "Delete Node",
     editRectangle: "Edit Rectangle",

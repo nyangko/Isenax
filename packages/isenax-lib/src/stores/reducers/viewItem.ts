@@ -69,6 +69,15 @@ export const deleteViewItem = (
   id: string,
   { state, viewId }: ViewReducerContext
 ): State => {
+  const view = getItemByIdOrThrow(state.model.views, viewId);
+  const viewItem = getItemByIdOrThrow(view.value.items, id);
+
+  // Anchor items mark "this view is the detail of that item" -- deleting them
+  // would leave the view without a way to tell what it's a drill-down of, so
+  // this is a no-op rather than an error (matches the delete-menu already
+  // hiding this option for anchors).
+  if (viewItem.value.anchor) return state;
+
   const newState = produce(state, (draft) => {
     const view = getItemByIdOrThrow(draft.model.views, viewId);
     const viewItem = getItemByIdOrThrow(view.value.items, id);

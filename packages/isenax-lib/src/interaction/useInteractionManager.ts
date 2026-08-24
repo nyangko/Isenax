@@ -97,6 +97,12 @@ const getModeFunction = (mode: ModeActions, e: SlimMouseEvent) => {
 export const useInteractionManager = () => {
   const rendererRef = useRef<HTMLElement | undefined>(undefined);
   const reducerTypeRef = useRef<string | undefined>(undefined);
+  // Touch has no right-click -- a long-press on the canvas opens the same
+  // context menu instead. Cancelled by touchmove past a small threshold (so
+  // it doesn't fire mid-pan/drag) and cleared on touchend.
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressStartRef = useRef<{ x: number; y: number } | null>(null);
+  const longPressFiredRef = useRef(false);
 
   const modeType = useUiStateStore((state) => state.mode.type);
   const rendererEl = useUiStateStore((state) => state.rendererEl);
@@ -466,27 +472,91 @@ export const useInteractionManager = () => {
 
     const el = window;
 
+    const clearLongPressTimer = () => {
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+        longPressTimerRef.current = null;
+      }
+    };
+
     const onTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const clientX = Math.floor(touch.clientX);
+      const clientY = Math.floor(touch.clientY);
+
+      longPressFiredRef.current = false;
+      longPressStartRef.current = { x: clientX, y: clientY };
+
       onMouseEvent({
         ...e,
-        clientX: Math.floor(e.touches[0].clientX),
-        clientY: Math.floor(e.touches[0].clientY),
+        clientX,
+        clientY,
         type: 'mousedown',
         button: 0
       });
+
+      clearLongPressTimer();
+      longPressTimerRef.current = setTimeout(() => {
+        longPressTimerRef.current = null;
+        longPressFiredRef.current = true;
+
+        const uiState = uiStateApi.getState();
+
+        // The pending "open edit panel on release" state would otherwise
+        // still fire on touchend, opening ItemControls alongside the
+        // context menu it's about to show.
+        if ('mousedownItem' in uiState.mode) {
+          uiState.actions.setMode({
+            ...uiState.mode,
+            mousedownItem: null
+          } as typeof uiState.mode);
+        }
+
+        onContextMenu({
+          clientX,
+          clientY,
+          target: e.target,
+          type: 'contextmenu',
+          preventDefault: () => {},
+          button: 2,
+          ctrlKey: false,
+          altKey: false,
+          shiftKey: false,
+          metaKey: false
+        });
+      }, 500);
     };
 
     const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const clientX = Math.floor(touch.clientX);
+      const clientY = Math.floor(touch.clientY);
+
+      if (longPressStartRef.current && longPressTimerRef.current) {
+        const dx = clientX - longPressStartRef.current.x;
+        const dy = clientY - longPressStartRef.current.y;
+        if (Math.hypot(dx, dy) > 10) clearLongPressTimer();
+      }
+
       onMouseEvent({
         ...e,
-        clientX: Math.floor(e.touches[0].clientX),
-        clientY: Math.floor(e.touches[0].clientY),
+        clientX,
+        clientY,
         type: 'mousemove',
         button: 0
       });
     };
 
     const onTouchEnd = (e: TouchEvent) => {
+      clearLongPressTimer();
+
+      if (longPressFiredRef.current) {
+        // Context menu is already open from the long-press -- don't also
+        // dispatch the release as a click/tap.
+        longPressFiredRef.current = false;
+        return;
+      }
+
       onMouseEvent({
         ...e,
         clientX: 0,
@@ -567,6 +637,12 @@ export const useInteractionManager = () => {
       el.removeEventListener('touchmove', onTouchMove);
       el.removeEventListener('touchend', onTouchEnd);
       rendererEl?.removeEventListener('wheel', onScroll);
+      // Deliberately NOT clearing the long-press timer here -- this cleanup
+      // re-runs on every dependency change (mode/renderer-size/etc.), not
+      // just unmount, and those fire constantly during an interaction. The
+      // timer callback reads live state via uiStateApi.getState() at fire
+      // time, so surviving a listener rebind is harmless; clearing it here
+      // was cancelling real long-presses mid-hold.
       cleanup();
     };
   }, [

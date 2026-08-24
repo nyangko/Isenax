@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Voltar para a visualização superior",
+    childViewHintTitle: "Você está em uma visualização de detalhe",
+    childViewHintBody: "Toque no botão acima para voltar à visualização superior.",
     switchToFlatView: "Mudar para vista plana",
     switchToIsometricView: "Mudar para vista isométrica"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Duplicar nó",
     duplicateRectangle: "Duplicar retângulo",
     duplicateText: "Duplicar texto",
+    childViewName: "Detalhe de {name}",
+    createChildView: "Criar visualização filha",
+    openChildView: "Abrir visualização filha",
     editNode: "Editar nó",
     deleteNode: "Excluir nó",
     editRectangle: "Editar retângulo",

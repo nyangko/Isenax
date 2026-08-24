@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Retour à la vue parente",
+    childViewHintTitle: "Vous êtes dans une vue de détail",
+    childViewHintBody: "Appuyez sur le bouton ci-dessus pour revenir à la vue parente.",
     switchToFlatView: "Basculer en vue plane",
     switchToIsometricView: "Basculer en vue isométrique"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Dupliquer le nœud",
     duplicateRectangle: "Dupliquer le rectangle",
     duplicateText: "Dupliquer le texte",
+    childViewName: "Détail de {name}",
+    createChildView: "Créer une vue enfant",
+    openChildView: "Ouvrir la vue enfant",
     editNode: "Modifier le nœud",
     deleteNode: "Supprimer le nœud",
     editRectangle: "Modifier le rectangle",

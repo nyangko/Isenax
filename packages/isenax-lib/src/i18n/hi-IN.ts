@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "पैरेंट व्यू पर वापस जाएं",
+    childViewHintTitle: "आप एक विवरण दृश्य में हैं",
+    childViewHintBody: "पैरेंट व्यू पर वापस जाने के लिए ऊपर दिया गया बटन दबाएं।",
     switchToFlatView: "फ़्लैट व्यू पर स्विच करें",
     switchToIsometricView: "आइसोमेट्रिक व्यू पर स्विच करें"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "नोड डुप्लिकेट करें",
     duplicateRectangle: "आयत डुप्लिकेट करें",
     duplicateText: "टेक्स्ट डुप्लिकेट करें",
+    childViewName: "{name} विवरण",
+    createChildView: "चाइल्ड व्यू बनाएं",
+    openChildView: "चाइल्ड व्यू खोलें",
     editNode: "नोड संपादित करें",
     deleteNode: "नोड हटाएं",
     editRectangle: "आयत संपादित करें",

@@ -188,6 +188,16 @@ describe('viewItem reducer', () => {
       }).toThrow('Item with id nonexistent not found');
     });
 
+    it('should no-op when the item is an anchor item', () => {
+      mockState.model.views[0].items[0] = { ...mockViewItem, anchor: true };
+
+      const result = deleteViewItem('item1', mockContext);
+
+      expect(result).toBe(mockState);
+      expect(result.model.views[0].items).toHaveLength(2);
+      expect(result.model.views[0].items.find(item => item.id === 'item1')).toBeDefined();
+    });
+
     it('should handle connectors with multiple anchors referencing the same item', () => {
       const complexConnector: Connector = {
         id: 'connector3',

@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "親ビューに戻る",
+    childViewHintTitle: "詳細ビューを表示中です",
+    childViewHintBody: "上のボタンをタップすると親ビューに戻ります。",
     switchToFlatView: "フラット表示に切り替え",
     switchToIsometricView: "アイソメトリック表示に切り替え"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "ノードを複製",
     duplicateRectangle: "四角形を複製",
     duplicateText: "テキストを複製",
+    childViewName: "{name}の詳細",
+    createChildView: "子ビューを作成",
+    openChildView: "子ビューを開く",
     editNode: "ノードを編集",
     deleteNode: "ノードを削除",
     editRectangle: "四角形を編集",

@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Вернуться к родительскому виду",
+    childViewHintTitle: "Вы находитесь в детальном виде",
+    childViewHintBody: "Нажмите кнопку выше, чтобы вернуться к родительскому виду.",
     switchToFlatView: "Переключить на плоский вид",
     switchToIsometricView: "Переключить на изометрический вид"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Дублировать узел",
     duplicateRectangle: "Дублировать прямоугольник",
     duplicateText: "Дублировать текст",
+    childViewName: "Детали {name}",
+    createChildView: "Создать дочерний вид",
+    openChildView: "Открыть дочерний вид",
     editNode: "Изменить узел",
     deleteNode: "Удалить узел",
     editRectangle: "Изменить прямоугольник",

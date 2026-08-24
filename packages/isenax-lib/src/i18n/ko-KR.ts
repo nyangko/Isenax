@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "레이어"
   },
   viewControls: {
+    backToParentView: "상위 뷰로 이동",
+    childViewHintTitle: "하위 뷰에 있어요",
+    childViewHintBody: "위쪽 버튼을 누르면 상위 뷰로 돌아갈 수 있어요.",
     switchToFlatView: "평면 보기로 전환",
     switchToIsometricView: "아이소메트릭 보기로 전환"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "노드 복제",
     duplicateRectangle: "영역 복제",
     duplicateText: "텍스트 복제",
+    childViewName: "{name} 상세",
+    createChildView: "하위 뷰 만들기",
+    openChildView: "하위 뷰로 이동",
     editNode: "노드 수정",
     deleteNode: "노드 삭제",
     editRectangle: "영역 수정",

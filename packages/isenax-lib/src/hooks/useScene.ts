@@ -188,6 +188,22 @@ export const useScene = () => {
     [getState, setState, saveToHistoryBeforeChange]
   );
 
+  const createChildView = useCallback(
+    (modelItemId: string, viewName?: string) => {
+      if (!currentViewId) return;
+
+      saveToHistoryBeforeChange();
+      const { state: newState, newViewId } = reducers.createChildView(
+        modelItemId,
+        { viewId: currentViewId, state: getState() },
+        viewName
+      );
+      setState(newState);
+      return { state: newState, newViewId };
+    },
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
+  );
+
   const createViewItem = useCallback(
     (newViewItem: ViewItem, currentState?: State) => {
       if (!currentViewId) return;
@@ -634,6 +650,7 @@ export const useScene = () => {
     createModelItem,
     updateModelItem,
     deleteModelItem,
+    createChildView,
     createViewItem,
     updateViewItem,
     deleteViewItem,

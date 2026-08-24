@@ -30,6 +30,9 @@ export const useInitialDataManager = () => {
   const editorMode = useUiStateStore((state) => {
     return state.editorMode;
   });
+  const currentViewId = useUiStateStore((state) => {
+    return state.view;
+  });
   const { changeView } = useView();
 
   const load = useCallback(
@@ -115,10 +118,19 @@ export const useInitialDataManager = () => {
       prevInitialData.current = initialData;
       model.actions.set(initialData, true);
 
-      const view = getItemByIdOrThrow(
-        initialData.views,
-        initialData.view ?? initialData.views[0].id
-      );
+      // A host app that echoes onModelUpdated straight back into initialData
+      // (a controlled-component pattern) re-triggers this load on every
+      // internal edit, not just genuine "open a different diagram" calls.
+      // Falling back to views[0] unconditionally would reset the active
+      // drill-down view to the root on every such echo -- stay on the
+      // current view when it still exists in the reloaded data instead.
+      const preferredViewId =
+        initialData.view ??
+        (currentViewId && initialData.views.some((v) => v.id === currentViewId)
+          ? currentViewId
+          : initialData.views[0].id);
+
+      const view = getItemByIdOrThrow(initialData.views, preferredViewId);
 
       changeView(view.value.id, initialData);
 
@@ -151,7 +163,7 @@ export const useInitialDataManager = () => {
 
       setIsReady(true);
     },
-    [changeView, model.actions, rendererEl, uiStateActions, editorMode]
+    [changeView, model.actions, rendererEl, uiStateActions, editorMode, currentViewId]
   );
 
   const clear = useCallback(() => {

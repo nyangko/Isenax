@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "Powrót do widoku nadrzędnego",
+    childViewHintTitle: "Jesteś w widoku szczegółowym",
+    childViewHintBody: "Dotknij przycisku powyżej, aby wrócić do widoku nadrzędnego.",
     switchToFlatView: "Przełącz na widok płaski",
     switchToIsometricView: "Przełącz na widok izometryczny"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "Duplikuj węzeł",
     duplicateRectangle: "Duplikuj prostokąt",
     duplicateText: "Duplikuj tekst",
+    childViewName: "Szczegóły {name}",
+    createChildView: "Utwórz widok podrzędny",
+    openChildView: "Otwórz widok podrzędny",
     editNode: "Edytuj węzeł",
     deleteNode: "Usuń węzeł",
     editRectangle: "Edytuj prostokąt",

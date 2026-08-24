@@ -26,6 +26,9 @@ const locale: LocaleProps = {
     layers: "Layers"
   },
   viewControls: {
+    backToParentView: "返回上级视图",
+    childViewHintTitle: "您正在查看详情视图",
+    childViewHintBody: "点击上方按钮返回上级视图。",
     switchToFlatView: "切换到平面视图",
     switchToIsometricView: "切换到等距视图"
   },
@@ -145,6 +148,9 @@ const locale: LocaleProps = {
     duplicateNode: "创建节点副本",
     duplicateRectangle: "创建矩形副本",
     duplicateText: "创建文本副本",
+    childViewName: "{name}详情",
+    createChildView: "创建子视图",
+    openChildView: "打开子视图",
     editNode: "编辑节点",
     deleteNode: "删除节点",
     editRectangle: "编辑矩形",

@@ -18,6 +18,7 @@ import { ZoomControls } from 'src/components/ZoomControls/ZoomControls';
 import { DebugUtils } from 'src/components/DebugUtils/DebugUtils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { ContextMenuManager } from 'src/components/ContextMenu/ContextMenuManager';
+import { useScene } from 'src/hooks/useScene';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
@@ -135,6 +136,11 @@ export const UiOverlay = () => {
   const toolbarPosition = useUiStateStore((state) => {
     return state.toolbarPosition;
   });
+  // LEFT is a vertical toolbar meant for wide desktop viewports -- on a
+  // narrow/tall mobile screen it collapses to a small icon cluster floating
+  // in the middle of a mostly-empty column. Fall back to TOP without
+  // touching the saved preference, so it's still LEFT next time on desktop.
+  const effectiveToolbarPosition = isMobile ? 'TOP' : toolbarPosition;
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
@@ -148,6 +154,16 @@ export const UiOverlay = () => {
       uiStateActions.setLayersPanelOpen(true);
     }
   }, [itemControls, uiStateActions]);
+
+  // Same reason as above: entering a child view surfaces the Layers panel,
+  // since its header is now the "back to parent view" control -- there's no
+  // separate floating canvas overlay for it.
+  const { currentView } = useScene();
+  useEffect(() => {
+    if (currentView.parentViewId) {
+      uiStateActions.setLayersPanelOpen(true);
+    }
+  }, [currentView.id, currentView.parentViewId, uiStateActions]);
   const isFlat = useUiStateStore((state) => {
     return state.projectionMode === 'FLAT';
   });
@@ -214,7 +230,7 @@ export const UiOverlay = () => {
           </SwipeableDrawer>
         )}
 
-        {availableTools.includes('TOOL_MENU') && toolbarPosition === 'LEFT' && (
+        {availableTools.includes('TOOL_MENU') && effectiveToolbarPosition === 'LEFT' && (
           <Box
             ref={toolMenuRef}
             // Deliberately NOT "ff-tool-menu-anchor" -- isenax-app's App.css
@@ -237,7 +253,7 @@ export const UiOverlay = () => {
           </Box>
         )}
 
-        {availableTools.includes('TOOL_MENU') && toolbarPosition === 'TOP' && (
+        {availableTools.includes('TOOL_MENU') && effectiveToolbarPosition === 'TOP' && (
           <Box
             ref={toolMenuRef}
             className="ff-tool-menu-anchor"
@@ -259,7 +275,7 @@ export const UiOverlay = () => {
 
         {availableTools.includes('TOOL_MENU') &&
           historyControlsPortalTarget &&
-          createPortal(<HistoryControls />, historyControlsPortalTarget)}
+          createPortal(<HistoryControls bare />, historyControlsPortalTarget)}
 
         {availableTools.includes('ZOOM_CONTROLS') && (
           <Box
