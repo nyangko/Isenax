@@ -25,7 +25,7 @@ Isenax es una potente aplicación web progresiva (PWA) de código abierto para c
 <b>Pruébalo en línea --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax incluye un servidor MCP para que un agente de IA externo (Claude, etc.) p
 Los iconos integrados viajan solo por id (no se envían datos base64 al agente), y `update_diagram_patch` permite que un agente envíe solo los campos que cambió en lugar de reenviar todo el modelo.
 
 ## Recientemente añadido
+
+### Profundizar en vistas de detalle
+Haz clic derecho en un nodo (mantén pulsado en móvil) → "Crear vista secundaria" para acercarte al diagrama de detalle propio de ese elemento. El icono de anclaje permanece fijo y no se puede eliminar, así siempre sabes de quién es la vista en la que estás, y el encabezado del panel de capas funciona también como botón de retroceso. Cada fila de nodo en el panel de capas tiene ahora su propio icono para crear/abrir esta vista.
+
+### Retroalimentación de selección más clara
+Al seleccionar un nodo, ahora se atenúan todos los demás nodos para que el seleccionado resalte; al seleccionar un conector, se resalta la línea misma en el lienzo (no solo sus extremos); y al hacer clic en una fila ya seleccionada del panel de capas, se deselecciona.
+
+### Barra de herramientas y Configuración adaptables a móvil
+La barra de herramientas superior ahora cambia automáticamente a un diseño horizontal en pantallas estrechas, sin importar la posición guardada, y Configuración se abre a pantalla completa en móvil, con una navegación de iconos desplazable horizontalmente en lugar de la barra lateral.
 
 ### Configuración rediseñada
 Un diálogo de configuración de dos paneles con búsqueda (⌘K) reemplaza la antigua franja de pestañas — agrupado en Atajos/Desplazamiento/Zoom, Pantalla, Paquetes de Iconos y Extensiones, con semántica de Cancelar/Guardar y un botón "Restablecer valores predeterminados" por sección.

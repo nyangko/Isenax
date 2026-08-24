@@ -25,7 +25,7 @@ Isenax est une puissante Progressive Web App (PWA) open-source pour créer de be
 <b>Essayez-le en ligne --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax embarque un serveur MCP permettant à un agent IA externe (Claude, etc.) 
 Les icônes intégrées ne voyagent que par id (aucune donnée base64 envoyée à l'agent), et `update_diagram_patch` permet à un agent de n'envoyer que les champs modifiés au lieu de renvoyer tout le modèle.
 
 ## Récemment ajouté
+
+### Exploration en profondeur des vues de détail
+Clic droit sur un nœud (appui long sur mobile) → « Créer une vue enfant » pour zoomer sur le diagramme de détail propre à cet élément. L'icône d'ancrage reste verrouillée en place et ne peut pas être supprimée, afin de toujours savoir à qui appartient la vue affichée ; l'en-tête du panneau Calques fait aussi office de bouton retour. Chaque ligne de nœud du panneau Calques dispose désormais de sa propre icône pour créer/ouvrir cette vue.
+
+### Un retour de sélection plus clair
+La sélection d'un nœud atténue désormais tous les autres nœuds pour le faire ressortir, la sélection d'un connecteur met en surbrillance la ligne elle-même sur le canevas (pas seulement ses extrémités), et cliquer sur une ligne déjà sélectionnée dans le panneau Calques la désélectionne.
+
+### Barre d'outils et Paramètres adaptatifs sur mobile
+La barre d'outils supérieure passe désormais automatiquement en disposition horizontale sur les écrans étroits, quel que soit le réglage de position enregistré, et les Paramètres s'ouvrent en plein écran sur mobile avec une navigation par icônes défilable horizontalement à la place de la barre latérale.
 
 ### Refonte des Paramètres
 Une boîte de dialogue des paramètres à deux volets et consultable (⌘K) remplace l'ancienne barre d'onglets — regroupée en Raccourcis/Déplacement/Zoom, Affichage, Packs d'icônes et Extensions, avec une logique Annuler/Enregistrer et un bouton « Réinitialiser les valeurs par défaut » par section.

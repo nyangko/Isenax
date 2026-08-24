@@ -25,7 +25,7 @@ Isenax è una potente Progressive Web App (PWA) open source per creare bellissim
 <b>Provala online --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax include un server MCP che permette a un agente IA esterno (Claude, ecc.) 
 Le icone integrate viaggiano solo tramite id (nessun dato base64 inviato all'agente), e `update_diagram_patch` permette a un agente di inviare solo i campi modificati invece di reinviare l'intero modello.
 
 ## Aggiunto di recente
+
+### Approfondimento nelle viste di dettaglio
+Fai clic destro su un nodo (tocco prolungato su mobile) → "Crea vista secondaria" per entrare nel diagramma di dettaglio di quell'elemento. L'icona di ancoraggio resta bloccata in posizione e non può essere eliminata, così sai sempre di chi è la vista che stai guardando, e l'intestazione del pannello Livelli funge anche da pulsante indietro. Ogni riga nodo nel pannello Livelli ha ora anche la propria icona per creare/aprire questa vista.
+
+### Feedback di selezione più chiaro
+Selezionare un nodo ora attenua tutti gli altri nodi così quello selezionato risalta di più, selezionare un connettore evidenzia la linea stessa sulla tela (non solo i suoi estremi), e cliccare su una riga già selezionata nel pannello Livelli la deseleziona.
+
+### Barra degli strumenti e Impostazioni responsive su mobile
+La barra degli strumenti superiore ora passa automaticamente a una disposizione orizzontale sugli schermi stretti, indipendentemente dalla posizione salvata, e le Impostazioni si aprono a schermo intero su mobile con una navigazione a icone scorrevole orizzontalmente al posto della barra laterale.
 
 ### Impostazioni ridisegnate
 Una finestra di dialogo delle impostazioni a due riquadri e con ricerca (⌘K) sostituisce la vecchia barra di schede — organizzata in Scorciatoie/Pan/Zoom, Visualizzazione, Pacchetti di icone ed Estensioni, con la logica Annulla/Salva e un pulsante "Ripristina predefiniti" per ogni sezione.

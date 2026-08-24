@@ -25,7 +25,7 @@ Isenax to rozbudowana, otwartoźródłowa aplikacja Progressive Web App (PWA) do
 <b>Wypróbuj online --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax zawiera serwer MCP, dzięki któremu zewnętrzny agent AI (Claude itp.) m
 Wbudowane ikony są przesyłane tylko przez id (dane base64 nie są wysyłane do agenta), a `update_diagram_patch` pozwala agentowi wysyłać tylko zmienione pola zamiast całego modelu.
 
 ## Ostatnio dodane
+
+### Zagłębianie się w widoki szczegółowe
+Kliknij prawym przyciskiem węzeł (na urządzeniach mobilnych: przytrzymaj) → „Utwórz widok podrzędny”, aby powiększyć własny diagram szczegółowy tego elementu. Ikona kotwicy pozostaje zablokowana na miejscu i nie można jej usunąć, dzięki czemu zawsze wiadomo, czyj to widok, a nagłówek panelu Warstwy pełni jednocześnie funkcję przycisku powrotu. Każdy wiersz węzła w panelu Warstwy ma teraz też własną ikonę tworzenia/otwierania takiego widoku.
+
+### Wyraźniejsza informacja zwrotna o zaznaczeniu
+Zaznaczenie węzła przyciemnia teraz wszystkie pozostałe węzły, dzięki czemu zaznaczony wyraźnie się wyróżnia; zaznaczenie łącznika podświetla samą linię na płótnie (nie tylko jej końce); a kliknięcie już zaznaczonego wiersza w panelu Warstwy usuwa zaznaczenie.
+
+### Responsywny pasek narzędzi i Ustawienia na urządzeniach mobilnych
+Górny pasek narzędzi na wąskich ekranach przełącza się teraz automatycznie w układ poziomy, niezależnie od zapisanej pozycji, a Ustawienia otwierają się na pełnym ekranie na urządzeniach mobilnych, z przewijaną poziomo nawigacją w postaci paska ikon zamiast listy bocznej.
 
 ### Przeprojektowane ustawienia
 Przeszukiwalne (⌘K) okno ustawień w układzie dwupanelowym zastępuje dawny pasek zakładek — pogrupowane w Skróty/Przesuwanie/Zoom, Wyświetlanie, Pakiety ikon i Rozszerzenia, z logiką Anuluj/Zapisz oraz przyciskiem „Przywróć domyślne” w każdej sekcji.

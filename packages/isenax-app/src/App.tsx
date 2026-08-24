@@ -43,7 +43,7 @@ interface CurrentDiagramRef {
 
 // Bump this whenever the History panel's changelog content changes so returning
 // users see the "unread" dot again even if they already dismissed the tutorial hints.
-const HISTORY_VERSION = 'v1.5.0';
+const HISTORY_VERSION = 'v1.8.0';
 const TUTORIAL_HINT_KEYS = [
   'isenax_import_hint_dismissed',
   'isenax_connector_hint_dismissed',

@@ -25,6 +25,20 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.8.0',
+    date: '2026-08-24',
+    items: [
+      ['노드 우클릭(모바일은 길게 누르기) → "하위 뷰 만들기"', '로 그 아이템만의 상세 다이어그램(하위 뷰)으로 드릴다운 가능 — 진입점 아이콘은 고정되어 삭제할 수 없고, 레이어 패널 헤더가 상위 뷰로 돌아가는 버튼을 겸함'],
+      ['레이어 패널의 각 노드 행', '에도 하위 뷰 생성/열기 아이콘 버튼 추가 — 우클릭이 어려운 환경에서도 바로 접근 가능'],
+      ['빈 채로 나간 하위 뷰', '는 자동으로 정리되어 원래 없던 것처럼 되돌아가고, 우클릭 메뉴에 다시 "만들기"로 표시됨'],
+      ['노드를 선택하면', ' 다른 노드들이 흐려져서(dim) 선택된 노드가 더 잘 구분됨'],
+      ['연결선을 선택하면', ' 양 끝 점뿐 아니라 선 자체에도 캔버스에 하이라이트가 표시됨'],
+      ['레이어 패널에서 이미 선택된 항목', '을 다시 클릭하면 선택이 해제됨'],
+      ['모바일/좁은 화면에서 상단 툴바', '가 저장된 위치 설정과 무관하게 자동으로 가로 배치로 전환됨'],
+      ['설정 화면', '도 모바일에서 전체화면으로 열리고, 좌측 그룹 목록 대신 가로로 스크롤되는 아이콘 스트립 내비게이션으로 전환됨']
+    ]
+  },
+  {
     version: 'v1.7.0',
     date: '2026-08-20',
     items: [
@@ -178,6 +192,20 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.8.0',
+    date: '2026-08-24',
+    items: [
+      ['Right-click a node (long-press on mobile) → "Create Child View"', " to drill down into that item's own detail diagram (a child view) — the anchor icon stays locked in place and can't be deleted, and the Layers panel header doubles as a back-to-parent button"],
+      ['Each node row in the Layers panel', ' now has its own create/open child-view icon button — a direct entry point even where right-click isn\'t available'],
+      ['A child view left empty', ' is now cleaned up automatically when you navigate away, so the node\'s menu shows "Create" again instead of leaving a dead empty view behind'],
+      ['Selecting a node', ' now dims every other node so the selected one stands out'],
+      ['Selecting a connector', ' now highlights the line itself on the canvas, not just its two endpoint dots'],
+      ['Clicking an already-selected row in the Layers panel', ' now deselects it'],
+      ['The top toolbar on mobile/narrow screens', ' now switches to a horizontal layout automatically, regardless of the saved position setting'],
+      ['Settings', ' also goes fullscreen on mobile, replacing the left group list with a horizontally scrollable icon-strip navigation']
+    ]
+  },
   {
     version: 'v1.7.0',
     date: '2026-08-20',

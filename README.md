@@ -26,7 +26,7 @@ Isenax is a powerful, open-source Progressive Web App (PWA) for creating beautif
 <b>Try it online --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
  
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="assets/screenshot.jpg" />
 
 ---------
 
@@ -158,6 +158,15 @@ Isenax ships an MCP server so an external AI agent (Claude, etc.) can read, crea
 Built-in icons round-trip by id only (no base64 sent to the agent), and `update_diagram_patch` lets an agent change just the fields it touched instead of resending the whole model.
 
 ## Recently added
+
+### Drill-down into detail views
+Right-click a node (long-press on mobile) → "Create Child View" to zoom into that item's own detail diagram. The anchor icon stays locked in place so you always know whose view you're in, and the Layers panel header doubles as a back button. Each node's row in the Layers panel also has its own create/open icon for the same thing.
+
+### Clearer selection feedback
+Selecting a node now dims every other node so it stands out, selecting a connector highlights the line itself on the canvas (not just its endpoints), and clicking an already-selected row in the Layers panel deselects it.
+
+### Mobile-responsive toolbar and Settings
+The top toolbar now switches to a horizontal layout automatically on narrow screens regardless of your saved position setting, and Settings goes fullscreen with a horizontally scrollable icon-strip navigation instead of the sidebar list.
 
 ### Redesigned Settings
 A searchable (⌘K), two-pane settings dialog replaces the old tab strip — grouped into Shortcuts/Pan/Zoom, Display, Icon Packs and Extensions, with Cancel/Save semantics and a "Reset to defaults" button per section.

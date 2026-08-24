@@ -25,7 +25,7 @@ Isenax é um poderoso Progressive Web App (PWA) de código aberto para criar bel
 <b>Experimente online --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ O Isenax vem com um servidor MCP para que um agente de IA externo (Claude, etc.)
 Os ícones integrados trafegam apenas por id (nenhum dado base64 é enviado ao agente), e o `update_diagram_patch` permite que um agente envie apenas os campos alterados em vez de reenviar todo o modelo.
 
 ## Adicionado recentemente
+
+### Indo mais fundo com as visualizações de detalhe
+Clique com o botão direito em um nó (toque longo no celular) → "Criar visualização filha" para entrar na própria visualização de detalhe daquele item. O ícone âncora fica travado no lugar e não pode ser excluído, então você sempre sabe de quem é a visualização que está vendo, e o cabeçalho do painel de Camadas também funciona como botão de voltar. Cada linha de nó no painel de Camadas agora também tem seu próprio ícone para criar/abrir essa visualização.
+
+### Feedback de seleção mais claro
+Selecionar um nó agora esmaece todos os outros nós para que o selecionado se destaque, selecionar um conector destaca a própria linha no canvas (não só as pontas), e clicar em uma linha já selecionada no painel de Camadas remove a seleção.
+
+### Barra de ferramentas e Configurações responsivas no celular
+A barra de ferramentas superior agora muda automaticamente para um layout horizontal em telas estreitas, independente da posição salva, e as Configurações abrem em tela cheia no celular, com uma navegação de ícones com rolagem horizontal no lugar da lista lateral.
 
 ### Configurações redesenhadas
 Um diálogo de configurações com pesquisa (⌘K) e dois painéis substitui a antiga faixa de abas — agrupado em Atalhos/Panorâmica/Zoom, Exibição, Pacotes de Ícones e Extensões, com semântica de Cancelar/Salvar e um botão "Restaurar padrões" por seção.

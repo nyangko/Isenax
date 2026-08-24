@@ -25,7 +25,7 @@ Isenax ist eine leistungsstarke, quelloffene Progressive Web App (PWA) zum Erste
 <b>Online ausprobieren --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax liefert einen MCP-Server mit, damit ein externer KI-Agent (Claude usw.) d
 Integrierte Icons werden nur per id übertragen (kein Base64 an den Agenten gesendet), und mit `update_diagram_patch` kann ein Agent nur die geänderten Felder senden, statt das gesamte Modell erneut zu übertragen.
 
 ## Kürzlich hinzugefügt
+
+### Drilldown in Detailansichten
+Rechtsklick auf einen Knoten (auf Mobilgeräten: lange gedrückt halten) → „Detailansicht erstellen“, um in die eigene Detailzeichnung dieses Elements hineinzuzoomen. Das Ankersymbol bleibt fest verankert und kann nicht gelöscht werden, sodass immer klar ist, wessen Ansicht gerade geöffnet ist; die Kopfzeile des Ebenen-Panels dient zugleich als Zurück-Button. Jede Knotenzeile im Ebenen-Panel hat jetzt ebenfalls ein eigenes Symbol zum Erstellen/Öffnen.
+
+### Klareres Auswahl-Feedback
+Die Auswahl eines Knotens blendet nun alle anderen Knoten ab, sodass der ausgewählte hervorsticht; die Auswahl eines Verbinders hebt die Linie selbst auf der Zeichenfläche hervor (nicht nur ihre Endpunkte); ein erneuter Klick auf eine bereits ausgewählte Zeile im Ebenen-Panel hebt die Auswahl auf.
+
+### Responsive Symbolleiste und Einstellungen auf Mobilgeräten
+Die obere Symbolleiste wechselt auf schmalen Bildschirmen jetzt automatisch in ein horizontales Layout, unabhängig von der gespeicherten Positionseinstellung, und die Einstellungen öffnen sich auf Mobilgeräten im Vollbild mit einer horizontal scrollbaren Icon-Leiste statt der Seitenleiste.
 
 ### Neu gestaltete Einstellungen
 Ein durchsuchbarer (⌘K), zweispaltiger Einstellungsdialog ersetzt die alte Tableiste — gegliedert in Tastenkürzel/Verschieben/Zoom, Anzeige, Icon-Packs und Erweiterungen, mit Abbrechen/Speichern-Logik und einem „Auf Standard zurücksetzen“-Button pro Abschnitt.

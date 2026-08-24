@@ -25,7 +25,7 @@ Isenax adalah aplikasi web progresif (PWA) open-source yang powerful untuk membu
 <b>Coba secara online --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax dilengkapi server MCP agar agen AI eksternal (Claude, dll.) dapat membaca
 Ikon bawaan hanya dikirim melalui id (data base64 tidak dikirim ke agen), dan `update_diagram_patch` memungkinkan agen mengirim hanya field yang berubah alih-alih mengirim ulang seluruh model.
 
 ## Baru ditambahkan
+
+### Drill-down ke tampilan detail
+Klik kanan pada sebuah node (tekan lama di perangkat mobile) → "Buat Tampilan Turunan" untuk memperbesar ke diagram detail milik item tersebut. Ikon jangkar tetap terkunci di tempatnya dan tidak bisa dihapus, jadi Anda selalu tahu tampilan ini milik siapa, dan header panel Layers juga berfungsi sebagai tombol kembali. Setiap baris node di panel Layers kini juga punya ikon buat/buka sendiri untuk fitur yang sama.
+
+### Umpan balik seleksi yang lebih jelas
+Memilih sebuah node kini meredupkan semua node lain agar node yang dipilih lebih menonjol, memilih konektor menyorot garisnya sendiri di kanvas (bukan hanya titik ujungnya), dan mengklik baris yang sudah dipilih di panel Layers akan membatalkan pilihannya.
+
+### Toolbar dan Pengaturan responsif di mobile
+Toolbar atas kini otomatis beralih ke tata letak horizontal di layar sempit, terlepas dari pengaturan posisi yang tersimpan, dan Pengaturan juga terbuka layar penuh di mobile dengan navigasi strip ikon yang bisa digulir horizontal, menggantikan daftar sidebar.
 
 ### Pengaturan yang Didesain Ulang
 Dialog pengaturan dua panel yang dapat dicari (⌘K) menggantikan deretan tab lama — dikelompokkan menjadi Pintasan/Pan/Zoom, Tampilan, Paket Ikon, dan Ekstensi, dengan mekanisme Batal/Simpan dan tombol "Reset ke default" di setiap bagian.

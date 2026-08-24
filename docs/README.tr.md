@@ -25,7 +25,7 @@ Isenax, güzel izometrik diyagramlar oluşturmak için geliştirilmiş güçlü,
 <b>Çevrimiçi deneyin --> https://nyangko.github.io/Isenax/ <-- </b>
 </p>
 
-<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="https://github.com/user-attachments/assets/15956888-991a-4b5e-9849-dbd82d6f9308" />
+<img width="100%" alt="Isenax-Isometric-Diagramming-Tool" src="../assets/screenshot.jpg" />
 
 ---------
 
@@ -157,6 +157,15 @@ Isenax, harici bir AI ajanının (Claude vb.) diyagramlarınızı doğrudan okuy
 Yerleşik simgeler yalnızca id ile aktarılır (ajana base64 verisi gönderilmez) ve `update_diagram_patch`, ajanın tüm modeli yeniden göndermek yerine yalnızca değiştirdiği alanları göndermesini sağlar.
 
 ## Yakın zamanda eklenenler
+
+### Detay görünümlerine derinlemesine inme
+Bir düğüme sağ tıklayın (mobilde uzun basın) → "Alt Görünüm Oluştur" ile o öğeye ait ayrıntı diyagramına yakınlaşın. Çapa simgesi yerinde kilitli kalır ve silinemez, böylece hangi görünümde olduğunuzu her zaman bilirsiniz; Katmanlar panelinin başlığı aynı zamanda geri düğmesi görevi görür. Katmanlar panelindeki her düğüm satırında artık aynı işlev için kendi oluştur/aç simgesi de var.
+
+### Daha net seçim geri bildirimi
+Bir düğümü seçmek artık diğer tüm düğümleri soluklaştırarak seçili olanın öne çıkmasını sağlıyor, bir bağlayıcıyı seçmek yalnızca uç noktalarını değil çizginin kendisini de tuval üzerinde vurguluyor, ve Katmanlar panelinde zaten seçili bir satıra tekrar tıklamak seçimi kaldırıyor.
+
+### Mobilde duyarlı araç çubuğu ve Ayarlar
+Üst araç çubuğu artık dar ekranlarda, kayıtlı konum ayarından bağımsız olarak otomatik olarak yatay düzene geçiyor; Ayarlar da mobilde tam ekran açılıyor ve kenar çubuğu listesi yerine yatay kaydırılabilir simge şeridi gezinmesi kullanıyor.
 
 ### Yeniden tasarlanan Ayarlar
 Aranabilir (⌘K), iki bölmeli ayarlar penceresi eski sekme şeridinin yerini aldı — Kısayollar/Kaydırma/Yakınlaştırma, Görünüm, Simge Paketleri ve Uzantılar olarak gruplandı; her bölümde İptal/Kaydet mantığı ve "Varsayılanlara sıfırla" düğmesi var.
