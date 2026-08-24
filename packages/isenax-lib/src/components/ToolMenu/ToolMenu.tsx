@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Stack, Divider } from '@mui/material';
+import { Stack, Divider, useTheme, useMediaQuery } from '@mui/material';
 import {
   IconArrowsMove as PanToolIcon,
   IconPointer2 as NearMeIcon,
@@ -38,6 +38,11 @@ export const ToolMenu = () => {
   const toolbarPosition = useUiStateStore((state) => {
     return state.toolbarPosition;
   });
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // Matches UiOverlay's effectiveToolbarPosition -- LEFT (vertical) is
+  // desktop-only, mobile always renders the horizontal TOP layout.
+  const effectiveToolbarPosition = isMobile ? 'TOP' : toolbarPosition;
 
   const hotkeys = HOTKEY_PROFILES[hotkeyProfile];
 
@@ -59,7 +64,7 @@ export const ToolMenu = () => {
 
   return (
     <UiElement>
-      <Stack direction={toolbarPosition === 'LEFT' ? 'column' : 'row'} spacing={0.5} alignItems="center">
+      <Stack direction={effectiveToolbarPosition === 'LEFT' ? 'column' : 'row'} spacing={0.5} alignItems="center">
         {/* Main Tools */}
         <IconButton
           name={`${t('settings.hotkeys.toolPan')}${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}

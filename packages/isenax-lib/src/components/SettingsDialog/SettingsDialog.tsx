@@ -12,7 +12,9 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Button
+  Button,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import {
   IconX as CloseIcon,
@@ -78,6 +80,8 @@ interface SettingsSnapshot {
 }
 
 export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dialog = useUiStateStore((state) => state.dialog);
   const setDialog = useUiStateStore((state) => state.actions.setDialog);
   const uiStateActions = useUiStateStore((state) => state.actions);
@@ -295,10 +299,25 @@ export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogPr
       onClose={handleDialogClose}
       maxWidth={false}
       fullWidth
+      fullScreen={isMobile}
       {...clickStopperProps}
-      PaperProps={{ sx: { width: 800, maxWidth: 800, height: '82vh', maxHeight: 640 } }}
+      PaperProps={
+        isMobile
+          ? undefined
+          : { sx: { width: 800, maxWidth: 800, height: '82vh', maxHeight: 640 } }
+      }
     >
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', p: 3, pb: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 1,
+          p: isMobile ? 2 : 3,
+          pb: 2
+        }}
+      >
         <Box>
           <Typography variant="h5" sx={{ fontWeight: 700 }}>
             {t('mainMenu.settings')}
@@ -307,21 +326,21 @@ export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogPr
             {t('settings.shell.subtitle')}
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: isMobile ? '100%' : 'auto' }}>
           <TextField
             inputRef={searchRef}
             size="small"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('settings.shell.searchPlaceholder')}
-            sx={{ width: 200 }}
+            sx={{ width: isMobile ? '100%' : 200 }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <SearchIcon size={16} />
                 </InputAdornment>
               ),
-              endAdornment: (
+              endAdornment: isMobile ? undefined : (
                 <InputAdornment position="end">
                   <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
                     ⌘K
@@ -336,14 +355,16 @@ export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogPr
         </Box>
       </Box>
 
-      <DialogContent dividers sx={{ display: 'flex', p: 0, overflow: 'hidden' }}>
+      <DialogContent dividers sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', p: 0, overflow: 'hidden' }}>
         <Box
           sx={{
-            width: 180,
+            width: isMobile ? '100%' : 180,
             flexShrink: 0,
-            borderRight: 1,
+            borderRight: isMobile ? 0 : 1,
+            borderBottom: isMobile ? 1 : 0,
             borderColor: 'divider',
-            overflowY: 'auto',
+            overflowX: isMobile ? 'auto' : 'visible',
+            overflowY: isMobile ? 'hidden' : 'auto',
             p: 1.5
           }}
         >
@@ -352,36 +373,62 @@ export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogPr
               {t('settings.shell.searchNoResults').replace('{query}', query)}
             </Typography>
           )}
-          {filteredGroups.map((group, groupIndex) => (
-            <Box key={group.labelKey} sx={{ mb: 1.5 }}>
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ px: 1.5, display: 'block', fontWeight: 600, mt: groupIndex > 0 ? 1 : 0 }}
-              >
-                {t(group.labelKey as Parameters<typeof t>[0])}
-              </Typography>
-              <List dense disablePadding>
-                {group.items.map((item) => (
-                  <ListItemButton
-                    key={item.id}
-                    selected={activeSection?.id === item.id}
-                    onClick={() => setSectionId(item.id)}
-                    sx={{ borderRadius: 1.5, mx: 0.5 }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 32 }}>{item.icon}</ListItemIcon>
-                    <ListItemText
-                      primary={t(item.titleKey as Parameters<typeof t>[0])}
-                      primaryTypographyProps={{ variant: 'body2' }}
-                    />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Box>
-          ))}
+          {/* Mobile: a single horizontal scroll-strip (group labels dropped --
+              they add vertical clutter a narrow screen has no room for). */}
+          {isMobile ? (
+            <List dense disablePadding sx={{ display: 'flex', gap: 0.5 }}>
+              {filteredGroups.flatMap((group) => group.items).map((item) => (
+                <ListItemButton
+                  key={item.id}
+                  selected={activeSection?.id === item.id}
+                  onClick={() => setSectionId(item.id)}
+                  sx={{ borderRadius: 1.5, flexDirection: 'column', gap: 0.5, width: 84, flexShrink: 0, py: 1 }}
+                >
+                  <ListItemIcon sx={{ minWidth: 'auto' }}>{item.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={t(item.titleKey as Parameters<typeof t>[0])}
+                    primaryTypographyProps={{
+                      variant: 'caption',
+                      textAlign: 'center',
+                      noWrap: true,
+                      sx: { display: 'block', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }
+                    }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          ) : (
+            filteredGroups.map((group, groupIndex) => (
+              <Box key={group.labelKey} sx={{ mb: 1.5 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ px: 1.5, display: 'block', fontWeight: 600, mt: groupIndex > 0 ? 1 : 0 }}
+                >
+                  {t(group.labelKey as Parameters<typeof t>[0])}
+                </Typography>
+                <List dense disablePadding>
+                  {group.items.map((item) => (
+                    <ListItemButton
+                      key={item.id}
+                      selected={activeSection?.id === item.id}
+                      onClick={() => setSectionId(item.id)}
+                      sx={{ borderRadius: 1.5, mx: 0.5 }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 32 }}>{item.icon}</ListItemIcon>
+                      <ListItemText
+                        primary={t(item.titleKey as Parameters<typeof t>[0])}
+                        primaryTypographyProps={{ variant: 'body2' }}
+                      />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Box>
+            ))
+          )}
         </Box>
 
-        <Box sx={{ flex: 1, overflowY: 'auto', p: 3 }}>
+        <Box sx={{ flex: 1, overflowY: 'auto', p: isMobile ? 2 : 3 }}>
           {activeSection && (
             <>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -399,7 +446,7 @@ export const SettingsDialog = ({ iconPackManager, mcpManager }: SettingsDialogPr
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2, justifyContent: 'space-between' }}>
+      <DialogActions sx={{ px: isMobile ? 2 : 3, py: 2, justifyContent: 'space-between' }}>
         {activeSection?.onReset ? (
           <Button
             startIcon={<ResetIcon size={16} />}
