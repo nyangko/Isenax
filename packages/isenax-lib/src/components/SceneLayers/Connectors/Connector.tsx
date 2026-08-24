@@ -351,6 +351,17 @@ export const Connector = memo(({ connector: _connector, isSelected, groupIndex =
       >
         {lineType === 'SINGLE' ? (
           <>
+            {isSelected && (
+              <polyline
+                points={pathString}
+                stroke={theme.palette.primary.main}
+                strokeWidth={connectorWidthPx * 2.6}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.5}
+                fill="none"
+              />
+            )}
             <polyline
               points={pathString}
               stroke={theme.palette.common.white}
@@ -373,6 +384,28 @@ export const Connector = memo(({ connector: _connector, isSelected, groupIndex =
           </>
         ) : offsetPaths ? (
           <>
+            {isSelected && (
+              <>
+                <polyline
+                  points={offsetPaths.path1}
+                  stroke={theme.palette.primary.main}
+                  strokeWidth={connectorWidthPx * 2.6}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeOpacity={0.5}
+                  fill="none"
+                />
+                <polyline
+                  points={offsetPaths.path2}
+                  stroke={theme.palette.primary.main}
+                  strokeWidth={connectorWidthPx * 2.6}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeOpacity={0.5}
+                  fill="none"
+                />
+              </>
+            )}
             {/* First line of double */}
             <polyline
               points={offsetPaths.path1}

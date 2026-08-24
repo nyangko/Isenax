@@ -14,6 +14,7 @@ import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
 interface Props {
   node: ViewItem;
   order: number;
+  dimmed?: boolean;
 }
 
 // Empty paragraphs/whitespace (e.g. "<p><br></p><p><br></p>") strip to no
@@ -24,7 +25,7 @@ const isMarkdownEmpty = (value?: string) => {
   return value.replace(/<[^>]*>/g, '').trim().length === 0;
 };
 
-export const Node = memo(({ node, order }: Props) => {
+export const Node = memo(({ node, order, dimmed = false }: Props) => {
   const modelItem = useModelItem(node.id);
   const { iconComponent } = useIcon(modelItem?.icon);
   const forceExpandLabels = useUiStateStore((state) => state.expandLabels);
@@ -72,7 +73,9 @@ export const Node = memo(({ node, order }: Props) => {
     <Box
       sx={{
         position: 'absolute',
-        zIndex: order
+        zIndex: order,
+        opacity: dimmed ? 0.3 : 1,
+        transition: 'opacity 0.2s ease-in-out'
       }}
     >
       <Box
