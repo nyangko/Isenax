@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.8.0](https://github.com/nyangko/Isenax/compare/v1.7.0...v1.8.0) (2026-08-24)
+
+### Features
+
+* allow drilling down from a node into a detail view ([3a03290](https://github.com/nyangko/Isenax/commit/3a032902e028e0ab2dcce1729c8ade901b86798f))
+* dim other nodes and highlight the line when a connector is selected ([9b1eeb8](https://github.com/nyangko/Isenax/commit/9b1eeb8724313236e9fcc682ccd0c039c0a6cd4d))
+* make the toolbar and Settings dialog responsive on mobile ([a2b8c01](https://github.com/nyangko/Isenax/commit/a2b8c018375ce5951bd38a5ba6b906cf3a6dc2e1))
+
+### Documentation
+
+* log v1.8.0 changes in app changelog and README, all languages ([a79aaca](https://github.com/nyangko/Isenax/commit/a79aaca872e0cdd789bcd2a05d2046f68826343e))
+
 ## [1.7.0](https://github.com/nyangko/Isenax/compare/v1.6.1...v1.7.0) (2026-08-20)
 
 ### Features
