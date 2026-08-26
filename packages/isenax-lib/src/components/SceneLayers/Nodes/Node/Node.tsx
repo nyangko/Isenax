@@ -1,4 +1,4 @@
-import React, { useMemo, useState, memo } from 'react';
+import React, { useMemo, useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, IconButton } from '@mui/material';
 import { IconChevronDown as ExpandMoreIcon, IconChevronUp as ExpandLessIcon } from '@tabler/icons-react';
 import { PROJECTED_TILE_SIZE, DEFAULT_LABEL_HEIGHT } from 'src/config';
@@ -64,6 +64,15 @@ export const Node = memo(({ node, order, dimmed = false }: Props) => {
     (isDescriptionExpanded ||
       (forceExpandLabels && editorMode === 'NON_INTERACTIVE'));
 
+  // Quill has no destroy() API (same issue as NodeControls) -- once a
+  // description has been expanded, keep its RichTextEditor mounted and just
+  // hide it on collapse instead of unmounting, so repeated expand/collapse
+  // doesn't leak a Quill instance per toggle.
+  const [hasMountedDescription, setHasMountedDescription] = useState(false);
+  useEffect(() => {
+    if (showDescription) setHasMountedDescription(true);
+  }, [showDescription]);
+
   // If modelItem doesn't exist, don't render the node
   if (!modelItem) {
     return null;
@@ -123,8 +132,8 @@ export const Node = memo(({ node, order, dimmed = false }: Props) => {
                     </IconButton>
                   )}
                 </Stack>
-                {showDescription && (
-                  <Box sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                {hasMountedDescription && (
+                  <Box sx={{ maxHeight: 300, overflowY: 'auto', display: showDescription ? 'block' : 'none' }}>
                     <RichTextEditor value={modelItem.description} readOnly />
                   </Box>
                 )}

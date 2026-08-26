@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef } from 'react';
 import { createStore } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, PersistStorage, StorageValue } from 'zustand/middleware';
 import { useStoreWithEqualityFn } from 'zustand/traditional';
 import {
   CoordsUtils,
@@ -14,6 +14,47 @@ import { DEFAULT_HOTKEY_PROFILE, HotkeyProfile } from 'src/config/hotkeys';
 import { DEFAULT_PAN_SETTINGS } from 'src/config/panSettings';
 import { DEFAULT_ZOOM_SETTINGS } from 'src/config/zoomSettings';
 import { DEFAULT_LABEL_SETTINGS } from 'src/config/labelSettings';
+
+// zustand's persist middleware re-serializes and writes to storage on EVERY
+// set() call to this store, regardless of whether the change even touches a
+// partialize'd (persisted) field -- mouse position updates 60x/sec while the
+// cursor moves, which was firing 60 synchronous localStorage writes/sec and
+// showing up as steadily climbing memory for as long as the mouse kept
+// moving. Debounce the actual write; getItem/removeItem stay synchronous
+// since only rehydration (page load) needs them.
+const createDebouncedLocalStorage = (): PersistStorage<unknown> => {
+  let pending: StorageValue<unknown> | null = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  const flush = () => {
+    if (timer) clearTimeout(timer);
+    timer = null;
+    if (pending) {
+      localStorage.setItem('isenax-ui-settings', JSON.stringify(pending));
+      pending = null;
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('pagehide', flush);
+  }
+
+  return {
+    getItem: (name) => {
+      const value = localStorage.getItem(name);
+      return value ? JSON.parse(value) : null;
+    },
+    setItem: (_name, value) => {
+      pending = value;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(flush, 500);
+    },
+    removeItem: (name) => {
+      pending = null;
+      if (timer) clearTimeout(timer);
+      localStorage.removeItem(name);
+    }
+  };
+};
 
 const initialState = () => {
   return createStore<UiStateStore>()(
@@ -228,6 +269,7 @@ const initialState = () => {
         // (zoom/scroll/mouse/mode/dialog/portal targets/etc.) is transient
         // per-session UI state that shouldn't survive or leak across reloads.
         name: 'isenax-ui-settings',
+        storage: createDebouncedLocalStorage(),
         partialize: (state) => {
           return {
             hotkeyProfile: state.hotkeyProfile,

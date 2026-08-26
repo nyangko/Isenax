@@ -25,6 +25,14 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.8.1',
+    date: '2026-08-26',
+    items: [
+      ['노드 설명을 펼쳤다 접었다 반복하면', ' 그때마다 에디터가 새로 생성되며 메모리가 조금씩 새던 문제 수정'],
+      ['마우스를 캔버스 위에서 계속 움직이면', ' 같은 타일 안에서도 화면이 매 프레임 다시 그려지며 메모리 사용량과 CPU 사용률이 계속 올라가던 문제 수정']
+    ]
+  },
+  {
     version: 'v1.8.0',
     date: '2026-08-24',
     items: [
@@ -192,6 +200,14 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.8.1',
+    date: '2026-08-26',
+    items: [
+      ["Repeatedly expanding/collapsing a node's description", ' fixed a small memory leak from the editor being recreated every time'],
+      ['Moving the mouse continuously over the canvas', ' fixed the screen re-rendering every single frame even within the same tile, which made memory usage and CPU keep climbing']
+    ]
+  },
   {
     version: 'v1.8.0',
     date: '2026-08-24',

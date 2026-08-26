@@ -327,15 +327,24 @@ export const getMouse = ({
     y: clientY - offset.y
   };
 
+  const newTile = screenToIso({
+    mouse: mousePosition,
+    zoom,
+    scroll,
+    rendererSize,
+    flat
+  });
+
   const newPosition: Mouse['position'] = {
     screen: mousePosition,
-    tile: screenToIso({
-      mouse: mousePosition,
-      zoom,
-      scroll,
-      rendererSize,
-      flat
-    })
+    // Reuse the previous tile object when the mouse hasn't crossed into a
+    // new tile -- this fires on every mousemove frame (up to 60/sec), and a
+    // fresh object here breaks reference equality for every zustand selector
+    // reading mouse.position.tile (e.g. the cursor highlight), forcing them
+    // to re-render every frame even while the mouse sits still within a tile.
+    tile: CoordsUtils.isEqual(newTile, lastMouse.position.tile)
+      ? lastMouse.position.tile
+      : newTile
   };
 
   const newDelta: Mouse['delta'] = {

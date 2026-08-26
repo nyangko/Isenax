@@ -53,6 +53,16 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
+// React 19's dev build calls performance.measure() on every component
+// mount/render (logComponentRender) to power Chrome DevTools' Performance
+// panel React tracks -- the browser never evicts these entries on its own,
+// so a long dev session accumulates hundreds of thousands of them. Doesn't
+// exist in production builds (this instrumentation is stripped), so only
+// clear in dev.
+if (process.env.NODE_ENV !== 'production') {
+  setInterval(() => performance.clearMeasures(), 30000);
+}
+
 // Service worker registration - only in production for PWA functionality
 if (process.env.NODE_ENV === 'production') {
   serviceWorkerRegistration.register({

@@ -39,6 +39,14 @@ type Mode = keyof typeof ModeOptions;
 
 export const NodeControls = ({ id, embedded }: Props) => {
   const [mode, setMode] = useState<Mode>('SETTINGS');
+  // NodeControls is no longer remounted per-item (see ItemControlsManager) so
+  // that the RichTextEditor/Quill instance in NodeSettings survives selection
+  // changes instead of being torn down and recreated on every click -- Quill
+  // has no destroy() API, so repeated mount/unmount was leaking a full editor
+  // instance per selection. Mode still needs its own manual reset per item.
+  useEffect(() => {
+    setMode('SETTINGS');
+  }, [id]);
   const scene = useScene();
   const { updateModelItem, updateViewItem, deleteViewItem, duplicateItem } = scene;
   const uiStateActions = useUiStateStore((state) => {
@@ -267,7 +275,6 @@ export const NodeControls = ({ id, embedded }: Props) => {
       </Box>
       {mode === 'SETTINGS' && (
         <NodeSettings
-          key={viewItem.id}
           node={viewItem}
           onModelItemUpdated={(updates) => {
             updateModelItem(viewItem.id, updates);

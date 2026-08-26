@@ -20,7 +20,7 @@ export const ItemControlsManager = ({ embedded }: Props) => {
   const Controls = useMemo(() => {
     switch (itemControls?.type) {
       case 'ITEM':
-        return <NodeControls key={itemControls.id} id={itemControls.id} embedded={embedded} />;
+        return <NodeControls id={itemControls.id} embedded={embedded} />;
       case 'CONNECTOR':
         return <ConnectorControls key={itemControls.id} id={itemControls.id} embedded={embedded} />;
       case 'CONNECTOR_GROUP':
