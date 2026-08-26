@@ -278,7 +278,7 @@ function EditorPage() {
       await storageManager.initialize();
       setServerStorageAvailable(storageManager.isServerStorage());
 
-      const list = await storageManager.getStorage().listDiagrams();
+      const list = await storageManager.listDiagrams();
       setDiagrams(list);
 
       // The last-opened diagram's content is already loaded via the
@@ -355,7 +355,7 @@ function EditorPage() {
     };
 
     const targetId = currentDiagram?.id || existingDiagram?.id;
-    const storage = storageManager.getStorage();
+    const storage = storageManager;
 
     try {
       if (targetId) {
@@ -427,7 +427,7 @@ function EditorPage() {
       fitToScreen: true
     };
 
-    const storage = storageManager.getStorage();
+    const storage = storageManager;
     const id = await storage.createDiagram(savedData);
 
     lastLocalSaveRef.current = { id, at: Date.now() };
@@ -464,7 +464,7 @@ function EditorPage() {
       return;
     }
 
-    const data: any = await storageManager.getStorage().loadDiagram(id);
+    const data: any = await storageManager.loadDiagram(id);
     const cached = diagrams.find((d) => {
       return d.id === id;
     });
@@ -630,7 +630,7 @@ function EditorPage() {
   const deleteDiagram = async (id: string) => {
     if (window.confirm(t('alert.confirmDelete'))) {
       try {
-        await storageManager.getStorage().deleteDiagram(id);
+        await storageManager.deleteDiagram(id);
       } catch (e) {
         console.error('Failed to delete diagram:', e);
       }
@@ -815,7 +815,7 @@ function EditorPage() {
       };
 
       try {
-        await storageManager.getStorage().saveDiagram(currentDiagram.id, savedData);
+        await storageManager.saveDiagram(currentDiagram.id, savedData);
         lastLocalSaveRef.current = { id: currentDiagram.id, at: Date.now() };
         setDiagrams((prevDiagrams) => {
           return prevDiagrams.map((d) => {

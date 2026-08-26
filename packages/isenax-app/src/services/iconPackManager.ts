@@ -13,13 +13,6 @@ export interface IconPackInfo {
   iconCount: number;
 }
 
-export interface IconPackManagerState {
-  lazyLoadingEnabled: boolean;
-  enabledPacks: IconPackName[];
-  packInfo: Record<IconPackName, IconPackInfo>;
-  loadedIcons: any[];
-}
-
 // localStorage keys
 const LAZY_LOADING_KEY = 'isenax-lazy-loading-enabled';
 const ENABLED_PACKS_KEY = 'isenax-enabled-icon-packs';
@@ -235,8 +228,6 @@ export const useIconPackManager = (coreIcons: any[]) => {
     }
   }, [packInfo, enabledPacks, loadPack]);
 
-  const isPackEnabled = useCallback((packName: IconPackName) => enabledPacks.includes(packName), [enabledPacks]);
-
   // Initialize: Load enabled packs or all packs depending on lazy loading setting
   useEffect(() => {
     const initialize = async () => {
@@ -264,8 +255,7 @@ export const useIconPackManager = (coreIcons: any[]) => {
       togglePack,
       toggleLazyLoading,
       loadAllPacks,
-      loadPacksForDiagram,
-      isPackEnabled
+      loadPacksForDiagram
     };
   }, [
     lazyLoadingEnabled,
@@ -275,7 +265,6 @@ export const useIconPackManager = (coreIcons: any[]) => {
     togglePack,
     toggleLazyLoading,
     loadAllPacks,
-    loadPacksForDiagram,
-    isPackEnabled
+    loadPacksForDiagram
   ]);
 };

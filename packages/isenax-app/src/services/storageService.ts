@@ -263,10 +263,6 @@ class StorageManager implements StorageService {
     return this;
   }
 
-  getStorage(): StorageService {
-    return this;
-  }
-
   isServerStorage(): boolean {
     return this.serverAvailable;
   }
