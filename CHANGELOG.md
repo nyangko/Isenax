@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.8.1](https://github.com/nyangko/Isenax/compare/v1.8.0...v1.8.1) (2026-08-26)
+
+### Bug Fixes
+
+* stop memory/CPU growth from repeated description toggling and mouse movement ([e82f63d](https://github.com/nyangko/Isenax/commit/e82f63d446ce4f42feb0db666390d6dba55b0d81))
+
 ## [1.8.0](https://github.com/nyangko/Isenax/compare/v1.7.0...v1.8.0) (2026-08-24)
 
 ### Features
