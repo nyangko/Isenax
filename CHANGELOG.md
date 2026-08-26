@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.8.2](https://github.com/nyangko/Isenax/compare/v1.8.1...v1.8.2) (2026-08-26)
+
+### Code Refactoring
+
+* drop unused auto-bind dep and replace uuid with crypto.randomUUID ([78253aa](https://github.com/nyangko/Isenax/commit/78253aaeae540b37e62e79f6ca2d6a2f99efec6e))
+* remove dead diagram utils, identity wrapper, and unused icon-pack API ([56dfc6c](https://github.com/nyangko/Isenax/commit/56dfc6cfe80d5958736254e03af97d99aad24df2))
+
 ## [1.8.1](https://github.com/nyangko/Isenax/compare/v1.8.0...v1.8.1) (2026-08-26)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 {
   "name": "isenax-backend",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Optional backend server for Isenax persistent storage",
   "main": "server.js",
   "type": "module",
