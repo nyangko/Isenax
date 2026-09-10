@@ -379,6 +379,11 @@ const ViewRow = ({
           autoFocus
           fullWidth
           defaultValue={view.name}
+          // Renaming is nearly always a replacement, not an edit -- land with
+          // the old name selected so typing overwrites it.
+          onFocus={(e) => {
+            e.target.select();
+          }}
           onClick={(e) => {
             e.stopPropagation();
           }}

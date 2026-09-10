@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "पैरेंट व्यू पर वापस जाएं",
     childViewHintTitle: "आप एक विवरण दृश्य में हैं",
-    childViewHintBody: "पैरेंट व्यू पर वापस जाने के लिए ऊपर दिया गया बटन दबाएं।",
+    childViewHintBody: "ऊपर दिए गए पथ से किसी भी ऊपरी व्यू पर वापस जा सकते हैं।",
     switchToFlatView: "फ़्लैट व्यू पर स्विच करें",
     switchToIsometricView: "आइसोमेट्रिक व्यू पर स्विच करें"
   },

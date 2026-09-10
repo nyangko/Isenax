@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "親ビューに戻る",
     childViewHintTitle: "詳細ビューを表示中です",
-    childViewHintBody: "上のボタンをタップすると親ビューに戻ります。",
+    childViewHintBody: "上のパスから、元のビューへいつでも戻れます。",
     switchToFlatView: "フラット表示に切り替え",
     switchToIsometricView: "アイソメトリック表示に切り替え"
   },

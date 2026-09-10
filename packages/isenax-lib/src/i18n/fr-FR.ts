@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "Retour à la vue parente",
     childViewHintTitle: "Vous êtes dans une vue de détail",
-    childViewHintBody: "Appuyez sur le bouton ci-dessus pour revenir à la vue parente.",
+    childViewHintBody: "Utilisez le chemin ci-dessus pour revenir à n'importe quelle vue parente.",
     switchToFlatView: "Basculer en vue plane",
     switchToIsometricView: "Basculer en vue isométrique"
   },

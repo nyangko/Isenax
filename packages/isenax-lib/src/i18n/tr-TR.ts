@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "Üst görünüme dön",
     childViewHintTitle: "Bir detay görünümündesiniz",
-    childViewHintBody: "Üst görünüme dönmek için yukarıdaki düğmeye dokunun.",
+    childViewHintBody: "Yukarıdaki yolu kullanarak üstteki herhangi bir görünüme dönebilirsiniz.",
     switchToFlatView: "Düz görünüme geç",
     switchToIsometricView: "İzometrik görünüme geç"
   },

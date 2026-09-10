@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "Back to parent view",
     childViewHintTitle: "You're in a detail view",
-    childViewHintBody: "Tap the button above to go back to the parent view.",
+    childViewHintBody: "Use the path above to jump back to any view it came from.",
     switchToFlatView: "Switch to flat view",
     switchToIsometricView: "Switch to isometric view"
   },

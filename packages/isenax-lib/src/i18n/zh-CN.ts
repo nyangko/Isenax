@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "返回上级视图",
     childViewHintTitle: "您正在查看详情视图",
-    childViewHintBody: "点击上方按钮返回上级视图。",
+    childViewHintBody: "点击上方路径中的任意一级，即可返回对应视图。",
     switchToFlatView: "切换到平面视图",
     switchToIsometricView: "切换到等距视图"
   },

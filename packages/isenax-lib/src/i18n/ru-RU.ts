@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "Вернуться к родительскому виду",
     childViewHintTitle: "Вы находитесь в детальном виде",
-    childViewHintBody: "Нажмите кнопку выше, чтобы вернуться к родительскому виду.",
+    childViewHintBody: "Используйте путь выше, чтобы вернуться к любому виду выше по цепочке.",
     switchToFlatView: "Переключить на плоский вид",
     switchToIsometricView: "Переключить на изометрический вид"
   },

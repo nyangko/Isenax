@@ -28,7 +28,7 @@ const locale: LocaleProps = {
   viewControls: {
     backToParentView: "Voltar para a visualização superior",
     childViewHintTitle: "Você está em uma visualização de detalhe",
-    childViewHintBody: "Toque no botão acima para voltar à visualização superior.",
+    childViewHintBody: "Use o caminho acima para voltar a qualquer visualização anterior.",
     switchToFlatView: "Mudar para vista plana",
     switchToIsometricView: "Mudar para vista isométrica"
   },
