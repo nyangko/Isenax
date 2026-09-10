@@ -1,4 +1,6 @@
-const CACHE_NAME = 'isenax-v3';
+// Bump when the caching strategy below changes -- activate() drops every cache
+// that isn't in the whitelist, so a new name is a clean slate.
+const CACHE_NAME = 'isenax-v4';
 
 // Get the base path from the service worker's location
 const swPath = self.location.pathname;
@@ -10,7 +12,6 @@ const basePath = swPath.substring(0, swPath.lastIndexOf('/') + 1);
 // unhashed public/ assets up front; hashed bundles get picked up lazily by
 // the fetch handler below (cache-first, populated on first real request).
 const urlsToCache = [
-  basePath,
   `${basePath}manifest.json`,
   `${basePath}favicon.ico`,
   `${basePath}logo192.png`,
@@ -21,13 +22,37 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
+      // Take over as soon as this version is installed. Without it the new
+      // worker sits in "waiting" until every tab of the app is closed, which
+      // in practice means a returning user never gets an update.
+      .then(() => self.skipWaiting())
   );
 });
 
+// The document is the one thing that must NOT be cache-first: it names the
+// content-hashed bundles, so serving a stale index.html pins the whole app to
+// the old build forever, refresh or not. Network-first here, cache only as the
+// offline fallback. Hashed assets stay cache-first -- a new build gives them
+// new URLs, so there is nothing stale to serve.
+const isDocumentRequest = request =>
+  request.mode === 'navigate' || request.destination === 'document';
+
 self.addEventListener('fetch', event => {
+  if (isDocumentRequest(event.request)) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then(cached => cached || caches.match(basePath)))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
@@ -67,6 +92,6 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
