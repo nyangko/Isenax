@@ -426,6 +426,7 @@ const locale: LocaleProps = {
     noSearchResults: "Tidak ada hasil untuk \"{query}\".",
     subTabStructure: "Struktur",
     subTabConnections: "Koneksi",
+    subTabViews: "Tampilan",
     boundaryRowPrefix: "Batas",
     labelRowPrefix: "Label",
     ungrouped: "Tidak Dikelompokkan",

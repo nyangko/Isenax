@@ -426,6 +426,7 @@ const locale: LocaleProps = {
     noSearchResults: "\"{query}\" के लिए कोई परिणाम नहीं।",
     subTabStructure: "संरचना",
     subTabConnections: "कनेक्शन",
+    subTabViews: "व्यू",
     boundaryRowPrefix: "सीमा",
     labelRowPrefix: "लेबल",
     ungrouped: "अवर्गीकृत",

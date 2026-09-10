@@ -426,6 +426,7 @@ const locale: LocaleProps = {
     noSearchResults: "未找到与「{query}」匹配的结果。",
     subTabStructure: "结构",
     subTabConnections: "连接",
+    subTabViews: "视图",
     boundaryRowPrefix: "边界",
     labelRowPrefix: "标签",
     ungrouped: "未分组",

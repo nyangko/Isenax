@@ -426,6 +426,7 @@ const locale: LocaleProps = {
     noSearchResults: "Нет результатов для «{query}».",
     subTabStructure: "Структура",
     subTabConnections: "Соединения",
+    subTabViews: "Виды",
     boundaryRowPrefix: "Граница",
     labelRowPrefix: "Подпись",
     ungrouped: "Без группы",

@@ -425,6 +425,7 @@ const locale: LocaleProps = {
     noSearchResults: "「{query}」に一致する結果はありません。",
     subTabStructure: "構造",
     subTabConnections: "接続",
+    subTabViews: "ビュー",
     boundaryRowPrefix: "境界",
     labelRowPrefix: "ラベル",
     ungrouped: "未分類",

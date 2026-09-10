@@ -38,12 +38,12 @@ import { useConnector } from 'src/hooks/useConnector';
 import { useTextBox } from 'src/hooks/useTextBox';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
-import { getConnectorLabels, getItemById, isWithinBounds } from 'src/utils';
+import { buildViewTree, getConnectorLabels, getItemById, isWithinBounds } from 'src/utils';
 import { ItemControlsManager } from 'src/components/ItemControls/ItemControlsManager';
-import { ViewItem, Rectangle as RectangleType, ItemControls } from 'src/types';
+import { ViewItem, View, Rectangle as RectangleType, ItemControls } from 'src/types';
 
 type TabValue = 'LIST' | 'DETAIL';
-type StructureTab = 'STRUCTURE' | 'CONNECTIONS';
+type StructureTab = 'STRUCTURE' | 'CONNECTIONS' | 'VIEWS';
 type TypeFilter = 'ALL' | 'NODE' | 'CONNECTOR' | 'RECTANGLE' | 'TEXTBOX';
 
 interface RowProps {
@@ -426,6 +426,10 @@ export const LayersPanel = () => {
   const query = search.trim().toLowerCase();
   const matches = (text: string) => !query || text.toLowerCase().includes(query);
 
+  const viewRows = useMemo(() => buildViewTree(model.views), [model.views]);
+
+  const visibleViewRows = viewRows.filter(({ view }) => matches(view.name));
+
   const connectorCountByItemId = useMemo(() => {
     const counts = new Map<string, number>();
     connectors.forEach((connector) => {
@@ -533,7 +537,12 @@ export const LayersPanel = () => {
     ((typeFilter === 'ALL' || typeFilter === 'NODE') ? ungroupedItems.filter((i) => matches(nodeName(i.id))).length : 0) +
     ((typeFilter === 'ALL' || typeFilter === 'TEXTBOX') ? ungroupedTextBoxes.filter((tb) => matches(tb.content)).length : 0);
 
-  const visibleResultCount = structureTab === 'STRUCTURE' ? structureMatchCount : filteredConnectors.length;
+  const visibleResultCount =
+    structureTab === 'STRUCTURE'
+      ? structureMatchCount
+      : structureTab === 'VIEWS'
+      ? visibleViewRows.length
+      : filteredConnectors.length;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
@@ -652,7 +661,7 @@ export const LayersPanel = () => {
                 onClick={() => {
                   setTypeFilter(value);
                   if (value === 'CONNECTOR') setStructureTab('CONNECTIONS');
-                  else if (structureTab === 'CONNECTIONS') setStructureTab('STRUCTURE');
+                  else if (structureTab !== 'STRUCTURE') setStructureTab('STRUCTURE');
                 }}
               />
             ))}
@@ -667,6 +676,7 @@ export const LayersPanel = () => {
           >
             <Tab value="STRUCTURE" label={t('subTabStructure')} sx={{ minHeight: 32, py: 0.5 }} />
             <Tab value="CONNECTIONS" label={t('subTabConnections')} sx={{ minHeight: 32, py: 0.5 }} />
+            <Tab value="VIEWS" label={t('subTabViews')} sx={{ minHeight: 32, py: 0.5 }} />
           </Tabs>
         </Box>
       )}
@@ -685,6 +695,28 @@ export const LayersPanel = () => {
                 {t('noSearchResults').replace('{query}', search.trim())}
               </Typography>
             </Box>
+          ) : structureTab === 'VIEWS' ? (
+            <GroupSection title={t('subTabViews')} count={visibleViewRows.length} forceExpanded>
+              {visibleViewRows.map(({ view, depth }) => (
+                <ListItemButton
+                  key={view.id}
+                  selected={view.id === currentView.id}
+                  onClick={() => {
+                    if (view.id !== currentView.id) changeView(view.id, model);
+                  }}
+                  dense
+                  sx={{ pl: 2 + depth * 2, pr: 1 }}
+                >
+                  <ListItemIcon sx={{ minWidth: 28 }}>
+                    <ChildViewIcon size={16} />
+                  </ListItemIcon>
+                  <ListItemText primary={view.name} primaryTypographyProps={{ noWrap: true }} />
+                  <Typography variant="caption" color="text.disabled" sx={{ flexShrink: 0 }}>
+                    · {view.items.length}
+                  </Typography>
+                </ListItemButton>
+              ))}
+            </GroupSection>
           ) : structureTab === 'STRUCTURE' ? (
             <>
               {zones.map((zone) => {

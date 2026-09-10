@@ -425,6 +425,7 @@ const locale: LocaleProps = {
     noSearchResults: "\"{query}\"에 대한 검색 결과가 없습니다.",
     subTabStructure: "구조",
     subTabConnections: "연결",
+    subTabViews: "뷰",
     boundaryRowPrefix: "경계",
     labelRowPrefix: "라벨",
     ungrouped: "미분류",

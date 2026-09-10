@@ -426,6 +426,7 @@ const locale: LocaleProps = {
     noSearchResults: "\"{query}\" için sonuç bulunamadı.",
     subTabStructure: "Yapı",
     subTabConnections: "Bağlantılar",
+    subTabViews: "Görünümler",
     boundaryRowPrefix: "Sınır",
     labelRowPrefix: "Etiket",
     ungrouped: "Gruplanmamış",

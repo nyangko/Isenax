@@ -425,6 +425,7 @@ const locale: LocaleProps = {
     noSearchResults: "No matches for \"{query}\".",
     subTabStructure: "Structure",
     subTabConnections: "Connections",
+    subTabViews: "Views",
     boundaryRowPrefix: "Boundary",
     labelRowPrefix: "Label",
     ungrouped: "Ungrouped",

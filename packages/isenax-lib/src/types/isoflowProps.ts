@@ -397,6 +397,7 @@ export interface LocaleProps {
     noSearchResults: string;
     subTabStructure: string;
     subTabConnections: string;
+    subTabViews: string;
     boundaryRowPrefix: string;
     labelRowPrefix: string;
     ungrouped: string;

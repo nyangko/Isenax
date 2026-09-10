@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { Model, ModelStore } from 'src/types';
+import { Model, ModelStore, View } from 'src/types';
 import { validateModel } from 'src/schemas/validation';
 import { getItemByIdOrThrow } from './common';
 
@@ -63,4 +63,53 @@ export const modelFromModelStore = (modelStore: ModelStore): Model => {
     items: modelStore.items,
     views: modelStore.views
   };
+};
+
+// views[] is flat; parentViewId is what makes it a tree. Returned depth-first
+// with a depth per row, so a list UI can render the hierarchy by indentation
+// alone -- diagrams have a handful of views, not hundreds.
+//
+// A parentViewId pointing at a view that isn't there (nothing validates that
+// yet) is treated as a root so the view still appears somewhere, and a
+// parentViewId cycle -- impossible through createChildView, but nothing stops
+// one arriving over MCP -- stops rather than recursing forever.
+export const buildViewTree = (views: View[]): { view: View; depth: number }[] => {
+  const childrenOf = new Map<string | undefined, View[]>();
+
+  views.forEach((view) => {
+    const parentId =
+      view.parentViewId && views.some((v) => v.id === view.parentViewId)
+        ? view.parentViewId
+        : undefined;
+
+    childrenOf.set(parentId, [...(childrenOf.get(parentId) ?? []), view]);
+  });
+
+  const rows: { view: View; depth: number }[] = [];
+  const seen = new Set<string>();
+
+  const walk = (parentId: string | undefined, depth: number) => {
+    (childrenOf.get(parentId) ?? []).forEach((view) => {
+      if (seen.has(view.id)) return;
+
+      seen.add(view.id);
+      rows.push({ view, depth });
+      walk(view.id, depth + 1);
+    });
+  };
+
+  walk(undefined, 0);
+
+  // Anything the walk never reached is in a parentViewId cycle -- every view
+  // in it points at another one, so none of them is a root. Surface them at
+  // the top level rather than dropping them off the list entirely.
+  views.forEach((view) => {
+    if (seen.has(view.id)) return;
+
+    seen.add(view.id);
+    rows.push({ view, depth: 0 });
+    walk(view.id, 1);
+  });
+
+  return rows;
 };
