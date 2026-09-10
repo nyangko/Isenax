@@ -188,6 +188,38 @@ export const useScene = () => {
     [getState, setState, saveToHistoryBeforeChange]
   );
 
+  const renameView = useCallback(
+    (viewId: string, name: string) => {
+      saveToHistoryBeforeChange();
+
+      const newState = reducers.view({
+        action: 'UPDATE_VIEW',
+        payload: { name },
+        ctx: { viewId, state: getState() }
+      });
+
+      setState(newState);
+    },
+    [getState, setState, saveToHistoryBeforeChange]
+  );
+
+  const deleteView = useCallback(
+    (viewId: string) => {
+      saveToHistoryBeforeChange();
+
+      const newState = reducers.view({
+        action: 'DELETE_VIEW',
+        payload: undefined,
+        ctx: { viewId, state: getState() }
+      });
+
+      setState(newState);
+
+      return newState;
+    },
+    [getState, setState, saveToHistoryBeforeChange]
+  );
+
   const createChildView = useCallback(
     (modelItemId: string, viewName?: string) => {
       if (!currentViewId) return;
@@ -651,6 +683,8 @@ export const useScene = () => {
     updateModelItem,
     deleteModelItem,
     createChildView,
+    renameView,
+    deleteView,
     createViewItem,
     updateViewItem,
     deleteViewItem,

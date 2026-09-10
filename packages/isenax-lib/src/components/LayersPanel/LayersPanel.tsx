@@ -16,7 +16,9 @@ import {
   Stack,
   Button,
   Breadcrumbs,
-  Link
+  Link,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import {
   IconX as CloseIcon,
@@ -29,7 +31,8 @@ import {
   IconLockOpen as LockOpenIcon,
   IconSquare as BoundaryIcon,
   IconTypography as LabelIcon,
-  IconStack as ChildViewIcon
+  IconStack as ChildViewIcon,
+  IconDots as MoreIcon
 } from '@tabler/icons-react';
 import { useScene } from 'src/hooks/useScene';
 import { useModelItem } from 'src/hooks/useModelItem';
@@ -275,6 +278,167 @@ interface GroupSectionProps {
   forceExpanded?: boolean;
   children: React.ReactNode;
 }
+
+// A row in the view tree. Only child views get the actions menu: the root view
+// is the diagram itself (there's no UI to make a second one), so renaming it
+// means nothing -- the breadcrumb labels it with the diagram title -- and
+// deleting it would leave a model with nothing to render.
+const ViewRow = ({
+  view,
+  depth,
+  isCurrent,
+  onOpen
+}: {
+  view: View;
+  depth: number;
+  isCurrent: boolean;
+  onOpen: () => void;
+}) => {
+  const { t } = useTranslation('layersPanel');
+  const scene = useScene();
+  const { changeView } = useView();
+  const model = useModelStore((state) => state);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+
+  const canManage = !!view.parentViewId;
+
+  const nestedViewCount = model.views.filter((candidate) => {
+    return (
+      candidate.id !== view.id &&
+      getViewPath(model.views, candidate.id).some((ancestor) => ancestor.id === view.id)
+    );
+  }).length;
+
+  const commitRename = (name: string) => {
+    const trimmed = name.trim();
+
+    setIsRenaming(false);
+    if (trimmed && trimmed !== view.name) scene.renameView(view.id, trimmed);
+  };
+
+  const confirmDelete = () => {
+    setIsConfirmingDelete(false);
+
+    // Standing in the view about to be deleted (or in one nested inside it)
+    // would leave the canvas pointing at nothing -- step out to its parent
+    // first, while the view still exists for changeView to read.
+    const isOnDoomedBranch = getViewPath(model.views, scene.currentView.id).some(
+      (ancestor) => ancestor.id === view.id
+    );
+
+    if (isOnDoomedBranch && view.parentViewId) changeView(view.parentViewId, model);
+
+    scene.deleteView(view.id);
+  };
+
+  if (isConfirmingDelete) {
+    return (
+      <Box sx={{ pl: 2 + depth * 2, pr: 1.5, py: 1, bgcolor: 'action.hover' }}>
+        <Typography variant="caption" color="text.primary" display="block">
+          {t('viewDeleteConfirm').replace('{name}', view.name)}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" display="block">
+          {t('viewDeleteSummary')
+            .replace('{items}', String(view.items.length))
+            .replace('{views}', String(nestedViewCount))}
+        </Typography>
+        <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+          <Button size="small" color="error" variant="contained" onClick={confirmDelete}>
+            {t('viewDelete')}
+          </Button>
+          <Button
+            size="small"
+            color="inherit"
+            onClick={() => {
+              setIsConfirmingDelete(false);
+            }}
+          >
+            {t('viewDeleteCancel')}
+          </Button>
+        </Stack>
+      </Box>
+    );
+  }
+
+  return (
+    <ListItemButton
+      selected={isCurrent}
+      onClick={onOpen}
+      dense
+      sx={{ pl: 2 + depth * 2, pr: 1 }}
+    >
+      <ListItemIcon sx={{ minWidth: 28 }}>
+        <ChildViewIcon size={16} />
+      </ListItemIcon>
+      {isRenaming ? (
+        <TextField
+          size="small"
+          variant="standard"
+          autoFocus
+          fullWidth
+          defaultValue={view.name}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          onBlur={(e) => {
+            commitRename(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            if (e.key === 'Enter') commitRename((e.target as HTMLInputElement).value);
+            if (e.key === 'Escape') setIsRenaming(false);
+          }}
+        />
+      ) : (
+        <ListItemText primary={view.name} primaryTypographyProps={{ noWrap: true }} />
+      )}
+      <Typography variant="caption" color="text.disabled" sx={{ flexShrink: 0, mr: 0.5 }}>
+        · {view.items.length}
+      </Typography>
+      {canManage && !isRenaming && (
+        <MUIIconButton
+          size="small"
+          aria-label={t('viewRename')}
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuAnchor(e.currentTarget);
+          }}
+          sx={{ flexShrink: 0 }}
+        >
+          <MoreIcon size={16} />
+        </MUIIconButton>
+      )}
+      <Menu
+        anchorEl={menuAnchor}
+        open={!!menuAnchor}
+        onClose={() => {
+          setMenuAnchor(null);
+        }}
+      >
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuAnchor(null);
+            setIsRenaming(true);
+          }}
+        >
+          {t('viewRename')}
+        </MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuAnchor(null);
+            setIsConfirmingDelete(true);
+          }}
+        >
+          {t('viewDelete')}
+        </MenuItem>
+      </Menu>
+    </ListItemButton>
+  );
+};
 
 const GroupSection = ({ title, count, color, actionsId, forceExpanded, children }: GroupSectionProps) => {
   const [localExpanded, setLocalExpanded] = useState(true);
@@ -751,23 +915,15 @@ export const LayersPanel = () => {
           ) : structureTab === 'VIEWS' ? (
             <GroupSection title={t('subTabViews')} count={visibleViewRows.length} forceExpanded>
               {visibleViewRows.map(({ view, depth }) => (
-                <ListItemButton
+                <ViewRow
                   key={view.id}
-                  selected={view.id === currentView.id}
-                  onClick={() => {
+                  view={view}
+                  depth={depth}
+                  isCurrent={view.id === currentView.id}
+                  onOpen={() => {
                     if (view.id !== currentView.id) changeView(view.id, model);
                   }}
-                  dense
-                  sx={{ pl: 2 + depth * 2, pr: 1 }}
-                >
-                  <ListItemIcon sx={{ minWidth: 28 }}>
-                    <ChildViewIcon size={16} />
-                  </ListItemIcon>
-                  <ListItemText primary={view.name} primaryTypographyProps={{ noWrap: true }} />
-                  <Typography variant="caption" color="text.disabled" sx={{ flexShrink: 0 }}>
-                    · {view.items.length}
-                  </Typography>
-                </ListItemButton>
+                />
               ))}
             </GroupSection>
           ) : structureTab === 'STRUCTURE' ? (

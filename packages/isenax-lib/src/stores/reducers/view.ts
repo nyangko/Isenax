@@ -47,9 +47,35 @@ export const syncScene = ({ viewId, state }: ViewReducerContext): State => {
 
 export const deleteView = (ctx: ViewReducerContext): State => {
   const newState = produce(ctx.state, (draft) => {
-    const view = getItemByIdOrThrow(draft.model.views, ctx.viewId);
+    // Views nested under this one go too. Left behind, they'd keep a
+    // parentViewId pointing at nothing and there'd be no way back into them.
+    const doomed = new Set<string>();
 
-    draft.model.views.splice(view.index, 1);
+    const collect = (viewId: string) => {
+      if (doomed.has(viewId)) return;
+
+      doomed.add(viewId);
+      draft.model.views.forEach((view) => {
+        if (view.parentViewId === viewId) collect(view.id);
+      });
+    };
+
+    collect(ctx.viewId);
+
+    // A model with no views has nothing to render and no way to recover in the
+    // UI. Deleting a root view with everything under it would do exactly that.
+    if (doomed.size >= draft.model.views.length) return;
+
+    // Each deleted view's anchor item still points at it. Left set, the node
+    // goes on offering a drill-down into a view that's gone -- and stays
+    // undeletable, since deleteViewItem refuses items with a childViewId.
+    draft.model.items.forEach((item) => {
+      if (item.childViewId && doomed.has(item.childViewId)) {
+        delete item.childViewId;
+      }
+    });
+
+    draft.model.views = draft.model.views.filter((view) => !doomed.has(view.id));
   });
 
   return newState;
@@ -61,7 +87,11 @@ export const updateView = (
 ): State => {
   const newState = produce(ctx.state, (draft) => {
     const view = getItemByIdOrThrow(draft.model.views, ctx.viewId);
-    view.value = { ...view.value, ...updates };
+
+    // getItemByIdOrThrow hands back a { value, index } wrapper, not a slot in
+    // the draft -- assigning to wrapper.value updated the wrapper and threw the
+    // change away. Nothing called this, so nothing noticed.
+    draft.model.views[view.index] = { ...view.value, ...updates };
   });
 
   return newState;

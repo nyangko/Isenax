@@ -398,6 +398,11 @@ export interface LocaleProps {
     subTabStructure: string;
     subTabConnections: string;
     subTabViews: string;
+    viewRename: string;
+    viewDelete: string;
+    viewDeleteConfirm: string;
+    viewDeleteSummary: string;
+    viewDeleteCancel: string;
     boundaryRowPrefix: string;
     labelRowPrefix: string;
     ungrouped: string;
