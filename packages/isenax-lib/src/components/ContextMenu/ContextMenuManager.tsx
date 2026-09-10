@@ -229,10 +229,17 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
           ? getItemById(scene.items, contextMenu.item.id)?.value
           : undefined;
 
+      const itemModelItem =
+        type === 'ITEM'
+          ? getItemById(model.items, contextMenu.item.id)?.value
+          : undefined;
+
       const deleteItem =
         // Anchor items mark "this view is the detail of that item" and can't
-        // be deleted -- hide the option entirely rather than show it and no-op.
-        type === 'ITEM' && !viewItem?.anchor ? {
+        // be deleted -- neither can the node a child view hangs off, since it
+        // is that view's only way back in. Hide the option entirely for both
+        // rather than show it and no-op.
+        type === 'ITEM' && !viewItem?.anchor && !itemModelItem?.childViewId ? {
           label: t('deleteNode'),
           Icon: <DeleteIcon size={20} />,
           onClick: () => {
@@ -263,7 +270,7 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
 
       if (type === 'ITEM') {
         const nodeId = contextMenu.item.id;
-        const modelItem = getItemById(model.items, nodeId)?.value;
+        const modelItem = itemModelItem;
 
         if (modelItem) {
           itemMenuItems.push({

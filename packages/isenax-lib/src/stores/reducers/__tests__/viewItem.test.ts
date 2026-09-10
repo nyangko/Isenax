@@ -17,6 +17,10 @@ jest.mock('src/utils', () => ({
     }
     return { value: items[index], index };
   }),
+  getItemById: jest.fn((items: any[], id: string) => {
+    const index = items.findIndex((item: any) => item.id === id);
+    return index === -1 ? null : { value: items[index], index };
+  }),
   getConnectorsByViewItem: jest.fn((viewItemId: string, connectors: Connector[]) => {
     return connectors.filter(connector =>
       connector.anchors.some((anchor: any) =>
@@ -195,6 +199,17 @@ describe('viewItem reducer', () => {
 
       expect(result).toBe(mockState);
       expect(result.model.views[0].items).toHaveLength(2);
+      expect(result.model.views[0].items.find(item => item.id === 'item1')).toBeDefined();
+    });
+
+    it('should no-op when the item is the entry point of a child view', () => {
+      mockState.model.items = [
+        { id: 'item1', name: 'Payment Service', childViewId: 'child1' }
+      ];
+
+      const result = deleteViewItem('item1', mockContext);
+
+      expect(result).toBe(mockState);
       expect(result.model.views[0].items.find(item => item.id === 'item1')).toBeDefined();
     });
 

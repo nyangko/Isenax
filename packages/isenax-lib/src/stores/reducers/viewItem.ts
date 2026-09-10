@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { ViewItem } from 'src/types';
-import { getItemByIdOrThrow, getConnectorsByViewItem } from 'src/utils';
+import { getItemById, getItemByIdOrThrow, getConnectorsByViewItem } from 'src/utils';
 import { validateView } from 'src/schemas/validation';
 import { State, ViewReducerContext } from './types';
 import * as reducers from './view';
@@ -77,6 +77,12 @@ export const deleteViewItem = (
   // this is a no-op rather than an error (matches the delete-menu already
   // hiding this option for anchors).
   if (viewItem.value.anchor) return state;
+
+  // The node a child view hangs off is that view's only entry point -- delete
+  // it and the detail diagram is still stored but unreachable from anywhere.
+  // No-op too, and the delete affordance is hidden for these the same way.
+  const modelItem = getItemById(state.model.items, viewItem.value.id);
+  if (modelItem?.value.childViewId) return state;
 
   const newState = produce(state, (draft) => {
     const view = getItemByIdOrThrow(draft.model.views, viewId);

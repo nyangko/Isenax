@@ -29,7 +29,8 @@ const CHANGELOG_KO: ChangelogGroup[] = [
     date: '2026-09-10',
     items: [
       ['다이어그램을 저장할 때', ' 기본 아이콘 팩에서 가져온 아이콘이 저장 데이터의 아이콘 목록에서 통째로 빠지던 문제 수정 — 화면에는 정상으로 보였지만 저장된 데이터 자체가 규격에 어긋난 상태라, MCP로 그 다이어그램을 조회하면 아이콘 목록이 비어 있고 부분 수정(update_diagram_patch)이 거부됐음'],
-      ['이제 실제로 사용 중인 아이콘만', ' 이미지 데이터 없이 함께 저장됨 — 저장 용량은 그대로이고, 기존 다이어그램도 한 번 열어서 저장하면 자동으로 교정됨']
+      ['이제 실제로 사용 중인 아이콘만', ' 이미지 데이터 없이 함께 저장됨 — 저장 용량은 그대로이고, 기존 다이어그램도 한 번 열어서 저장하면 자동으로 교정됨'],
+      ['하위 뷰가 딸린 노드를 삭제하면', ' 아무 반응 없이 무시되던 문제 수정 — 그 노드는 하위 뷰로 들어가는 유일한 입구라 원래 삭제가 막혀 있었지만, 안내 없이 조용히 넘어가서 고장난 것처럼 보였음. 이제 삭제 버튼과 우클릭 메뉴의 삭제 항목이 아예 표시되지 않음 (하위 뷰를 비우면 자동 정리되면서 다시 삭제 가능). 하위 뷰의 고정 아이콘도 편집 패널에서 같은 방식으로 정리됨']
     ]
   },
   {
@@ -220,7 +221,8 @@ const CHANGELOG_EN: ChangelogGroup[] = [
     date: '2026-09-10',
     items: [
       ['Saving a diagram', ' fixed icons that came from a built-in pack being dropped entirely from the saved icon list — it still looked fine on screen, but the stored data itself was off-spec, so reading that diagram over MCP returned an empty icon list and partial updates (update_diagram_patch) were rejected'],
-      ['Only the icons actually in use', ' are now stored alongside the diagram, without their image data — no size increase, and an existing diagram repairs itself the first time you open and save it']
+      ['Only the icons actually in use', ' are now stored alongside the diagram, without their image data — no size increase, and an existing diagram repairs itself the first time you open and save it'],
+      ['Deleting a node that has a child view', ' silently did nothing — that node is the child view\'s only way in, so deletion was blocked on purpose, but with no feedback it just looked broken. The delete button and the right-click delete entry are now hidden for those nodes (empty the child view and it gets pruned, making the node deletable again), and the same is true for a child view\'s locked anchor icon in the edit panel']
     ]
   },
   {

@@ -153,12 +153,17 @@ export const NodeControls = ({ id, embedded }: Props) => {
     <ControlsContainer
       footer={
         <Stack direction="row" spacing={1}>
-          <DeleteButton
-            onClick={() => {
-              uiStateActions.setItemControls(null);
-              deleteViewItem(viewItem.id);
-            }}
-          />
+          {/* An anchor, or a node with a child view hanging off it, can't be
+              deleted -- the reducer no-ops it, so don't offer the button
+              (matches the context menu hiding the same option). */}
+          {!viewItem.anchor && !modelItem.childViewId && (
+            <DeleteButton
+              onClick={() => {
+                uiStateActions.setItemControls(null);
+                deleteViewItem(viewItem.id);
+              }}
+            />
+          )}
           <Button
             variant="outlined"
             size="small"
