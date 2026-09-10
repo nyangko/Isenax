@@ -27,6 +27,14 @@ self.addEventListener('install', event => {
       // Take over as soon as this version is installed. Without it the new
       // worker sits in "waiting" until every tab of the app is closed, which
       // in practice means a returning user never gets an update.
+      //
+      // Deliberately NOT paired with clients.claim(): claiming would put a
+      // page that loaded *without* a controller under this worker mid-session,
+      // which is a behaviour change for the very first visit and nothing here
+      // needs it -- the document that has to come from the network is fetched
+      // on the next navigation, by which point this worker is already in
+      // control. (E2E caught the difference: claiming mid-session broke node
+      // placement partway through a run.)
       .then(() => self.skipWaiting())
   );
 });
@@ -92,6 +100,6 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    })
   );
 });
