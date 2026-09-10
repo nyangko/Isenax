@@ -25,6 +25,21 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.8.3',
+    date: '2026-09-10',
+    items: [
+      ['다이어그램을 저장할 때', ' 기본 아이콘 팩에서 가져온 아이콘이 저장 데이터의 아이콘 목록에서 통째로 빠지던 문제 수정 — 화면에는 정상으로 보였지만 저장된 데이터 자체가 규격에 어긋난 상태라, MCP로 그 다이어그램을 조회하면 아이콘 목록이 비어 있고 부분 수정(update_diagram_patch)이 거부됐음'],
+      ['이제 실제로 사용 중인 아이콘만', ' 이미지 데이터 없이 함께 저장됨 — 저장 용량은 그대로이고, 기존 다이어그램도 한 번 열어서 저장하면 자동으로 교정됨']
+    ]
+  },
+  {
+    version: 'v1.8.2',
+    date: '2026-08-26',
+    items: [
+      ['사용하지 않는 내부 코드와 외부 의존성 2개', '를 정리해 앱에서 제거 — 동작은 그대로이고 불러오는 코드량만 줄어듦']
+    ]
+  },
+  {
     version: 'v1.8.1',
     date: '2026-08-26',
     items: [
@@ -200,6 +215,21 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.8.3',
+    date: '2026-09-10',
+    items: [
+      ['Saving a diagram', ' fixed icons that came from a built-in pack being dropped entirely from the saved icon list — it still looked fine on screen, but the stored data itself was off-spec, so reading that diagram over MCP returned an empty icon list and partial updates (update_diagram_patch) were rejected'],
+      ['Only the icons actually in use', ' are now stored alongside the diagram, without their image data — no size increase, and an existing diagram repairs itself the first time you open and save it']
+    ]
+  },
+  {
+    version: 'v1.8.2',
+    date: '2026-08-26',
+    items: [
+      ['Unused internal code and two external dependencies', ' were removed — no behavior change, just less code to load']
+    ]
+  },
   {
     version: 'v1.8.1',
     date: '2026-08-26',

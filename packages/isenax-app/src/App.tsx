@@ -77,6 +77,18 @@ const MOBILE_MAIN_MENU_OPTIONS: NonNullable<IsoflowProps['mainMenuOptions']> = [
 const getImportedIcons = (icons: any[] = []) =>
   icons.filter((icon) => icon.collection === 'imported');
 
+// What actually gets persisted with a diagram: custom uploads plus the
+// built-in icons the items reference. Built-in art is reloaded from
+// iconPackManager anyway, so their url is stripped -- but the entries have to
+// stay, or the stored model breaks modelSchema's "items[].icon must resolve in
+// icons[]" rule and MCP tools reject the diagram (#45).
+const getPersistedIcons = (icons: any[] = [], items: any[] = []) => {
+  const used = new Set(items.map((item) => item.icon).filter(Boolean));
+  return stripBuiltinIconUrls(
+    icons.filter((icon) => icon.collection === 'imported' || used.has(icon.id))
+  );
+};
+
 const MOBILE_BREAKPOINT_QUERY = '(max-width: 599.95px)';
 
 const useIsMobile = () => {
@@ -341,15 +353,19 @@ function EditorPage() {
       }
     }
 
-    // Construct save data - include only imported icons
-    const importedIcons = getImportedIcons(currentModel?.icons || diagramData.icons);
+    // Construct save data - imported icons plus the built-in icons in use
+    const savedItems = currentModel?.items || diagramData.items || [];
+    const savedIcons = getPersistedIcons(
+      currentModel?.icons || diagramData.icons,
+      savedItems
+    );
 
     const savedData = {
       title: diagramName,
       name: diagramName,
-      icons: importedIcons, // Save only imported icons with diagram
+      icons: savedIcons,
       colors: currentModel?.colors || diagramData.colors || [],
-      items: currentModel?.items || diagramData.items || [],
+      items: savedItems,
       views: currentModel?.views || diagramData.views || [],
       fitToScreen: true
     };
@@ -416,13 +432,13 @@ function EditorPage() {
     if (currentDiagram) return currentDiagram.id;
 
     const name = diagramName.trim() || currentModel?.title || 'Untitled Diagram';
-    const importedIcons = getImportedIcons(currentModel?.icons || diagramData.icons);
+    const savedItems = currentModel?.items || diagramData.items || [];
     const savedData = {
       title: name,
       name,
-      icons: importedIcons,
+      icons: getPersistedIcons(currentModel?.icons || diagramData.icons, savedItems),
       colors: currentModel?.colors || diagramData.colors || [],
-      items: currentModel?.items || diagramData.items || [],
+      items: savedItems,
       views: currentModel?.views || diagramData.views || [],
       fitToScreen: true
     };
@@ -801,15 +817,14 @@ function EditorPage() {
     if (!currentModel || !hasUnsavedChanges || !currentDiagram) return;
 
     const autoSaveTimer = setTimeout(async () => {
-      // Include imported icons in auto-save
-      const importedIcons = getImportedIcons(currentModel?.icons || diagramData.icons);
+      const savedItems = currentModel.items || [];
 
       const savedData = {
         title: diagramName || currentDiagram.name,
         name: diagramName || currentDiagram.name,
-        icons: importedIcons, // Save imported icons in auto-save
+        icons: getPersistedIcons(currentModel?.icons || diagramData.icons, savedItems),
         colors: currentModel.colors || [],
-        items: currentModel.items || [],
+        items: savedItems,
         views: currentModel.views || [],
         fitToScreen: true
       };
