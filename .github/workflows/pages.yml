@@ -32,6 +32,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Deploy the commit E2E actually validated, not whatever landed on
+          # the default branch since (see the same note in e2e-tests.yml).
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Build

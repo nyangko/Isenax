@@ -21,6 +21,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          # A workflow_run job checks out the default branch's HEAD by default,
+          # not the commit whose Run Tests passed -- so back-to-back pushes can
+          # E2E a different commit than the one that was unit-tested. Empty on
+          # pull_request/workflow_dispatch, where checkout's default is right.
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

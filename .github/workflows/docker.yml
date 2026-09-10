@@ -1,8 +1,11 @@
 name: Build and Push Docker Image
 
 on:
+  # Runs after Release, not after E2E. Two reasons: the version tags below need
+  # the version semantic-release just wrote into package.json, and an image
+  # built before the release commit carries the previous version inside it.
   workflow_run:
-    workflows: ["E2E Tests"]
+    workflows: ["Release"]
     types:
       - completed
     branches: ["main", "master"]
@@ -10,7 +13,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   build-and-push:
@@ -20,6 +22,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        # Default checkout (branch HEAD) is what we want here: that's the
+        # release commit semantic-release just pushed.
+
+      - name: Read the released version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "minor=${VERSION%.*}" >> "$GITHUB_OUTPUT"
+          echo "major=${VERSION%%.*}" >> "$GITHUB_OUTPUT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -38,12 +50,19 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: nyangko/isenax
+          # These were type=semver rules gated on a tag push, but this workflow
+          # has never had a push trigger -- so the version tags never once
+          # applied and every image shipped as latest/master only, with no way
+          # to pin or roll back to a version. Taken from package.json instead,
+          # which is the version semantic-release just released. (A tag-push
+          # trigger wouldn't work: semantic-release pushes its tag with
+          # GITHUB_TOKEN, and those pushes don't start new workflow runs.)
           tags: |
-            type=semver,pattern={{version}},enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,pattern={{major}}.{{minor}},enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,pattern={{major}},enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
-            type=ref,event=branch,enable=${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v') }}
-            type=sha,prefix={{branch}}-,enable=${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=${{ steps.version.outputs.minor }}
+            type=raw,value=${{ steps.version.outputs.major }}
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
       - name: Build and push Docker image
         uses: docker/build-push-action@v7

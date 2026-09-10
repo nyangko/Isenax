@@ -1,9 +1,12 @@
 name: Release
 
 on:
-  # Runs after Pages deployment completes successfully
+  # Runs after E2E tests pass, in parallel with the Pages deploy rather than
+  # behind it: publishing a static site and cutting a version are independent,
+  # and gating the release on Pages meant a Pages-side failure silently held
+  # back a release whose tests had all passed.
   workflow_run:
-    workflows: ["Deploy static content to Pages"]
+    workflows: ["E2E Tests"]
     types:
       - completed
     branches: ["main", "master"]
@@ -24,6 +27,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          # Deliberately NOT pinned to workflow_run.head_sha like the other
+          # jobs: semantic-release has to run on the release branch itself, and
+          # a detached HEAD fails its branch check.
           fetch-depth: 0
           persist-credentials: false
 
