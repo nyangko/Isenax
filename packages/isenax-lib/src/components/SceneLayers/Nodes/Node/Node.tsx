@@ -1,6 +1,10 @@
 import React, { useMemo, useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, IconButton } from '@mui/material';
-import { IconChevronDown as ExpandMoreIcon, IconChevronUp as ExpandLessIcon } from '@tabler/icons-react';
+import {
+  IconChevronDown as ExpandMoreIcon,
+  IconChevronUp as ExpandLessIcon,
+  IconStack as ChildViewIcon
+} from '@tabler/icons-react';
 import { PROJECTED_TILE_SIZE, DEFAULT_LABEL_HEIGHT } from 'src/config';
 import { getTilePosition, CoordsUtils } from 'src/utils';
 import { useIcon } from 'src/hooks/useIcon';
@@ -160,6 +164,30 @@ export const Node = memo(({ node, order, dimmed = false }: Props) => {
             >
               {iconComponent}
             </Box>
+            {/* Until now a node with a drill-down view looked exactly like one
+                without: you had to right-click it (or open the Layers panel) to
+                find out. Same glyph the context menu and the Layers panel row
+                use for child views, so it reads as one thing everywhere. Hidden
+                when exporting -- a static image can't be drilled into. */}
+            {modelItem.childViewId && editorMode !== 'NON_INTERACTIVE' && (
+              <Box
+                aria-hidden
+                sx={{
+                  position: 'absolute',
+                  right: -4,
+                  bottom: -4,
+                  display: 'flex',
+                  p: '2px',
+                  borderRadius: '50%',
+                  color: 'text.secondary',
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }}
+              >
+                <ChildViewIcon size={12} />
+              </Box>
+            )}
           </Box>
         )}
       </Box>

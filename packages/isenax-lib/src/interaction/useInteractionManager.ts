@@ -7,6 +7,7 @@ import { getMouse, getItemAtTile, getConnectorsAtTile, generateId, incrementZoom
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
+import { useView } from 'src/hooks/useView';
 import { HOTKEY_PROFILES } from 'src/config/hotkeys';
 import { TEXTBOX_DEFAULTS } from 'src/config';
 import { Cursor } from './modes/Cursor';
@@ -111,6 +112,7 @@ export const useInteractionManager = () => {
   const uiStateApi = useUiStateStoreApi();
   const trackpadMode = useUiStateStore((state) => state.zoomSettings.trackpadMode);
   const modelStoreApi = useModelStoreApi();
+  const { changeView } = useView();
   const scene = useScene();
   const { size: rendererSize } = useResizeObserver(rendererEl);
   const { undo, redo, canUndo, canRedo } = useHistory();
@@ -467,6 +469,29 @@ export const useInteractionManager = () => {
     [uiStateApi, scene]
   );
 
+  // Double-click is the gesture people already try on a node that has more
+  // inside it (and what #63 originally asked for), but until now the only ways
+  // in were the context menu and the Layers panel row -- both of which you have
+  // to know about first. Enter-only: creating a child view is a bigger action
+  // than a stray double-click should trigger. Allowed in read-only diagrams
+  // too, since drilling in is navigation, not editing.
+  const onDoubleClick = useCallback(() => {
+    const uiState = uiStateApi.getState();
+
+    if (uiState.editorMode === 'NON_INTERACTIVE') return;
+
+    const itemAtTile = getItemAtTile({ tile: uiState.mouse.position.tile, scene });
+
+    if (itemAtTile?.type !== 'ITEM') return;
+
+    const model = modelStoreApi.getState();
+    const modelItem = model.items.find((item) => item.id === itemAtTile.id);
+
+    if (!modelItem?.childViewId) return;
+
+    changeView(modelItem.childViewId, model);
+  }, [uiStateApi, modelStoreApi, scene, changeView]);
+
   useEffect(() => {
     if (modeType === 'INTERACTIONS_DISABLED') return;
 
@@ -623,6 +648,7 @@ export const useInteractionManager = () => {
     el.addEventListener('mousedown', onMouseEvent);
     el.addEventListener('mouseup', onMouseEvent);
     el.addEventListener('contextmenu', onContextMenu);
+    el.addEventListener('dblclick', onDoubleClick);
     el.addEventListener('touchstart', onTouchStart);
     el.addEventListener('touchmove', onTouchMove);
     el.addEventListener('touchend', onTouchEnd);
@@ -633,6 +659,7 @@ export const useInteractionManager = () => {
       el.removeEventListener('mousedown', onMouseEvent);
       el.removeEventListener('mouseup', onMouseEvent);
       el.removeEventListener('contextmenu', onContextMenu);
+      el.removeEventListener('dblclick', onDoubleClick);
       el.removeEventListener('touchstart', onTouchStart);
       el.removeEventListener('touchmove', onTouchMove);
       el.removeEventListener('touchend', onTouchEnd);
@@ -650,6 +677,7 @@ export const useInteractionManager = () => {
     modeType,
     onMouseEvent,
     onContextMenu,
+    onDoubleClick,
     rendererEl,
     rendererSize,
     uiStateApi,
