@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.9.0](https://github.com/nyangko/Isenax/compare/v1.8.3...v1.9.0) (2026-09-10)
+
+### Features
+
+* add a view tree to the Layers panel ([f6f3425](https://github.com/nyangko/Isenax/commit/f6f34254a452e65b037ec0ff8a6b29d2efafd783)), closes [#38](https://github.com/nyangko/Isenax/issues/38)
+* animate drilling into and out of a child view ([6a13b17](https://github.com/nyangko/Isenax/commit/6a13b17c18c73a9cd1e08f5b45ce9c63edb4124d)), closes [#74](https://github.com/nyangko/Isenax/issues/74)
+* make drill-down views discoverable on the canvas ([9c24c3b](https://github.com/nyangko/Isenax/commit/9c24c3b824f11fedfed7b484a7111f6501bbdab4)), closes [#63](https://github.com/nyangko/Isenax/issues/63) [#38](https://github.com/nyangko/Isenax/issues/38)
+* rename and delete views from the view tree ([903e8b5](https://github.com/nyangko/Isenax/commit/903e8b5a4e033c8ebc25bef6094f21abf07b272f)), closes [#69](https://github.com/nyangko/Isenax/issues/69)
+* show the full view path as a breadcrumb in the Layers panel ([6d5073e](https://github.com/nyangko/Isenax/commit/6d5073ed39daff132032d7b2a7226d833d5c0e2c)), closes [#38](https://github.com/nyangko/Isenax/issues/38)
+
+### Bug Fixes
+
+* land the rename field with the old view name selected ([1298b04](https://github.com/nyangko/Isenax/commit/1298b042b00d0eb0fa2047a91e12f0e6e4473101))
+* make the child-view affordance mean "back out" on an anchor node ([d73175b](https://github.com/nyangko/Isenax/commit/d73175bd41493c06d2b7b19122ce3d12b96d62b7)), closes [#38](https://github.com/nyangko/Isenax/issues/38)
+
+### Documentation
+
+* log v1.9.0 view navigation in the app changelog and READMEs ([49f253f](https://github.com/nyangko/Isenax/commit/49f253f3198b9e4abe0d42df1801e792422dde53))
+
 ## [1.8.3](https://github.com/nyangko/Isenax/compare/v1.8.2...v1.8.3) (2026-09-10)
 
 ### Bug Fixes
