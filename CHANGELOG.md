@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.9.1](https://github.com/nyangko/Isenax/compare/v1.9.0...v1.9.1) (2026-09-10)
+
+### Bug Fixes
+
+* drop clients.claim() from the service worker ([e07c861](https://github.com/nyangko/Isenax/commit/e07c86113ec012066c48996348b23260079d2ae2))
+* stop the service worker pinning returning visitors to an old build ([8aff45b](https://github.com/nyangko/Isenax/commit/8aff45ba1388a1c37d3a17e69974764b4297576d)), closes [#76](https://github.com/nyangko/Isenax/issues/76)
+
 ## [1.9.0](https://github.com/nyangko/Isenax/compare/v1.8.3...v1.9.0) (2026-09-10)
 
 ### Features
