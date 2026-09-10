@@ -1,4 +1,4 @@
-import { buildViewTree, getViewPath } from '../model';
+import { buildViewTree, getViewPath, getChildViewAction } from '../model';
 import { View } from 'src/types';
 
 const view = (id: string, parentViewId?: string): View => ({
@@ -86,5 +86,34 @@ describe('getViewPath', () => {
 
   it('returns nothing for a view id that is not there', () => {
     expect(getViewPath(views, 'missing')).toEqual([]);
+  });
+});
+
+describe('getChildViewAction', () => {
+  const rootView = { anchorItemId: undefined, parentViewId: undefined };
+  const childView = { anchorItemId: 'payment', parentViewId: 'root' };
+
+  it('enters the child view of a node that has one', () => {
+    expect(getChildViewAction({ id: 'payment', childViewId: 'detail' }, rootView)).toEqual({
+      type: 'ENTER',
+      viewId: 'detail'
+    });
+  });
+
+  it('offers to create one for a node that has none', () => {
+    expect(getChildViewAction({ id: 'payment' }, rootView)).toEqual({ type: 'CREATE' });
+  });
+
+  it('goes back to the parent on the node the current view hangs off', () => {
+    expect(getChildViewAction({ id: 'payment', childViewId: 'detail' }, childView)).toEqual({
+      type: 'BACK',
+      viewId: 'root'
+    });
+  });
+
+  it('offers nothing on an anchor whose view has no parent', () => {
+    expect(
+      getChildViewAction({ id: 'payment', childViewId: 'detail' }, { anchorItemId: 'payment' })
+    ).toBeNull();
   });
 });

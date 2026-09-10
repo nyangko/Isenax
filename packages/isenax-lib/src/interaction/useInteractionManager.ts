@@ -3,7 +3,7 @@ import { useModelStoreApi } from 'src/stores/modelStore';
 import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
 import { ModeActions, State, SlimMouseEvent, Mouse } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, getConnectorsAtTile, generateId, incrementZoom, decrementZoom, isPointInPolygon, isWithinBounds } from 'src/utils';
+import { getMouse, getItemAtTile, getConnectorsAtTile, generateId, incrementZoom, decrementZoom, isPointInPolygon, isWithinBounds, getChildViewAction } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -487,9 +487,15 @@ export const useInteractionManager = () => {
     const model = modelStoreApi.getState();
     const modelItem = model.items.find((item) => item.id === itemAtTile.id);
 
-    if (!modelItem?.childViewId) return;
+    if (!modelItem) return;
 
-    changeView(modelItem.childViewId, model);
+    // On the node the current view hangs off, this means "back out" -- see
+    // getChildViewAction. CREATE is deliberately not wired up here.
+    const action = getChildViewAction(modelItem, scene.currentView);
+
+    if (!action || action.type === 'CREATE') return;
+
+    changeView(action.viewId, model);
   }, [uiStateApi, modelStoreApi, scene, changeView]);
 
   useEffect(() => {

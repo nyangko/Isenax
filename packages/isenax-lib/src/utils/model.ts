@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { Model, ModelStore, View } from 'src/types';
+import { Model, ModelStore, ModelItem, View } from 'src/types';
 import { validateModel } from 'src/schemas/validation';
 import { getItemByIdOrThrow } from './common';
 
@@ -132,4 +132,30 @@ export const getViewPath = (views: View[], viewId: string): View[] => {
   }
 
   return path;
+};
+
+// What the child-view affordance on a node should do right now. Inside a view,
+// the node that view hangs off is still carrying childViewId -- pointing it at
+// its own view again is a no-op, so there it means "back out to where this
+// lives" instead. Every entry point (context menu, Layers panel row, canvas
+// double-click) asks this so they can't drift apart.
+export type ChildViewAction =
+  | { type: 'ENTER'; viewId: string }
+  | { type: 'BACK'; viewId: string }
+  | { type: 'CREATE' }
+  | null;
+
+export const getChildViewAction = (
+  modelItem: Pick<ModelItem, 'id' | 'childViewId'>,
+  currentView: Pick<View, 'anchorItemId' | 'parentViewId'>
+): ChildViewAction => {
+  if (currentView.anchorItemId === modelItem.id) {
+    // A child view always has a parent; guard anyway rather than offer a
+    // navigation that goes nowhere.
+    return currentView.parentViewId ? { type: 'BACK', viewId: currentView.parentViewId } : null;
+  }
+
+  if (modelItem.childViewId) return { type: 'ENTER', viewId: modelItem.childViewId };
+
+  return { type: 'CREATE' };
 };

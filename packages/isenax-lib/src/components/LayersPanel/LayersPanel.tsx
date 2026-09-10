@@ -43,6 +43,7 @@ import { useTranslation } from 'src/stores/localeStore';
 import {
   buildViewTree,
   getViewPath,
+  getChildViewAction,
   getConnectorLabels,
   getItemById,
   isWithinBounds
@@ -111,14 +112,21 @@ const NodeRow = ({
   const { changeView } = useView();
   const model = useModelStore((state) => state);
   const { t } = useTranslation('contextMenu');
+  const { t: tViewControls } = useTranslation('viewControls');
   if (!modelItem) return null;
 
-  const openOrCreateChildView = (e: React.MouseEvent) => {
+  const childViewAction = getChildViewAction(modelItem, scene.currentView);
+
+  const runChildViewAction = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (modelItem.childViewId) {
-      changeView(modelItem.childViewId, model);
+
+    if (!childViewAction) return;
+
+    if (childViewAction.type !== 'CREATE') {
+      changeView(childViewAction.viewId, model);
       return;
     }
+
     try {
       const viewName = t('childViewName').replace('{name}', modelItem.name);
       const result = scene.createChildView(id, viewName);
@@ -144,14 +152,22 @@ const NodeRow = ({
       <Typography variant="caption" color="text.disabled" sx={{ mr: 0.5, flexShrink: 0 }}>
         · {connectorCount}
       </Typography>
-      <MUIIconButton
-        size="small"
-        aria-label={modelItem.childViewId ? t('openChildView') : t('createChildView')}
-        onClick={openOrCreateChildView}
-        sx={{ flexShrink: 0 }}
-      >
-        <ChildViewIcon size={16} />
-      </MUIIconButton>
+      {childViewAction && (
+        <MUIIconButton
+          size="small"
+          aria-label={
+            childViewAction.type === 'BACK'
+              ? tViewControls('backToParentView')
+              : childViewAction.type === 'ENTER'
+              ? t('openChildView')
+              : t('createChildView')
+          }
+          onClick={runChildViewAction}
+          sx={{ flexShrink: 0 }}
+        >
+          <ChildViewIcon size={16} />
+        </MUIIconButton>
+      )}
       <LayerRowActions id={id} />
     </ListItemButton>
   );

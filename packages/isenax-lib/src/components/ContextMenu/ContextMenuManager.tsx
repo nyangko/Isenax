@@ -11,7 +11,12 @@ import {
   IconStack as ChildViewIcon
 } from '@tabler/icons-react';
 import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
-import { generateId, findNearestUnoccupiedTile, getItemById } from 'src/utils';
+import {
+  generateId,
+  findNearestUnoccupiedTile,
+  getItemById,
+  getChildViewAction
+} from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 import { useView } from 'src/hooks/useView';
 import { useModelStore } from 'src/stores/modelStore';
@@ -27,6 +32,7 @@ interface Props {
 export const ContextMenuManager = ({ anchorEl }: Props) => {
   const scene = useScene();
   const { t } = useTranslation('contextMenu');
+  const { t: tViewControls } = useTranslation('viewControls');
   const model = useModelStore((state) => {
     return state;
   });
@@ -272,13 +278,22 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
         const nodeId = contextMenu.item.id;
         const modelItem = itemModelItem;
 
-        if (modelItem) {
+        const childViewAction = modelItem
+          ? getChildViewAction(modelItem, scene.currentView)
+          : null;
+
+        if (modelItem && childViewAction) {
           itemMenuItems.push({
-            label: modelItem.childViewId ? t('openChildView') : t('createChildView'),
+            label:
+              childViewAction.type === 'BACK'
+                ? tViewControls('backToParentView')
+                : childViewAction.type === 'ENTER'
+                ? t('openChildView')
+                : t('createChildView'),
             Icon: <ChildViewIcon size={20} />,
             onClick: () => {
-              if (modelItem.childViewId) {
-                changeView(modelItem.childViewId, model);
+              if (childViewAction.type !== 'CREATE') {
+                changeView(childViewAction.viewId, model);
                 onClose();
                 return;
               }
