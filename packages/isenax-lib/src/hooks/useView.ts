@@ -40,8 +40,25 @@ export const useView = () => {
         ctx: { viewId, state: { model: prunedModel, scene: INITIAL_SCENE_STATE } }
       });
 
+      // What the change should look like: into a child, back up to the parent,
+      // or sideways. Undefined on the first load and on the controlled-reload
+      // echo (same view id), so opening a diagram doesn't animate.
+      const previousView = currentViewId
+        ? prunedModel.views.find((view) => view.id === currentViewId)
+        : undefined;
+      const nextView = prunedModel.views.find((view) => view.id === viewId);
+
+      const transition =
+        !previousView || previousView.id === viewId
+          ? undefined
+          : nextView?.parentViewId === previousView.id
+          ? 'IN'
+          : previousView.parentViewId === viewId
+          ? 'OUT'
+          : 'JUMP';
+
       sceneActions.set(newState.scene, true);
-      uiStateActions.setView(viewId);
+      uiStateActions.setView(viewId, transition);
     },
     [uiStateActions, sceneActions, currentViewId, modelStoreApi]
   );

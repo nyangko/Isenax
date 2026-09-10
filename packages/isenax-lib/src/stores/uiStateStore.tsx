@@ -108,12 +108,20 @@ const initialState = () => {
           // sites, tracked separately rather than risked here. Hidden actually
           // stops rendering (Renderer.tsx filters on this); locked is
           // stored+toggleable but not yet enforced against canvas clicks/drags.
+          viewTransition: null,
           hiddenLayerIds: [],
           lockedLayerIds: [],
 
           actions: {
-            setView: (view) => {
-              set({ view });
+            setView: (view, transition) => {
+              set({
+                view,
+                viewTransition: transition
+                  ? { direction: transition, nonce: get().viewTransition
+                      ? (get().viewTransition as { nonce: number }).nonce + 1
+                      : 1 }
+                  : null
+              });
             },
             setMainMenuOptions: (mainMenuOptions) => {
               set({ mainMenuOptions });

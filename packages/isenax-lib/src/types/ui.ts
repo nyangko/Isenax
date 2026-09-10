@@ -211,6 +211,12 @@ export interface UiState {
   exportCompactJsonButtonPortalTarget: HTMLElement | null;
   layersButtonPortalTarget: HTMLElement | null;
   layersPanelOpen: boolean;
+  /**
+   * How the last view change should read on screen: IN drilled into a child,
+   * OUT went back up, JUMP went sideways (view tree/breadcrumb). nonce only
+   * exists so the same direction twice in a row still replays the animation.
+   */
+  viewTransition: { direction: ViewTransition; nonce: number } | null;
   /** Item/connector/rectangle/textBox ids hidden from the canvas via the Layers panel. Session-only. */
   hiddenLayerIds: string[];
   /** Ids marked locked via the Layers panel. Session-only; not yet enforced against canvas interaction. */
@@ -221,8 +227,10 @@ export interface UiState {
   mainMenuExtraItems: ((closeMenu: () => void) => ReactNode) | null;
 }
 
+export type ViewTransition = 'IN' | 'OUT' | 'JUMP';
+
 export interface UiStateActions {
-  setView: (view: string) => void;
+  setView: (view: string, transition?: ViewTransition) => void;
   setMainMenuOptions: (options: MainMenuOptions) => void;
   setEditorMode: (mode: keyof typeof EditorModeEnum) => void;
   setIconCategoriesState: (iconCategoriesState: IconCollectionState[]) => void;
