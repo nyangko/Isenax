@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.8.3](https://github.com/nyangko/Isenax/compare/v1.8.2...v1.8.3) (2026-09-10)
+
+### Bug Fixes
+
+* keep referenced built-in icons in the saved diagram ([e7f2782](https://github.com/nyangko/Isenax/commit/e7f27821f3d93d00b5bb6dd250106f727316d00a)), closes [#45](https://github.com/nyangko/Isenax/issues/45)
+* stop offering delete on nodes that can't be deleted ([fba4fef](https://github.com/nyangko/Isenax/commit/fba4fefeb4988c999af3dec8b6a1b969e6fe54b7)), closes [#63](https://github.com/nyangko/Isenax/issues/63)
+
 ## [1.8.2](https://github.com/nyangko/Isenax/compare/v1.8.1...v1.8.2) (2026-08-26)
 
 ### Code Refactoring
