@@ -113,3 +113,23 @@ export const buildViewTree = (views: View[]): { view: View; depth: number }[] =>
 
   return rows;
 };
+
+// Root-first chain of views from the diagram's root down to viewId, for a
+// breadcrumb. Stops on a parentViewId cycle (see buildViewTree) so a bad chain
+// yields a short path instead of hanging.
+export const getViewPath = (views: View[], viewId: string): View[] => {
+  const path: View[] = [];
+  const seen = new Set<string>();
+
+  let current = views.find((view) => view.id === viewId);
+
+  while (current && !seen.has(current.id)) {
+    seen.add(current.id);
+    path.unshift(current);
+
+    const parentId: string | undefined = current.parentViewId;
+    current = parentId ? views.find((view) => view.id === parentId) : undefined;
+  }
+
+  return path;
+};

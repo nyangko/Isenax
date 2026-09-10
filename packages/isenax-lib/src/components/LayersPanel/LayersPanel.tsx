@@ -14,12 +14,14 @@ import {
   InputAdornment,
   Chip,
   Stack,
-  Button
+  Button,
+  Breadcrumbs,
+  Link
 } from '@mui/material';
 import {
   IconX as CloseIcon,
   IconChevronDown as ChevronDownIcon,
-  IconChevronLeft as BackIcon,
+  IconChevronRight as SeparatorIcon,
   IconSearch as SearchIcon,
   IconEye as EyeIcon,
   IconEyeOff as EyeOffIcon,
@@ -38,7 +40,13 @@ import { useConnector } from 'src/hooks/useConnector';
 import { useTextBox } from 'src/hooks/useTextBox';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
-import { buildViewTree, getConnectorLabels, getItemById, isWithinBounds } from 'src/utils';
+import {
+  buildViewTree,
+  getViewPath,
+  getConnectorLabels,
+  getItemById,
+  isWithinBounds
+} from 'src/utils';
 import { ItemControlsManager } from 'src/components/ItemControls/ItemControlsManager';
 import { ViewItem, View, Rectangle as RectangleType, ItemControls } from 'src/types';
 
@@ -382,9 +390,15 @@ export const LayersPanel = () => {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('ALL');
   const [childViewHintDismissed, setChildViewHintDismissed] = useState(true);
 
-  const parentView = currentView.parentViewId
-    ? model.views.find((v) => v.id === currentView.parentViewId)
-    : undefined;
+  // Root view first, current view last. The root view is the diagram itself --
+  // there's no UI to create a second one -- so it's labelled with the diagram
+  // title rather than its own name, which is "Untitled view" for anything the
+  // app created.
+  const viewPath = useMemo(
+    () => getViewPath(model.views, currentView.id),
+    [model.views, currentView.id]
+  );
+  const diagramTitle = model.title || t('title');
 
   // Selecting an item (canvas or list) makes sure the panel is visible, but
   // no longer force-switches to the Edit tab -- the bottom summary bar shows
@@ -558,23 +572,46 @@ export const LayersPanel = () => {
           flexShrink: 0
         }}
       >
-        {parentView ? (
-          <Button
-            aria-label={tViewControls('backToParentView')}
-            onClick={() => changeView(parentView.id, model)}
-            startIcon={<BackIcon size={16} />}
-            size="small"
-            variant="text"
-            color="inherit"
-            sx={{ textTransform: 'none', ml: -1 }}
+        {viewPath.length > 1 ? (
+          // maxItems collapses the middle into a "..." button on its own, which
+          // is the whole abbreviation rule a panel this narrow needs.
+          <Breadcrumbs
+            maxItems={3}
+            itemsBeforeCollapse={1}
+            itemsAfterCollapse={1}
+            separator={<SeparatorIcon size={12} />}
+            sx={{
+              minWidth: 0,
+              '& .MuiBreadcrumbs-ol': { flexWrap: 'nowrap' },
+              '& .MuiBreadcrumbs-li': { minWidth: 0 }
+            }}
           >
-            <Typography variant="subtitle2" noWrap>
+            {viewPath.slice(0, -1).map((view, index) => (
+              <Link
+                key={view.id}
+                component="button"
+                underline="hover"
+                color="inherit"
+                aria-label={
+                  index === viewPath.length - 2
+                    ? tViewControls('backToParentView')
+                    : undefined
+                }
+                onClick={() => changeView(view.id, model)}
+                sx={{ minWidth: 0 }}
+              >
+                <Typography variant="subtitle2" noWrap>
+                  {index === 0 ? diagramTitle : view.name}
+                </Typography>
+              </Link>
+            ))}
+            <Typography variant="subtitle2" color="text.primary" noWrap>
               {currentView.name}
             </Typography>
-          </Button>
+          </Breadcrumbs>
         ) : (
-          <Typography variant="subtitle2" color="text.primary">
-            {t('title')}
+          <Typography variant="subtitle2" color="text.primary" noWrap>
+            {diagramTitle}
           </Typography>
         )}
         <MUIIconButton
@@ -589,7 +626,7 @@ export const LayersPanel = () => {
         </MUIIconButton>
       </Box>
 
-      {parentView && !childViewHintDismissed && (
+      {viewPath.length > 1 && !childViewHintDismissed && (
         <Box
           sx={{
             display: 'flex',
