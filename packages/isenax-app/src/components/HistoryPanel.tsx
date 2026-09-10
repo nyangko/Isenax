@@ -25,6 +25,19 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.9.0',
+    date: '2026-09-10',
+    items: [
+      ['레이어 패널에 "뷰" 탭 추가', ' — 다이어그램의 모든 뷰가 상위/하위 관계 그대로 트리로 보이고, 클릭하면 어느 뷰로든 바로 이동. 지금까지는 "상위 뷰로" 버튼 하나뿐이라 형제 뷰로 가려면 올라갔다 다시 내려가야 했음'],
+      ['패널 헤더가 현재 위치의 전체 경로', '를 브레드크럼으로 표시 — `다이어그램 제목 › 상위 뷰 › 현재 뷰`. 각 단계를 클릭해 바로 이동할 수 있고, 좁은 화면에서는 가운데가 자동으로 접힘'],
+      ['하위 뷰가 있는 노드', '는 캔버스에서 아이콘 모서리에 표시가 생겨 바로 구분됨 — 지금까지는 우클릭해보기 전엔 알 수 없었음'],
+      ['노드를 더블클릭하면', ' 하위 뷰로 바로 들어감'],
+      ['하위 뷰를 오갈 때 확대·축소 애니메이션', '이 붙어서 안으로 들어갔는지 밖으로 나왔는지가 화면으로 드러남'],
+      ['하위 뷰 안에서 그 뷰의 기준이 되는 노드', '를 우클릭하면 "상위 뷰로 이동"이 나옴 — 이전에는 이미 열려 있는 뷰를 다시 여는 동작이라 아무 반응이 없었음'],
+      ['뷰 이름 변경과 삭제', ' 추가 — "뷰" 탭의 각 행 오른쪽 메뉴에서. 삭제는 그 안의 아이템 수와 하위 뷰 수를 보여주고 한 번 더 확인함']
+    ]
+  },
+  {
     version: 'v1.8.3',
     date: '2026-09-10',
     items: [
@@ -216,6 +229,19 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.9.0',
+    date: '2026-09-10',
+    items: [
+      ['A "Views" tab in the Layers panel', " lists every view in the diagram as a tree, parent to child, and clicking a row jumps straight to it. Until now the only way between views was a single back-to-parent button, so reaching a sibling view meant going up and hunting for the node again"],
+      ['The panel header shows your full path', ' as a breadcrumb -- `Diagram title › Parent view › Current view`. Every step is clickable, and the middle collapses on a narrow panel'],
+      ['Nodes that have a child view', ' now carry a marker at the corner of their icon, so you can spot them on the canvas -- previously you had to right-click one to find out'],
+      ['Double-clicking a node', ' drops straight into its child view'],
+      ['Moving between views is animated', ' -- scaling in on the way down and settling back on the way out, so going deeper reads as going deeper'],
+      ['Inside a child view, right-clicking the node it belongs to', ' now offers "Back to parent view". It used to offer to open the view you were already in, which did nothing'],
+      ['Views can be renamed and deleted', ' from the row menu in the Views tab. Deleting shows how many items and nested views go with it, and asks first']
+    ]
+  },
   {
     version: 'v1.8.3',
     date: '2026-09-10',

@@ -158,6 +158,9 @@ Os ícones integrados trafegam apenas por id (nenhum dado base64 é enviado ao a
 
 ## Adicionado recentemente
 
+### Navegar entre visualizações
+O painel de camadas tem uma aba "Visualizações" que lista todas as visualizações do diagrama como uma árvore, permitindo ir direto a qualquer uma em vez de subir nível a nível, e o cabeçalho do painel mostra o caminho completo como breadcrumbs clicáveis. Nós com uma visualização filha ficam marcados no canvas e abrem com duplo clique, a troca entre visualizações é animada, e as visualizações podem ser renomeadas ou excluídas pelo menu da linha.
+
 ### Indo mais fundo com as visualizações de detalhe
 Clique com o botão direito em um nó (toque longo no celular) → "Criar visualização filha" para entrar na própria visualização de detalhe daquele item. O ícone âncora fica travado no lugar e não pode ser excluído, então você sempre sabe de quem é a visualização que está vendo, e o cabeçalho do painel de Camadas também funciona como botão de voltar. Cada linha de nó no painel de Camadas agora também tem seu próprio ícone para criar/abrir essa visualização.
 

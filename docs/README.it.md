@@ -158,6 +158,9 @@ Le icone integrate viaggiano solo tramite id (nessun dato base64 inviato all'age
 
 ## Aggiunto di recente
 
+### Spostarsi tra le viste
+Il pannello Livelli ha una scheda "Viste" che elenca tutte le viste del diagramma come albero, così si salta direttamente a qualsiasi vista invece di risalire un livello alla volta, e l'intestazione del pannello mostra il percorso completo come breadcrumb cliccabili. I nodi con una vista figlia sono contrassegnati sul canvas e si aprono con un doppio clic, il passaggio tra viste è animato, e le viste si possono rinominare o eliminare dal menu della riga.
+
 ### Approfondimento nelle viste di dettaglio
 Fai clic destro su un nodo (tocco prolungato su mobile) → "Crea vista secondaria" per entrare nel diagramma di dettaglio di quell'elemento. L'icona di ancoraggio resta bloccata in posizione e non può essere eliminata, così sai sempre di chi è la vista che stai guardando, e l'intestazione del pannello Livelli funge anche da pulsante indietro. Ogni riga nodo nel pannello Livelli ha ora anche la propria icona per creare/aprire questa vista.
 

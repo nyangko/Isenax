@@ -158,6 +158,9 @@ Ikon bawaan hanya dikirim melalui id (data base64 tidak dikirim ke agen), dan `u
 
 ## Baru ditambahkan
 
+### Berpindah antar tampilan
+Panel Layer punya tab "Tampilan" yang menampilkan seluruh tampilan diagram sebagai pohon, sehingga Anda bisa langsung melompat ke mana pun alih-alih naik satu tingkat demi tingkat, dan header panel menampilkan jalur lengkap sebagai breadcrumb yang bisa diklik. Node yang punya tampilan turunan ditandai di kanvas dan terbuka dengan klik ganda, perpindahan antar tampilan dianimasikan, dan tampilan bisa diganti nama atau dihapus dari menu barisnya.
+
 ### Drill-down ke tampilan detail
 Klik kanan pada sebuah node (tekan lama di perangkat mobile) → "Buat Tampilan Turunan" untuk memperbesar ke diagram detail milik item tersebut. Ikon jangkar tetap terkunci di tempatnya dan tidak bisa dihapus, jadi Anda selalu tahu tampilan ini milik siapa, dan header panel Layers juga berfungsi sebagai tombol kembali. Setiap baris node di panel Layers kini juga punya ikon buat/buka sendiri untuk fitur yang sama.
 

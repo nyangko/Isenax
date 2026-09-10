@@ -158,6 +158,9 @@ Integrierte Icons werden nur per id übertragen (kein Base64 an den Agenten gese
 
 ## Kürzlich hinzugefügt
 
+### Zwischen Ansichten navigieren
+Das Ebenen-Panel hat einen Reiter "Ansichten", der alle Ansichten des Diagramms als Baum auflistet — so springt man direkt zu jeder Ansicht, statt Ebene für Ebene nach oben zu gehen. Die Kopfzeile des Panels zeigt den vollständigen Pfad als anklickbare Brotkrumen. Knoten mit einer Unteransicht sind auf der Zeichenfläche markiert und öffnen sich per Doppelklick, der Wechsel zwischen Ansichten ist animiert, und Ansichten lassen sich über das Zeilenmenü umbenennen oder löschen.
+
 ### Drilldown in Detailansichten
 Rechtsklick auf einen Knoten (auf Mobilgeräten: lange gedrückt halten) → „Detailansicht erstellen“, um in die eigene Detailzeichnung dieses Elements hineinzuzoomen. Das Ankersymbol bleibt fest verankert und kann nicht gelöscht werden, sodass immer klar ist, wessen Ansicht gerade geöffnet ist; die Kopfzeile des Ebenen-Panels dient zugleich als Zurück-Button. Jede Knotenzeile im Ebenen-Panel hat jetzt ebenfalls ein eigenes Symbol zum Erstellen/Öffnen.
 

@@ -158,6 +158,9 @@ Los iconos integrados viajan solo por id (no se envían datos base64 al agente),
 
 ## Recientemente añadido
 
+### Moverse entre vistas
+El panel de capas tiene una pestaña "Vistas" que lista todas las vistas del diagrama como un árbol, así puedes saltar directamente a cualquiera en vez de subir nivel por nivel, y la cabecera del panel muestra la ruta completa como migas de pan en las que se puede hacer clic. Los nodos con una vista hija están marcados en el lienzo y se abren con doble clic, el cambio entre vistas está animado, y las vistas se pueden renombrar o eliminar desde el menú de cada fila.
+
 ### Profundizar en vistas de detalle
 Haz clic derecho en un nodo (mantén pulsado en móvil) → "Crear vista secundaria" para acercarte al diagrama de detalle propio de ese elemento. El icono de anclaje permanece fijo y no se puede eliminar, así siempre sabes de quién es la vista en la que estás, y el encabezado del panel de capas funciona también como botón de retroceso. Cada fila de nodo en el panel de capas tiene ahora su propio icono para crear/abrir esta vista.
 

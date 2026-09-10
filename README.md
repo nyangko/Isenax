@@ -159,6 +159,9 @@ Built-in icons round-trip by id only (no base64 sent to the agent), and `update_
 
 ## Recently added
 
+### Getting around views
+The Layers panel has a Views tab listing every view in the diagram as a tree, so you can jump straight to any of them instead of stepping up one level at a time, and the panel header shows your full path as a clickable breadcrumb. Nodes that have a child view are marked on the canvas and open on double-click, moving between views is animated so going deeper reads as going deeper, and views can be renamed or deleted from the row menu.
+
 ### Drill-down into detail views
 Right-click a node (long-press on mobile) → "Create Child View" to zoom into that item's own detail diagram. The anchor icon stays locked in place so you always know whose view you're in, and the Layers panel header doubles as a back button. Each node's row in the Layers panel also has its own create/open icon for the same thing.
 

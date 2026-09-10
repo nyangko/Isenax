@@ -158,6 +158,9 @@ Wbudowane ikony są przesyłane tylko przez id (dane base64 nie są wysyłane do
 
 ## Ostatnio dodane
 
+### Poruszanie się między widokami
+Panel warstw ma zakładkę „Widoki”, która pokazuje wszystkie widoki diagramu jako drzewo — można przejść od razu do dowolnego zamiast wracać poziom po poziomie, a nagłówek panelu pokazuje pełną ścieżkę jako klikalne okruszki. Węzły z widokiem podrzędnym są oznaczone na kanwie i otwierają się podwójnym kliknięciem, przechodzenie między widokami jest animowane, a widoki można zmienić nazwę lub usunąć z menu wiersza.
+
 ### Zagłębianie się w widoki szczegółowe
 Kliknij prawym przyciskiem węzeł (na urządzeniach mobilnych: przytrzymaj) → „Utwórz widok podrzędny”, aby powiększyć własny diagram szczegółowy tego elementu. Ikona kotwicy pozostaje zablokowana na miejscu i nie można jej usunąć, dzięki czemu zawsze wiadomo, czyj to widok, a nagłówek panelu Warstwy pełni jednocześnie funkcję przycisku powrotu. Każdy wiersz węzła w panelu Warstwy ma teraz też własną ikonę tworzenia/otwierania takiego widoku.
 

@@ -158,6 +158,9 @@ Les icônes intégrées ne voyagent que par id (aucune donnée base64 envoyée �
 
 ## Récemment ajouté
 
+### Naviguer entre les vues
+Le panneau Calques dispose d'un onglet "Vues" qui liste toutes les vues du diagramme sous forme d'arborescence : vous atteignez directement n'importe laquelle au lieu de remonter niveau par niveau, et l'en-tête du panneau affiche le chemin complet sous forme de fil d'Ariane cliquable. Les nœuds ayant une vue enfant sont signalés sur le canevas et s'ouvrent par double-clic, le passage d'une vue à l'autre est animé, et les vues peuvent être renommées ou supprimées depuis le menu de leur ligne.
+
 ### Exploration en profondeur des vues de détail
 Clic droit sur un nœud (appui long sur mobile) → « Créer une vue enfant » pour zoomer sur le diagramme de détail propre à cet élément. L'icône d'ancrage reste verrouillée en place et ne peut pas être supprimée, afin de toujours savoir à qui appartient la vue affichée ; l'en-tête du panneau Calques fait aussi office de bouton retour. Chaque ligne de nœud du panneau Calques dispose désormais de sa propre icône pour créer/ouvrir cette vue.
 

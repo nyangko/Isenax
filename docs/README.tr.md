@@ -158,6 +158,9 @@ Yerleşik simgeler yalnızca id ile aktarılır (ajana base64 verisi gönderilme
 
 ## Yakın zamanda eklenenler
 
+### Görünümler arasında gezinme
+Katmanlar panelinde, diyagramdaki tüm görünümleri ağaç olarak listeleyen bir "Görünümler" sekmesi var; böylece seviye seviye yukarı çıkmak yerine doğrudan istediğiniz görünüme geçebilirsiniz ve panel başlığı bulunduğunuz yerin tam yolunu tıklanabilir bir gezinti izi olarak gösterir. Alt görünümü olan düğümler tuval üzerinde işaretlenir ve çift tıklamayla açılır, görünümler arası geçiş animasyonludur, görünümler satır menüsünden yeniden adlandırılabilir veya silinebilir.
+
 ### Detay görünümlerine derinlemesine inme
 Bir düğüme sağ tıklayın (mobilde uzun basın) → "Alt Görünüm Oluştur" ile o öğeye ait ayrıntı diyagramına yakınlaşın. Çapa simgesi yerinde kilitli kalır ve silinemez, böylece hangi görünümde olduğunuzu her zaman bilirsiniz; Katmanlar panelinin başlığı aynı zamanda geri düğmesi görevi görür. Katmanlar panelindeki her düğüm satırında artık aynı işlev için kendi oluştur/aç simgesi de var.
 
