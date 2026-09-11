@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.12.0](https://github.com/nyangko/Isenax/compare/v1.11.0...v1.12.0) (2026-09-11)
+
+### Features
+
+* **theme:** restyle Slider and Radio to match Switch and ToggleButton ([6cfe747](https://github.com/nyangko/Isenax/commit/6cfe74736a3f1a454c0c3c186a9918ed9d6e62ad)), closes [#26](https://github.com/nyangko/Isenax/issues/26) [#25](https://github.com/nyangko/Isenax/issues/25) [#25](https://github.com/nyangko/Isenax/issues/25) [#26](https://github.com/nyangko/Isenax/issues/26)
+
 ## [1.11.0](https://github.com/nyangko/Isenax/compare/v1.10.2...v1.11.0) (2026-09-11)
 
 ### Features
