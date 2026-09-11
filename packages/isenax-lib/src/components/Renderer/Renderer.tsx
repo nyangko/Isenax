@@ -26,6 +26,9 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
   const showCursor = useUiStateStore((state) => {
     return state.mode.showCursor;
   });
+  const modeType = useUiStateStore((state) => {
+    return state.mode.type;
+  });
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -64,6 +67,11 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
   return (
     <Box
       ref={containerRef}
+      // The interaction mode has no other footprint in the DOM. Exposed so a
+      // test can wait on it instead of sleeping (#77); nothing in the app reads
+      // it. Note PLACE_ICON outlives a placement with its id cleared, so this
+      // says "placement mode", not "an icon is armed".
+      data-mode={modeType}
       sx={{
         position: 'absolute',
         top: 0,
