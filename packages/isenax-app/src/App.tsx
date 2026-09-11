@@ -43,7 +43,7 @@ interface CurrentDiagramRef {
 
 // Bump this whenever the History panel's changelog content changes so returning
 // users see the "unread" dot again even if they already dismissed the tutorial hints.
-const HISTORY_VERSION = 'v1.10.0';
+const HISTORY_VERSION = 'v1.10.1';
 const TUTORIAL_HINT_KEYS = [
   'isenax_import_hint_dismissed',
   'isenax_connector_hint_dismissed',
@@ -207,6 +207,10 @@ function EditorPage() {
   // change (e.g. an MCP-driven edit), so we don't immediately reload what we
   // just wrote ourselves.
   const lastLocalSaveRef = useRef<{ id: string; at: number }>({ id: '', at: 0 });
+  // The diagram id whose content is actually in memory. Autosave refuses to
+  // write under any other id -- the one way this app has lost data (#79) was
+  // an id attached to a model that was never loaded for it.
+  const loadedDiagramIdRef = useRef<string | null>(null);
   const [mcpSyncing, setMcpSyncing] = useState(false);
   const mcpSyncingSinceRef = useRef<number | null>(null);
   const isReadonlyUrl =
@@ -305,18 +309,25 @@ function EditorPage() {
       const list = await storageManager.listDiagrams();
       setDiagrams(list);
 
-      // The last-opened diagram's content is already loaded via the
-      // diagramData state initializer (from the 'isenax-last-opened-data'
-      // cache); this just re-attaches its id/name if it's one of ours.
       const lastOpenedId = localStorage.getItem('isenax-last-opened');
       if (lastOpenedId) {
         const lastDiagram = list.find((d) => {
           return d.id === lastOpenedId;
         });
         if (lastDiagram) {
-          setCurrentDiagram({ id: lastDiagram.id, name: lastDiagram.name });
-          setDiagramName(lastDiagram.name);
-          setCurrentModel(diagramData);
+          if (localStorage.getItem('isenax-last-opened-data')) {
+            // Content came in through the diagramData initializer from the
+            // 'isenax-last-opened-data' cache; just re-attach id/name.
+            loadedDiagramIdRef.current = lastDiagram.id;
+            setCurrentDiagram({ id: lastDiagram.id, name: lastDiagram.name });
+            setDiagramName(lastDiagram.name);
+            setCurrentModel(diagramData);
+          } else {
+            // No cache: the initializer fell back to an empty model. Attaching
+            // the id to *that* is how a stored diagram got overwritten by the
+            // next autosave (#79) -- fetch the real content instead.
+            await loadDiagram(lastDiagram.id, true);
+          }
         }
       }
     })().catch(console.error);
@@ -415,6 +426,7 @@ function EditorPage() {
       setUnsavedDiagramLocked(false);
     }
     lastLocalSaveRef.current = { id: savedId, at: Date.now() };
+    loadedDiagramIdRef.current = savedId;
     setCurrentDiagram({ id: savedId, name: diagramName });
     setShowSaveDialog(false);
     setHasUnsavedChanges(false);
@@ -459,6 +471,7 @@ function EditorPage() {
     const id = await storage.createDiagram(savedData);
 
     lastLocalSaveRef.current = { id, at: Date.now() };
+    loadedDiagramIdRef.current = id;
     setCurrentDiagram({ id, name });
     setDiagramName(name);
     setHasUnsavedChanges(false);
@@ -513,6 +526,7 @@ function EditorPage() {
       view: localStorage.getItem(activeViewKey(id)) ?? undefined
     };
 
+    loadedDiagramIdRef.current = id;
     setCurrentDiagram({ id, name });
     setDiagramName(name);
     setDiagramData(dataWithIcons);
@@ -829,6 +843,16 @@ function EditorPage() {
   // Auto-save functionality
   useEffect(() => {
     if (!currentModel || !hasUnsavedChanges || !currentDiagram) return;
+
+    // Never write under an id whose content was never loaded in this session:
+    // whatever is in memory then is not that diagram, and saving it would
+    // replace the stored one (#79).
+    if (loadedDiagramIdRef.current !== currentDiagram.id) {
+      console.warn(
+        `autosave skipped: "${currentDiagram.id}" is not the diagram loaded in this session`
+      );
+      return;
+    }
 
     const autoSaveTimer = setTimeout(async () => {
       const savedItems = currentModel.items || [];

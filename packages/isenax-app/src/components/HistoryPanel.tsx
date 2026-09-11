@@ -25,6 +25,13 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.10.1',
+    date: '2026-09-11',
+    items: [
+      ['저장된 다이어그램이 빈 캔버스로 열리고, 그 상태에서 편집하면 원본이 덮어써지던 문제', ' 수정 — 마지막으로 열었던 다이어그램의 캐시가 사라진 경우(브라우저 정리, 파일 가져오기 뒤 등) 앱이 빈 모델에 그 다이어그램의 id를 붙여 두고 있었음. 이제 캐시가 없으면 저장소에서 실제 내용을 다시 불러오고, 이 세션에서 불러온 적 없는 다이어그램 위에는 자동저장이 절대 쓰지 않음']
+    ]
+  },
+  {
     version: 'v1.10.0',
     date: '2026-09-11',
     items: [
@@ -246,6 +253,13 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.10.1',
+    date: '2026-09-11',
+    items: [
+      ['A saved diagram could open as an empty canvas, and editing it then overwrote the original', ' -- fixed. When the last-opened cache was gone (browser cleanup, after a file import, ...) the app attached that diagram\'s id to an empty model. It now reloads the real content from storage when the cache is missing, and autosave never writes under a diagram id that was not loaded in this session']
+    ]
+  },
   {
     version: 'v1.10.0',
     date: '2026-09-11',
