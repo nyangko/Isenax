@@ -211,8 +211,32 @@ def place_node_at(driver, x_offset, y_offset):
     if first_icon_btn is None:
         return False
 
+    # The docked panel is still sliding in from the right when the icon grid
+    # first passes the checks above (~0.3s after "Add Item"), so the button's
+    # centre is off-screen or moving when WebDriver computes the click, and
+    # the icon's onMouseDown never fires. Wait for it to hold still first.
+    deadline = time.time() + 3
+    prev_rect = None
+    while time.time() < deadline:
+        rect = driver.execute_script(
+            "const r = arguments[0].getBoundingClientRect(); return [r.x, r.y];",
+            first_icon_btn)
+        if rect == prev_rect:
+            break
+        prev_rect = rect
+        time.sleep(0.05)
+
+    # The item is placed on this click's mouseup (PlaceIcon.mouseup places at
+    # the tracked mouse tile, wherever the pointer is), not by the canvas
+    # click below -- that only returns the editor to CURSOR mode. So verify
+    # here, where it actually happens.
+    items_before = get_scene_state(driver)['modelItems']
     ActionChains(driver).click(first_icon_btn).perform()
-    time.sleep(0.5)
+    deadline = time.time() + 5
+    while get_scene_state(driver)['modelItems'] != items_before + 1:
+        if time.time() > deadline:
+            return False
+        time.sleep(0.1)
 
     # Placing an item selects it, which docks the Layers panel over the
     # right ~360px of the canvas (see LayersPanel/UiOverlay) -- close it so
