@@ -15,6 +15,7 @@ import { ExportCompactJsonButton } from 'src/components/ExportCompactJsonButton/
 import { LayersButton } from 'src/components/LayersButton/LayersButton';
 import { LayersPanel } from 'src/components/LayersPanel/LayersPanel';
 import { ZoomControls } from 'src/components/ZoomControls/ZoomControls';
+import { Minimap } from 'src/components/Minimap/Minimap';
 import { DebugUtils } from 'src/components/DebugUtils/DebugUtils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { ContextMenuManager } from 'src/components/ContextMenu/ContextMenuManager';
@@ -289,6 +290,23 @@ export const UiOverlay = () => {
             }}
           >
             <ZoomControls />
+          </Box>
+        )}
+
+        {/* Sits just above the zoom controls; hidden on mobile where it would
+            cover a good share of the canvas (#82). */}
+        {availableTools.includes('ZOOM_CONTROLS') && !isMobile && (
+          <Box
+            sx={{
+              position: 'absolute',
+              transform: 'translateY(-100%)'
+            }}
+            style={{
+              top: rendererSize.height - appPadding.y * 2 - spacing(1),
+              left: appPadding.x
+            }}
+          >
+            <Minimap />
           </Box>
         )}
 

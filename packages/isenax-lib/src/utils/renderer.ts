@@ -99,6 +99,28 @@ export const screenToIso = ({
   return tile;
 };
 
+interface GetViewportSceneBounds {
+  scroll: Scroll;
+  zoom: number;
+  rendererSize: Size;
+}
+
+// The rectangle of scene space (unprojected px, origin at tile 0,0) that the
+// renderer currently shows -- the inverse of SceneLayer's
+// translate(scroll) scale(zoom) about the renderer centre.
+export const getViewportSceneBounds = ({
+  scroll,
+  zoom,
+  rendererSize
+}: GetViewportSceneBounds): Size & Coords => {
+  return {
+    x: (-rendererSize.width / 2 - scroll.position.x) / zoom,
+    y: (-rendererSize.height / 2 - scroll.position.y) / zoom,
+    width: rendererSize.width / zoom,
+    height: rendererSize.height / zoom
+  };
+};
+
 interface GetTilePosition {
   tile: Coords;
   origin?: TileOrigin;

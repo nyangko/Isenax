@@ -25,6 +25,21 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.11.0',
+    date: '2026-09-11',
+    items: [
+      ['캔버스 왼쪽 아래에 미니맵', ' 추가 — 다이어그램 전체 중 지금 보고 있는 영역이 사각형으로 표시되고, 미니맵을 클릭하거나 드래그하면 그 지점으로 바로 이동. 노드가 8개 이상일 때만 나타나며 모서리 ×로 접을 수 있음. 모바일에서는 표시하지 않음']
+    ]
+  },
+  {
+    version: 'v1.10.2',
+    date: '2026-09-11',
+    items: [
+      ['의존성 보안 패치', ' — 웹 번들과 서버에 포함되는 라이브러리(react-router, qs, hono, nanoid 등)의 알려진 취약점을 패치 버전으로 올림. 기능 변화 없음'],
+      ['릴리스를 막던 E2E 테스트 불안정', ' 수정 — 배포 파이프라인 쪽 문제로, 앱 동작과는 무관']
+    ]
+  },
+  {
     version: 'v1.10.1',
     date: '2026-09-11',
     items: [
@@ -253,6 +268,21 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.11.0',
+    date: '2026-09-11',
+    items: [
+      ['Minimap at the bottom-left of the canvas', ' -- shows which part of the whole diagram you are looking at, and clicking or dragging on it jumps straight there. Appears once a view has 8 or more nodes, can be collapsed from its corner, and is not shown on mobile']
+    ]
+  },
+  {
+    version: 'v1.10.2',
+    date: '2026-09-11',
+    items: [
+      ['Dependency security patches', ' -- known vulnerabilities in libraries shipped in the web bundle and server (react-router, qs, hono, nanoid, ...) bumped to patched versions. No functional change'],
+      ['Flaky end-to-end test that was blocking releases', ' fixed -- a release-pipeline issue, unrelated to app behaviour']
+    ]
+  },
   {
     version: 'v1.10.1',
     date: '2026-09-11',

@@ -1,7 +1,7 @@
 import { Coords, Size, Scroll } from 'src/types';
 import { CoordsUtils, SizeUtils, getConnectorGroups, getGroupOffset } from 'src/utils';
 import { PROJECTED_TILE_SIZE, UNPROJECTED_TILE_SIZE } from 'src/config';
-import { getGridSubset, isWithinBounds, screenToIso, getItemAtTile, getTilePosition } from '../renderer';
+import { getGridSubset, isWithinBounds, screenToIso, getItemAtTile, getTilePosition, getViewportSceneBounds } from '../renderer';
 
 const getRendererSize = (tileSize: Size, zoom: number = 1): Size => {
   const projectedTileSize = SizeUtils.multiply(PROJECTED_TILE_SIZE, zoom);
@@ -261,5 +261,19 @@ describe('Tests renderer utils', () => {
 
     // Without screen-space info, it falls back to the old first-match behavior.
     expect(getItemAtTile({ tile, scene })).toEqual({ type: 'CONNECTOR', id: 'c0' });
+  });
+
+  test('getViewportSceneBounds() inverts the scene transform', () => {
+    const rendererSize = { width: 800, height: 600 };
+
+    expect(
+      getViewportSceneBounds({ scroll: getScroll({ x: 0, y: 0 }), zoom: 1, rendererSize })
+    ).toEqual({ x: -400, y: -300, width: 800, height: 600 });
+
+    // Panned right by 100px at half zoom: the visible scene rect is twice as
+    // large and its left edge sits 200 scene-px further left of the origin.
+    expect(
+      getViewportSceneBounds({ scroll: getScroll({ x: 100, y: 0 }), zoom: 0.5, rendererSize })
+    ).toEqual({ x: -1000, y: -600, width: 1600, height: 1200 });
   });
 });
