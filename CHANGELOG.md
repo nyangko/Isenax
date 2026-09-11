@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.11.0](https://github.com/nyangko/Isenax/compare/v1.10.2...v1.11.0) (2026-09-11)
+
+### Features
+
+* minimap showing the viewport within the current view ([744f7b5](https://github.com/nyangko/Isenax/commit/744f7b508fd4a584a2928dbe8bd13857795abfd7)), closes [#82](https://github.com/nyangko/Isenax/issues/82)
+
 ## [1.10.2](https://github.com/nyangko/Isenax/compare/v1.10.1...v1.10.2) (2026-09-11)
 
 ### Bug Fixes
