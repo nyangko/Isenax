@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.10.1](https://github.com/nyangko/Isenax/compare/v1.10.0...v1.10.1) (2026-09-11)
+
+### Bug Fixes
+
+* don't bind an empty model to a stored diagram id on cold start ([b8109aa](https://github.com/nyangko/Isenax/commit/b8109aa7c08366928c1368ee7642d17f37527fb9)), closes [#79](https://github.com/nyangko/Isenax/issues/79)
+
 ## [1.10.0](https://github.com/nyangko/Isenax/compare/v1.9.1...v1.10.0) (2026-09-11)
 
 ### Features
