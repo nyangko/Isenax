@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.10.0](https://github.com/nyangko/Isenax/compare/v1.9.1...v1.10.0) (2026-09-11)
+
+### Features
+
+* expose the interaction mode on the renderer as data-mode ([b968b17](https://github.com/nyangko/Isenax/commit/b968b170632671b7983d5c14cf8a7e31141efb41))
+* **mcp:** document child views in the tool descriptions ([732d246](https://github.com/nyangko/Isenax/commit/732d246bb17c6749f6c4184d93683b10c2c0fdbf)), closes [#73](https://github.com/nyangko/Isenax/issues/73)
+* reject duplicate ids at the model boundary, repair them on load ([7907ebe](https://github.com/nyangko/Isenax/commit/7907ebec706cf70ae2aee8d1eef4912c0e8c09ce))
+* reopen a diagram on the view it was last open at ([8d07ec7](https://github.com/nyangko/Isenax/commit/8d07ec71cde1079043866d665cc09494070489d5)), closes [#70](https://github.com/nyangko/Isenax/issues/70)
+* validate the child-view reference graph ([d384661](https://github.com/nyangko/Isenax/commit/d384661df1bafefe66fcc370d6ee885fa013ab78)), closes [#45](https://github.com/nyangko/Isenax/issues/45) [#72](https://github.com/nyangko/Isenax/issues/72)
+
+### Documentation
+
+* log v1.9.1 and v1.10.0 in the app changelog ([5fb1a9c](https://github.com/nyangko/Isenax/commit/5fb1a9c3a5cf7cad4279468a29ab993b769aef75))
+
 ## [1.9.1](https://github.com/nyangko/Isenax/compare/v1.9.0...v1.9.1) (2026-09-10)
 
 ### Bug Fixes
