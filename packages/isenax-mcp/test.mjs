@@ -111,5 +111,61 @@ assert.equal(badPatch.isError, true, 'a patch producing an invalid model should 
 
 await tool('delete_diagram')({ id: 'patch-test' }, {});
 
+// A drill-down built the way the tool description tells an agent to build one:
+// parentViewId + anchorItemId on the child view, childViewId on the item, and
+// the item present in the child view as its anchor.
+const childViewModel = {
+  title: 'Hierarchy',
+  items: [
+    { id: 'payment', name: 'Payment Service', childViewId: 'detail' },
+    { id: 'ledger', name: 'Ledger' }
+  ],
+  views: [
+    {
+      id: 'root',
+      name: 'Systems',
+      items: [{ id: 'payment', tile: { x: 0, y: 0 } }],
+      connectors: [],
+      rectangles: [],
+      textBoxes: []
+    },
+    {
+      id: 'detail',
+      name: 'Payment Service Detail',
+      parentViewId: 'root',
+      anchorItemId: 'payment',
+      items: [
+        { id: 'payment', tile: { x: 0, y: 0 }, anchor: true },
+        { id: 'ledger', tile: { x: 1, y: 0 } }
+      ],
+      connectors: [],
+      rectangles: [],
+      textBoxes: []
+    }
+  ],
+  icons: [],
+  colors: [{ id: 'c1', value: '#a5b8f3' }]
+};
+
+const hierarchy = await tool('create_diagram')({ id: 'hierarchy-test', model: childViewModel }, {});
+assert.equal(hierarchy.isError, undefined, 'a diagram with a child view should validate');
+
+const hierarchySummary = JSON.parse(hierarchy.content[0].text);
+const rootSummary = hierarchySummary.views.find((v) => v.id === 'root');
+const detailSummary = hierarchySummary.views.find((v) => v.id === 'detail');
+assert.equal(detailSummary.parentViewId, 'root', 'summary should report the parent view');
+assert.equal(detailSummary.anchorItemId, 'payment', 'summary should report the anchor item');
+assert.equal(rootSummary.parentViewId, undefined, 'a root view should not carry hierarchy fields');
+
+const roundTripped = JSON.parse((await tool('get_diagram')({ id: 'hierarchy-test' }, {})).content[0].text);
+assert.equal(roundTripped.items.find((i) => i.id === 'payment').childViewId, 'detail', 'childViewId should round-trip');
+assert.equal(
+  roundTripped.views.find((v) => v.id === 'detail').items.find((i) => i.id === 'payment').anchor,
+  true,
+  'the anchor flag should round-trip'
+);
+
+await tool('delete_diagram')({ id: 'hierarchy-test' }, {});
+
 await fs.rm(storagePath, { recursive: true, force: true });
 console.log('isenax-mcp self-check passed');

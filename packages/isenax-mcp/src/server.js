@@ -31,7 +31,12 @@ const summarize = (id, model) => ({
     name: view.name,
     itemCount: view.items.length,
     connectorCount: view.connectors?.length ?? 0,
-    rectangleCount: view.rectangles?.length ?? 0
+    rectangleCount: view.rectangles?.length ?? 0,
+    // Only on views that have them, so a flat diagram's summary is unchanged.
+    // Without these, an agent that built a hierarchy can't tell from the reply
+    // whether the nesting actually took.
+    ...(view.parentViewId ? { parentViewId: view.parentViewId } : {}),
+    ...(view.anchorItemId ? { anchorItemId: view.anchorItemId } : {})
   }))
 });
 
@@ -68,6 +73,11 @@ export function createServer({ onActivity } = {}) {
         'rectangles[] entry ({id, color, from: {x,y}, to: {x,y}}) spanning their tiles — drawn behind the items. ' +
         'A connector can carry request/response-style annotations via its labels[] ' +
         '({id, text, position: 0-100 along the path}), not just a single description. ' +
+        'A view can be the detail of a single item (a drill-down): give the extra view parentViewId and ' +
+        'anchorItemId, set childViewId on that ModelItem to the new view id, and place the item in the new ' +
+        'view as its anchor ({id: <same item id>, tile, anchor: true}). Those four go together \u2014 a one-way ' +
+        'or anchor-less link leaves a view the app cannot navigate. Nest as deep as you like, but a view ' +
+        'cannot anchor to an item that already anchors one of its own ancestors. ' +
         'Returns a summary (item/view/connector/rectangle counts), not the full model.',
       inputSchema: { id: z.string().optional(), model: z.any() }
     },
@@ -86,7 +96,7 @@ export function createServer({ onActivity } = {}) {
     {
       description:
         'Replace an existing Isenax diagram with a new Model JSON object (full replace, validated). Same ' +
-        'zone-rectangle and connector-label support as create_diagram — see its description. Returns a summary ' +
+        'zone-rectangle, connector-label and child-view support as create_diagram — see its description. Returns a summary ' +
         '(item/view/connector/rectangle counts), not the full model.',
       inputSchema: { id: z.string(), model: z.any() }
     },
@@ -110,7 +120,7 @@ export function createServer({ onActivity } = {}) {
         'given), plus views?: [{id, name?, items?, connectors?, rectangles?, textBoxes?}] — for a view matching ' +
         'an existing view id, only the fields you include in that view patch are replaced (whole-field, not ' +
         'per-item merge); views you omit, and fields within a matched view you omit, are left exactly as stored. ' +
-        'Same icon/rectangle/label support as update_diagram. Returns the same summary shape.',
+        'Same icon/rectangle/label/child-view support as update_diagram. Returns the same summary shape.',
       inputSchema: { id: z.string(), patch: z.any() }
     },
     async ({ id, patch }) => {
