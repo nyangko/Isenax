@@ -145,7 +145,7 @@ export const PanSettings = () => {
             min={5}
             max={50}
             step={5}
-            valueLabelDisplay="auto"
+            marks
           />
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: -1 }}>
             <Typography variant="caption" color="text.secondary">

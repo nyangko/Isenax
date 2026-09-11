@@ -217,17 +217,100 @@ export const themeConfig: ThemeOptions = {
       }
     },
     MuiSlider: {
+      defaultProps: {
+        // Every slider in the app has a step; showing the value while
+        // dragging is the point of #26, so it's on by default rather than
+        // opted into per usage.
+        valueLabelDisplay: 'auto'
+      },
       styleOverrides: {
-        rail: {
-          height: 3
-        },
+        rail: ({ theme }) => ({
+          height: 3,
+          opacity: 1,
+          backgroundColor: theme.palette.grey[300]
+        }),
         track: {
-          height: 3
+          height: 3,
+          border: 0
         },
-        thumb: {
+        // Step notches (rendered when a usage passes `marks`). Only shown on
+        // the unfilled side -- on the filled track they'd just be noise.
+        mark: ({ theme }) => ({
+          width: 3,
+          height: 3,
+          borderRadius: '50%',
+          backgroundColor: theme.palette.grey[500],
+          '&.MuiSlider-markActive': {
+            opacity: 0
+          }
+        }),
+        // White thumb with a dark ring, matching Switch/Radio.
+        thumb: ({ theme }) => ({
           width: 16,
-          height: 16
-        }
+          height: 16,
+          backgroundColor: '#fff',
+          border: `2px solid ${theme.palette.primary.main}`,
+          boxShadow: 'none',
+          '&::before': {
+            boxShadow: 'none'
+          },
+          '&:hover, &.Mui-focusVisible': {
+            boxShadow: '0 0 0 6px rgba(35, 38, 43, 0.12)'
+          },
+          '&.Mui-active': {
+            boxShadow: '0 0 0 10px rgba(35, 38, 43, 0.16)'
+          }
+        }),
+        valueLabel: ({ theme }) => ({
+          fontSize: 11,
+          fontWeight: 600,
+          padding: '2px 6px',
+          borderRadius: 4,
+          backgroundColor: theme.palette.primary.main
+        })
+      }
+    },
+    // Drawn with pseudo-elements instead of MUI's two SVG icons so the flat
+    // off-state / ringed on-state matches Switch and ToggleButton (#25).
+    MuiRadio: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          padding: 6,
+          '& .MuiSvgIcon-root': {
+            display: 'none'
+          },
+          '&::before': {
+            content: '""',
+            display: 'block',
+            width: 16,
+            height: 16,
+            borderRadius: '50%',
+            boxSizing: 'border-box',
+            backgroundColor: theme.palette.grey[300],
+            transition: 'background-color 120ms, border-color 120ms'
+          },
+          '&.Mui-checked::before': {
+            backgroundColor: '#fff',
+            border: `2px solid ${theme.palette.text.primary}`
+          },
+          '&.Mui-checked::after': {
+            content: '""',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: theme.palette.primary.main
+          },
+          '&.Mui-focusVisible::before': {
+            boxShadow: '0 0 0 3px rgba(35, 38, 43, 0.2)'
+          },
+          '&.Mui-disabled::before, &.Mui-disabled::after': {
+            opacity: 0.4
+          }
+        })
       }
     },
     MuiFormControlLabel: {

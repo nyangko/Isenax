@@ -25,6 +25,14 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.12.0',
+    date: '2026-09-12',
+    items: [
+      ['슬라이더 재정비', ' — 채워진 구간은 진하게, 나머지는 옅은 회색으로 구분되고, 스텝이 있는 슬라이더는 남은 구간에 스텝 위치가 점으로 표시됨. 드래그하는 동안 썸 위에 현재 값이 뜨고, 썸은 흰 바탕에 테두리 링으로 스위치와 톤을 맞춤'],
+      ['라디오 버튼 재디자인', ' — 꺼짐은 옅은 회색 원, 켜짐은 흰 바탕에 어두운 링과 가운데 점. 크기도 다른 컨트롤에 맞춰 줄임']
+    ]
+  },
+  {
     version: 'v1.11.0',
     date: '2026-09-11',
     items: [
@@ -268,6 +276,14 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.12.0',
+    date: '2026-09-12',
+    items: [
+      ['Sliders reworked', ' -- the filled part of the track is dark and the rest light grey, and sliders with steps show a dot at each remaining step. The current value appears above the thumb while dragging, and the thumb is now white with a dark ring to match the switches'],
+      ['Radio buttons redesigned', ' -- off is a flat light-grey circle, on is white with a dark ring and a centre dot. Sized down to match the other controls']
+    ]
+  },
   {
     version: 'v1.11.0',
     date: '2026-09-11',

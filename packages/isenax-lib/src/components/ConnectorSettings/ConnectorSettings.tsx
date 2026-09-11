@@ -154,8 +154,8 @@ export const ConnectorSettings = () => {
               min={50}
               max={500}
               step={10}
+              marks
               value={connectorAnimationSpeed}
-              valueLabelDisplay="auto"
               onChange={(event, newSpeed) => {
                 setConnectorAnimationSpeed(newSpeed as number);
               }}
