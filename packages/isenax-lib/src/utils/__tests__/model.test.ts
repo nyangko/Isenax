@@ -1,4 +1,4 @@
-import { buildViewTree, getViewPath, getChildViewAction } from '../model';
+import { buildViewTree, getViewPath, getChildViewAction, repairModel } from '../model';
 import { View } from 'src/types';
 
 const view = (id: string, parentViewId?: string): View => ({
@@ -115,5 +115,88 @@ describe('getChildViewAction', () => {
     expect(
       getChildViewAction({ id: 'payment', childViewId: 'detail' }, { anchorItemId: 'payment' })
     ).toBeNull();
+  });
+});
+
+describe('repairModel', () => {
+  const base = () => ({
+    version: '1.0',
+    title: 'T',
+    description: '',
+    colors: [],
+    icons: [],
+    items: [
+      { id: 'payment', name: 'Payment', childViewId: 'detail' },
+      { id: 'live_sync_node', name: 'Live Sync Test Node' },
+      { id: 'live_sync_node', name: 'Live Sync Test Node' }
+    ],
+    views: [
+      {
+        id: 'root',
+        name: 'Root',
+        items: [
+          { id: 'payment', tile: { x: 0, y: 0 } },
+          { id: 'live_sync_node', tile: { x: 8, y: 8 } },
+          { id: 'live_sync_node', tile: { x: 8, y: 8 } }
+        ]
+      },
+      {
+        id: 'detail',
+        name: 'Detail',
+        parentViewId: 'root',
+        anchorItemId: 'payment',
+        items: [{ id: 'payment', tile: { x: 0, y: 0 }, anchor: true }]
+      }
+    ]
+  });
+
+  beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  it('keeps the first of a repeated id in the model and in the view', () => {
+    const repaired = repairModel(base());
+
+    expect(repaired.items.map((i) => i.id)).toEqual(['payment', 'live_sync_node']);
+    expect(repaired.views[0].items.map((i) => i.id)).toEqual(['payment', 'live_sync_node']);
+  });
+
+  it('leaves a consistent hierarchy alone', () => {
+    const repaired = repairModel(base());
+
+    expect(repaired.items[0].childViewId).toBe('detail');
+    expect(repaired.views[1].parentViewId).toBe('root');
+    expect(repaired.views[1].anchorItemId).toBe('payment');
+  });
+
+  it('drops a childViewId that points at a missing view', () => {
+    const m = base();
+    m.views = [m.views[0]];
+
+    expect(repairModel(m).items[0].childViewId).toBeUndefined();
+  });
+
+  it('drops a one-way anchor link from the view side', () => {
+    const m = base();
+    m.items[0] = { id: 'payment', name: 'Payment' };
+
+    expect(repairModel(m).views[1].anchorItemId).toBeUndefined();
+  });
+
+  it('drops a parentViewId that points at a missing view', () => {
+    const m = base();
+    m.views[1].parentViewId = 'gone';
+
+    expect(repairModel(m).views[1].parentViewId).toBeUndefined();
+  });
+
+  it('cuts a parentViewId loop', () => {
+    const m = base();
+    m.views[0].parentViewId = 'detail';
+
+    const repaired = repairModel(m);
+    const hasLoop = repaired.views.every((v) => v.parentViewId);
+
+    expect(hasLoop).toBe(false);
   });
 });

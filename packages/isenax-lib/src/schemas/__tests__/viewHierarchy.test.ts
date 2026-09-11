@@ -114,3 +114,46 @@ describe('view hierarchy validation', () => {
     expect(typesOf(m)).toContain('CIRCULAR_VIEW_HIERARCHY');
   });
 });
+
+describe('id uniqueness validation', () => {
+  it('rejects two model items with the same id', () => {
+    const m = model(
+      [
+        { id: 'live_sync_node', name: 'Live Sync Test Node' },
+        { id: 'live_sync_node', name: 'Live Sync Test Node' }
+      ],
+      [{ id: 'root', name: 'Root', items: [{ id: 'live_sync_node', tile: { x: 8, y: 8 } }] }]
+    );
+
+    expect(typesOf(m)).toContain('DUPLICATE_ID');
+  });
+
+  it('rejects the same item placed twice in one view', () => {
+    const m = model(
+      [{ id: 'a', name: 'A' }],
+      [
+        {
+          id: 'root',
+          name: 'Root',
+          items: [
+            { id: 'a', tile: { x: 0, y: 0 } },
+            { id: 'a', tile: { x: 1, y: 1 } }
+          ]
+        }
+      ]
+    );
+
+    const issue = validateModel(m).find((i) => i.type === 'DUPLICATE_ID');
+    expect(issue?.params).toEqual({ collection: 'items', id: 'a', view: 'root' });
+  });
+
+  it('rejects two views with the same id', () => {
+    const m = model([], [{ id: 'v', name: 'One', items: [] }, { id: 'v', name: 'Two', items: [] }]);
+
+    expect(typesOf(m)).toContain('DUPLICATE_ID');
+  });
+
+  it('allows the same item to appear in different views', () => {
+    expect(validateModel(anchoredChild())).toEqual([]);
+  });
+});

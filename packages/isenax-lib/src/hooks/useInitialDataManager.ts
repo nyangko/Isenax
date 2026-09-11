@@ -7,7 +7,8 @@ import {
   categoriseIcons,
   generateId,
   getItemByIdOrThrow,
-  hydrateBuiltinIconUrls
+  hydrateBuiltinIconUrls,
+  repairModel
 } from 'src/utils';
 import * as reducers from 'src/stores/reducers';
 import { useModelStore } from 'src/stores/modelStore';
@@ -63,9 +64,11 @@ export const useInitialDataManager = () => {
       // Exports (and hand-authored/AI-authored models) may reference a
       // built-in icon by id only, without its url — restore it from the
       // bundled packs before validating against the strict schema.
-      const hydratedInitialData = _initialData.icons
-        ? { ..._initialData, icons: hydrateBuiltinIconUrls(_initialData.icons) }
-        : _initialData;
+      const hydratedInitialData = repairModel(
+        _initialData.icons
+          ? { ..._initialData, icons: hydrateBuiltinIconUrls(_initialData.icons) }
+          : _initialData
+      );
 
       const validationResult = modelSchema.safeParse(hydratedInitialData);
 

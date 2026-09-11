@@ -159,3 +159,96 @@ export const getChildViewAction = (
 
   return { type: 'CREATE' };
 };
+
+// Load-time repair for the things validateModel now rejects that a stored
+// diagram can already contain. The MCP boundary should refuse them -- that's
+// where they come from -- but refusing to *open* a diagram over them locks a
+// user out of their own data with nothing they can do about it from the UI
+// (an alert and a blank canvas). So on load: keep the first of any repeated
+// id, and drop hierarchy links that point at nothing or only go one way. Each
+// repair is logged, the way the connector cleanup below it already does.
+export const repairModel = <T extends Model>(model: T): T => {
+  const warn = (msg: string) => console.warn(`repairModel: ${msg}`);
+
+  const dedupe = <I extends { id: string }>(list: I[], what: string): I[] => {
+    const seen = new Set<string>();
+
+    return list.filter((entry) => {
+      if (seen.has(entry.id)) {
+        warn(`dropped duplicate ${what} "${entry.id}"`);
+        return false;
+      }
+
+      seen.add(entry.id);
+      return true;
+    });
+  };
+
+  const views = dedupe(model.views, 'view').map((view) => ({
+    ...view,
+    items: dedupe(view.items, `item in view "${view.id}"`),
+    ...(view.connectors ? { connectors: dedupe(view.connectors, `connector in view "${view.id}"`) } : {}),
+    ...(view.rectangles ? { rectangles: dedupe(view.rectangles, `rectangle in view "${view.id}"`) } : {}),
+    ...(view.textBoxes ? { textBoxes: dedupe(view.textBoxes, `text box in view "${view.id}"`) } : {})
+  }));
+  const items = dedupe(model.items, 'item');
+
+  const viewsById = new Map(views.map((view) => [view.id, view]));
+  const itemsById = new Map(items.map((item) => [item.id, item]));
+
+  const repairedViews = views.map((view) => {
+    let next = view;
+
+    if (next.parentViewId && !viewsById.has(next.parentViewId)) {
+      warn(`view "${view.id}" pointed at missing parent "${next.parentViewId}"`);
+      next = { ...next, parentViewId: undefined };
+    }
+
+    if (next.anchorItemId) {
+      const anchor = itemsById.get(next.anchorItemId);
+      const hasAnchorViewItem = next.items.some((vi) => vi.id === next.anchorItemId && vi.anchor);
+
+      if (!anchor || anchor.childViewId !== view.id || !hasAnchorViewItem) {
+        warn(`view "${view.id}" had a broken anchor link to item "${next.anchorItemId}"`);
+        next = { ...next, anchorItemId: undefined };
+      }
+    }
+
+    return next;
+  });
+
+  // A parentViewId loop: cut it at the first view we come back around to.
+  const finalViews = repairedViews.map((view) => {
+    const seen = new Set<string>([view.id]);
+    let cursor = view.parentViewId ? repairedViews.find((v) => v.id === view.parentViewId) : undefined;
+
+    while (cursor) {
+      if (seen.has(cursor.id)) {
+        warn(`view "${view.id}" was its own ancestor; detached it`);
+        return { ...view, parentViewId: undefined };
+      }
+
+      seen.add(cursor.id);
+      cursor = cursor.parentViewId ? repairedViews.find((v) => v.id === cursor!.parentViewId) : undefined;
+    }
+
+    return view;
+  });
+
+  const finalViewsById = new Map(finalViews.map((view) => [view.id, view]));
+
+  const repairedItems = items.map((item) => {
+    if (!item.childViewId) return item;
+
+    const child = finalViewsById.get(item.childViewId);
+
+    if (!child || child.anchorItemId !== item.id) {
+      warn(`item "${item.id}" pointed at child view "${item.childViewId}" that does not link back`);
+      return { ...item, childViewId: undefined };
+    }
+
+    return item;
+  });
+
+  return { ...model, items: repairedItems, views: finalViews };
+};

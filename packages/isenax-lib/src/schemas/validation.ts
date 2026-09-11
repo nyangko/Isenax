@@ -93,6 +93,14 @@ type IssueType =
       };
     }
   | {
+      type: 'DUPLICATE_ID';
+      params: {
+        collection: string;
+        id: string;
+        view?: string;
+      };
+    }
+  | {
       type: 'CONNECTOR_TOO_FEW_ANCHORS';
       params: {
         connector: string;
@@ -439,8 +447,49 @@ const validateViewHierarchy = (model: Model): Issue[] => {
   return issues;
 };
 
+// Every list below is rendered with the id as the React key, and React is
+// explicit about what two children with the same key do: they "may cause
+// children to be duplicated and/or omitted". In practice that's a Layers
+// panel row that appears in a view it isn't in, or a node that vanishes from
+// the one it is in. The app never generates a clash itself; one arrived over
+// MCP (a live-sync test that added the same item twice), and nothing turned
+// it away.
+const validateUniqueIds = (model: Model): Issue[] => {
+  const issues: Issue[] = [];
+
+  const check = (collection: string, ids: string[], view?: string) => {
+    const seen = new Set<string>();
+
+    ids.forEach((id) => {
+      if (seen.has(id)) {
+        issues.push({
+          type: 'DUPLICATE_ID',
+          params: { collection, id, ...(view ? { view } : {}) },
+          message: `Duplicate id "${id}" in ${collection}${view ? ` of view "${view}"` : ''}.  Ids must be unique.`
+        });
+      }
+
+      seen.add(id);
+    });
+  };
+
+  check('items', model.items.map((item) => item.id));
+  check('views', model.views.map((view) => view.id));
+
+  model.views.forEach((view) => {
+    check('items', view.items.map((item) => item.id), view.id);
+    check('connectors', (view.connectors ?? []).map((c) => c.id), view.id);
+    check('rectangles', (view.rectangles ?? []).map((r) => r.id), view.id);
+    check('textBoxes', (view.textBoxes ?? []).map((t) => t.id), view.id);
+  });
+
+  return issues;
+};
+
 export const validateModel = (model: Model): Issue[] => {
   const issues: Issue[] = [];
+
+  issues.push(...validateUniqueIds(model));
 
   model.items.forEach((modelItem) => {
     issues.push(...validateModelItem(modelItem, { model }));
