@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.10.2](https://github.com/nyangko/Isenax/compare/v1.10.1...v1.10.2) (2026-09-11)
+
+### Bug Fixes
+
+* **deps:** patch transitive CVEs and drop stale npm lockfiles ([0e3f80d](https://github.com/nyangko/Isenax/commit/0e3f80dcfc09c987eaa047b3886822091dd5eff9)), closes [#81](https://github.com/nyangko/Isenax/issues/81)
+
 ## [1.10.1](https://github.com/nyangko/Isenax/compare/v1.10.0...v1.10.1) (2026-09-11)
 
 ### Bug Fixes
