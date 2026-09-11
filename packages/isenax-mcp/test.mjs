@@ -165,6 +165,20 @@ assert.equal(
   'the anchor flag should round-trip'
 );
 
+// The other half of the contract: a hierarchy that only links one way is
+// rejected at this boundary rather than stored for the app to trip over.
+const oneWay = JSON.parse(JSON.stringify(childViewModel));
+delete oneWay.items.find((i) => i.id === 'payment').childViewId;
+
+const rejectedOneWay = await tool('create_diagram')({ id: 'one-way-test', model: oneWay }, {});
+assert.equal(rejectedOneWay.isError, true, 'a child view with no item pointing at it should be rejected');
+
+const anchorless = JSON.parse(JSON.stringify(childViewModel));
+anchorless.views.find((v) => v.id === 'detail').items = [{ id: 'ledger', tile: { x: 1, y: 0 } }];
+
+const rejectedAnchorless = await tool('create_diagram')({ id: 'anchorless-test', model: anchorless }, {});
+assert.equal(rejectedAnchorless.isError, true, 'a child view missing its anchor item should be rejected');
+
 await tool('delete_diagram')({ id: 'hierarchy-test' }, {});
 
 await fs.rm(storagePath, { recursive: true, force: true });

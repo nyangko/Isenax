@@ -66,6 +66,33 @@ type IssueType =
       };
     }
   | {
+      type: 'INVALID_ITEM_TO_CHILD_VIEW_REF';
+      params: {
+        modelItem: string;
+        view: string;
+      };
+    }
+  | {
+      type: 'INVALID_VIEW_TO_PARENT_VIEW_REF';
+      params: {
+        view: string;
+        parentView: string;
+      };
+    }
+  | {
+      type: 'INVALID_VIEW_TO_ANCHOR_ITEM_REF';
+      params: {
+        view: string;
+        modelItem: string;
+      };
+    }
+  | {
+      type: 'CIRCULAR_VIEW_HIERARCHY';
+      params: {
+        view: string;
+      };
+    }
+  | {
       type: 'CONNECTOR_TOO_FEW_ANCHORS';
       params: {
         connector: string;
@@ -297,6 +324,121 @@ export const validateModelItem = (
   return issues;
 };
 
+// A drill-down view is held together by four references that have to agree:
+// the item's childViewId, the view's parentViewId and anchorItemId, and the
+// anchor ViewItem inside the view. Nothing checked any of them, so a model
+// arriving over MCP could name a view that isn't there, link one way only, or
+// describe a loop -- and the app has no storage-level validation to catch it
+// afterwards (see #45 for the same class of hole with icon references).
+//
+// Deliberately checked here at the model level rather than inside
+// validateView: that one runs inside updateViewItem and throws on any issue,
+// so a rule added there would fire on the transient states normal editing goes
+// through.
+const validateViewHierarchy = (model: Model): Issue[] => {
+  const issues: Issue[] = [];
+  const viewsById = new Map(model.views.map((view) => [view.id, view]));
+  const itemsById = new Map(model.items.map((item) => [item.id, item]));
+
+  model.items.forEach((modelItem) => {
+    if (!modelItem.childViewId) return;
+
+    const childView = viewsById.get(modelItem.childViewId);
+
+    if (!childView) {
+      issues.push({
+        type: 'INVALID_ITEM_TO_CHILD_VIEW_REF',
+        params: { modelItem: modelItem.id, view: modelItem.childViewId },
+        message:
+          'Invalid item found in the model.  The item references a child view that does not exist.'
+      });
+      return;
+    }
+
+    if (childView.anchorItemId !== modelItem.id) {
+      issues.push({
+        type: 'INVALID_ITEM_TO_CHILD_VIEW_REF',
+        params: { modelItem: modelItem.id, view: childView.id },
+        message:
+          'Invalid item found in the model.  The item references a child view that is not anchored back to it.'
+      });
+    }
+  });
+
+  model.views.forEach((view) => {
+    if (view.parentViewId && !viewsById.has(view.parentViewId)) {
+      issues.push({
+        type: 'INVALID_VIEW_TO_PARENT_VIEW_REF',
+        params: { view: view.id, parentView: view.parentViewId },
+        message:
+          'Invalid view found in the model.  The view references a parent view that does not exist.'
+      });
+    }
+
+    if (!view.anchorItemId) return;
+
+    const anchorItem = itemsById.get(view.anchorItemId);
+
+    if (!anchorItem) {
+      issues.push({
+        type: 'INVALID_VIEW_TO_ANCHOR_ITEM_REF',
+        params: { view: view.id, modelItem: view.anchorItemId },
+        message:
+          'Invalid view found in the model.  The view is anchored to an item that does not exist.'
+      });
+      return;
+    }
+
+    if (anchorItem.childViewId !== view.id) {
+      issues.push({
+        type: 'INVALID_VIEW_TO_ANCHOR_ITEM_REF',
+        params: { view: view.id, modelItem: anchorItem.id },
+        message:
+          'Invalid view found in the model.  The item this view is anchored to does not point back at it.'
+      });
+    }
+
+    // Without the anchor ViewItem there is nothing in the view to say whose
+    // detail it is, and nothing to navigate back from.
+    const hasAnchorViewItem = view.items.some(
+      (viewItem) => viewItem.id === view.anchorItemId && viewItem.anchor
+    );
+
+    if (!hasAnchorViewItem) {
+      issues.push({
+        type: 'INVALID_VIEW_TO_ANCHOR_ITEM_REF',
+        params: { view: view.id, modelItem: view.anchorItemId },
+        message:
+          'Invalid view found in the model.  The view does not contain the anchor item it is the detail of.'
+      });
+    }
+  });
+
+  // createChildView refuses to build a loop at runtime, but a model handed
+  // straight to the schema has never been through it.
+  model.views.forEach((view) => {
+    const seen = new Set<string>([view.id]);
+    let current = view.parentViewId ? viewsById.get(view.parentViewId) : undefined;
+
+    while (current) {
+      if (seen.has(current.id)) {
+        issues.push({
+          type: 'CIRCULAR_VIEW_HIERARCHY',
+          params: { view: view.id },
+          message:
+            'Invalid view found in the model.  The view is its own ancestor via parentViewId.'
+        });
+        return;
+      }
+
+      seen.add(current.id);
+      current = current.parentViewId ? viewsById.get(current.parentViewId) : undefined;
+    }
+  });
+
+  return issues;
+};
+
 export const validateModel = (model: Model): Issue[] => {
   const issues: Issue[] = [];
 
@@ -307,6 +449,8 @@ export const validateModel = (model: Model): Issue[] => {
   model.views.forEach((view) => {
     issues.push(...validateView(view, { model }));
   });
+
+  issues.push(...validateViewHierarchy(model));
 
   return issues;
 };
