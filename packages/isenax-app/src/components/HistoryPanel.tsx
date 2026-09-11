@@ -25,6 +25,23 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.10.0',
+    date: '2026-09-11',
+    items: [
+      ['다이어그램을 다시 열면', ' 마지막으로 보고 있던 뷰에서 열림 — 지금까지는 항상 루트 뷰로 돌아갔음. 이 브라우저에만 기억되며 다이어그램 자체에는 저장되지 않아서, 공유받은 사람이 남이 보던 뷰로 열리는 일은 없음'],
+      ['MCP로 하위 뷰(드릴다운)를 만들 수 있게', ' 툴 설명에 작성법을 추가 — 구조는 처음부터 지원했지만 에이전트가 존재를 알 수 없었음. 응답 요약에도 뷰의 상위/앵커 정보가 포함됨'],
+      ['MCP로 들어오는 하위 뷰 구조를 검증', ' — 존재하지 않는 뷰나 아이템을 가리키는 링크, 한쪽만 연결된 링크, 순환 참조를 저장 전에 거부함']
+    ]
+  },
+  {
+    version: 'v1.9.1',
+    date: '2026-09-10',
+    items: [
+      ['웹사이트가 새 버전이 나와도 계속 옛 화면을 보여주던 문제', ' 수정 — 오프라인 캐시가 첫 페이지까지 붙들고 있어서 새로고침해도 이전 빌드가 뜨는 구조였음. 이제 새로고침하면 항상 최신 버전이 뜨고, 이미 옛 화면에 갇혀 있던 경우도 다음 방문 때 자동으로 풀림'],
+      ['새 버전이 나왔을 때 히스토리 버튼에 표시되는 알림 점', '이 v1.8.0 이후로 켜지지 않던 문제 수정']
+    ]
+  },
+  {
     version: 'v1.9.0',
     date: '2026-09-10',
     items: [
@@ -229,6 +246,23 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.10.0',
+    date: '2026-09-11',
+    items: [
+      ['Reopening a diagram', ' lands on the view you were last looking at -- until now it always went back to the root. Remembered per browser, not saved into the diagram, so someone you share it with never opens on a view you happened to leave it at'],
+      ['Child views (drill-downs) can be built over MCP', ' -- the tool descriptions now explain how. The structure was always supported, but an agent had no way to know it existed. Summaries now report each view\'s parent and anchor too'],
+      ['Child-view structure arriving over MCP is validated', ' -- links to views or items that don\'t exist, links that only go one way, and circular parents are rejected before anything is stored']
+    ]
+  },
+  {
+    version: 'v1.9.1',
+    date: '2026-09-10',
+    items: [
+      ['The website kept showing the old version after a release', ' -- fixed. The offline cache was holding on to the first page itself, so a reload still served the previous build. Reloading now always picks up the current version, and anyone already stuck on an old one is freed on their next visit'],
+      ['The unread dot on the History button', " hadn't lit up for any release since v1.8.0 -- fixed"]
+    ]
+  },
   {
     version: 'v1.9.0',
     date: '2026-09-10',
