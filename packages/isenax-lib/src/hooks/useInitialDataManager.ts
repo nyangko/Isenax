@@ -124,11 +124,22 @@ export const useInitialDataManager = () => {
       // Falling back to views[0] unconditionally would reset the active
       // drill-down view to the root on every such echo -- stay on the
       // current view when it still exists in the reloaded data instead.
+      //
+      // Order matters: a view the user has already navigated to inside this
+      // instance wins over initialData.view. The host passes initialData.view
+      // to say where to *open*, but it keeps passing the same object on every
+      // echo, so letting it win would snap the user back to the opening view
+      // on each internal edit. On a genuine open, the store is fresh (or the
+      // old view id isn't in the new data) and initialData.view applies. A
+      // view id that isn't there at all falls through to the root instead of
+      // throwing -- a remembered id can outlive the view it named.
+      const hasView = (id?: string) =>
+        !!id && initialData.views.some((v) => v.id === id);
+
       const preferredViewId =
-        initialData.view ??
-        (currentViewId && initialData.views.some((v) => v.id === currentViewId)
-          ? currentViewId
-          : initialData.views[0].id);
+        (hasView(currentViewId) ? currentViewId : undefined) ??
+        (hasView(initialData.view) ? initialData.view : undefined) ??
+        initialData.views[0].id;
 
       const view = getItemByIdOrThrow(initialData.views, preferredViewId);
 

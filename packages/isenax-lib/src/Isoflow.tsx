@@ -21,6 +21,7 @@ const App = ({
   width = '100%',
   height = '100%',
   onModelUpdated,
+  onViewChange,
   enableDebugTools = false,
   editorMode = 'EDITABLE',
   projectionMode,
@@ -42,6 +43,9 @@ const App = ({
   });
   const initialDataManager = useInitialDataManager();
   const modelStoreApi = useModelStoreApi();
+  const currentViewId = useUiStateStore((state) => {
+    return state.view;
+  });
 
   const { load } = initialDataManager;
 
@@ -73,6 +77,11 @@ const App = ({
     const model = modelStoreApi.getState()
     onModelUpdated(model);
   }, [modelStoreApi.getState(), initialDataManager.isReady, onModelUpdated]);
+
+  useEffect(() => {
+    if (!initialDataManager.isReady || !currentViewId || !onViewChange) return;
+    onViewChange(currentViewId);
+  }, [currentViewId, initialDataManager.isReady, onViewChange]);
 
   useEffect(() => {
     uiStateActions.setEnableDebugTools(enableDebugTools);

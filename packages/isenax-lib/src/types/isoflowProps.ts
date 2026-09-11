@@ -444,6 +444,10 @@ export interface IsoflowProps {
   initialData?: InitialData;
   mainMenuOptions?: MainMenuOptions;
   onModelUpdated?: (Model: Model) => void;
+  // Fires with the id of the view now on screen -- on load and on every
+  // drill-down/back/jump. InitialData.view is the way in; this is the way out,
+  // so a host can remember where the user was.
+  onViewChange?: (viewId: string) => void;
   width?: number | string;
   height?: number | string;
   enableDebugTools?: boolean;

@@ -43,7 +43,7 @@ interface CurrentDiagramRef {
 
 // Bump this whenever the History panel's changelog content changes so returning
 // users see the "unread" dot again even if they already dismissed the tutorial hints.
-const HISTORY_VERSION = 'v1.9.0';
+const HISTORY_VERSION = 'v1.10.0';
 const TUTORIAL_HINT_KEYS = [
   'isenax_import_hint_dismissed',
   'isenax_connector_hint_dismissed',
@@ -88,6 +88,12 @@ const getPersistedIcons = (icons: any[] = [], items: any[] = []) => {
     icons.filter((icon) => icon.collection === 'imported' || used.has(icon.id))
   );
 };
+
+// Which view a diagram was last open at, per browser. Kept out of the saved
+// diagram on purpose: it's the same kind of state as scroll position, and a
+// diagram shared through the server or MCP shouldn't open on whatever view
+// *another* person happened to leave it at.
+const activeViewKey = (diagramId: string) => `isenax-active-view:${diagramId}`;
 
 const MOBILE_BREAKPOINT_QUERY = '(max-width: 599.95px)';
 
@@ -262,11 +268,17 @@ function EditorPage() {
         const data = JSON.parse(lastOpenedData);
         const importedIcons = getImportedIcons(data.icons);
         const mergedIcons = [...coreIcons, ...importedIcons];
+        // Same remembered view as loadDiagram() passes -- this cold-start
+        // restore is the path a plain reload takes, and without it the
+        // diagram reopened on the root and then overwrote the remembered
+        // view with it.
+        const lastOpenedId = localStorage.getItem('isenax-last-opened');
         return {
           ...data,
           icons: mergedIcons,
           colors: data.colors?.length ? data.colors : defaultColors,
-          fitToScreen: data.fitToScreen !== false
+          fitToScreen: data.fitToScreen !== false,
+          view: lastOpenedId ? localStorage.getItem(activeViewKey(lastOpenedId)) ?? undefined : undefined
         };
       } catch (e) {
         console.error('Failed to load last opened data:', e);
@@ -496,7 +508,9 @@ function EditorPage() {
     const mergedIcons = [...iconPackManager.loadedIcons, ...importedIcons];
     const dataWithIcons = {
       ...data,
-      icons: mergedIcons
+      icons: mergedIcons,
+      // The library falls back to the root view if this id no longer exists.
+      view: localStorage.getItem(activeViewKey(id)) ?? undefined
     };
 
     setCurrentDiagram({ id, name });
@@ -1172,6 +1186,11 @@ function EditorPage() {
           key={`${isenaxKey}-${i18n.language}`}
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
+          onViewChange={(viewId) => {
+            // Unsaved scratch diagrams have no id to key on -- nothing to
+            // remember for those.
+            if (currentDiagram) localStorage.setItem(activeViewKey(currentDiagram.id), viewId);
+          }}
           editorMode={
             isAnyDialogOpen
               ? 'NON_INTERACTIVE'
