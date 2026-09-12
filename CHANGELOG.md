@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > Looking for pre-fork history? See [UPSTREAM_HISTORY.md](docs/UPSTREAM_HISTORY.md).
 
+## [1.13.0](https://github.com/nyangko/Isenax/compare/v1.12.0...v1.13.0) (2026-09-12)
+
+### Features
+
+* minimap toggle (button, hotkey, persisted) and connector hairlines ([dc50360](https://github.com/nyangko/Isenax/commit/dc50360f76d7121eaaeb97d3c13be7155ef65147)), closes [#83](https://github.com/nyangko/Isenax/issues/83)
+
 ## [1.12.0](https://github.com/nyangko/Isenax/compare/v1.11.0...v1.12.0) (2026-09-11)
 
 ### Features
