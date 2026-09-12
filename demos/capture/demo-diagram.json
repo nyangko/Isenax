@@ -1,0 +1,454 @@
+{
+  "title": "Microservices Architecture",
+  "icons": [],
+  "colors": [
+    {
+      "id": "blue",
+      "value": "#0066cc"
+    },
+    {
+      "id": "green",
+      "value": "#00aa00"
+    },
+    {
+      "id": "zone-red",
+      "value": "#FFB3BA"
+    },
+    {
+      "id": "zone-blue",
+      "value": "#A7C7E7"
+    },
+    {
+      "id": "zone-green",
+      "value": "#B5EAD7"
+    }
+  ],
+  "items": [
+    {
+      "id": "fbb9e3b5-ac8e-4024-a76c-36de5ad632c0",
+      "name": "Client",
+      "icon": "laptop"
+    },
+    {
+      "id": "a428551a-6bc9-4c91-89b1-7cde633f8b48",
+      "name": "API Gateway",
+      "icon": "router"
+    },
+    {
+      "id": "c1713f61-9e3b-4826-8ce1-e00a1aa760cd",
+      "name": "Auth Service",
+      "icon": "lock"
+    },
+    {
+      "id": "3d3ceb2c-9cb8-49fe-a86a-7649a46b14f2",
+      "name": "Order Service",
+      "icon": "server"
+    },
+    {
+      "id": "b38be3a3-4cd1-4343-a549-55ca26e936ca",
+      "name": "Payment Service",
+      "icon": "paymentcard"
+    },
+    {
+      "id": "3c65fda6-160f-4b68-bb10-fc30c868bc5b",
+      "name": "Event Queue",
+      "icon": "queue"
+    },
+    {
+      "id": "07247a97-b892-4187-88a8-01dcb4c37d08",
+      "name": "Notification Service",
+      "icon": "mail"
+    },
+    {
+      "id": "b4048015-68ae-4d6e-9dcd-bd9053fccffd",
+      "name": "Order DB",
+      "icon": "storage"
+    },
+    {
+      "id": "ba4ae9ca-36ef-4f43-97f0-35271b258acb",
+      "name": "Payment DB",
+      "icon": "storage"
+    }
+  ],
+  "views": [
+    {
+      "id": "279d76b7-56cb-4067-8f98-e37709261802",
+      "name": "Overview",
+      "items": [
+        {
+          "id": "fbb9e3b5-ac8e-4024-a76c-36de5ad632c0",
+          "tile": {
+            "x": 7,
+            "y": 0
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "a428551a-6bc9-4c91-89b1-7cde633f8b48",
+          "tile": {
+            "x": 5,
+            "y": 1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "c1713f61-9e3b-4826-8ce1-e00a1aa760cd",
+          "tile": {
+            "x": 5,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "3d3ceb2c-9cb8-49fe-a86a-7649a46b14f2",
+          "tile": {
+            "x": 3,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "b38be3a3-4cd1-4343-a549-55ca26e936ca",
+          "tile": {
+            "x": 3,
+            "y": 5
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "3c65fda6-160f-4b68-bb10-fc30c868bc5b",
+          "tile": {
+            "x": 1,
+            "y": 4
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "07247a97-b892-4187-88a8-01dcb4c37d08",
+          "tile": {
+            "x": 0,
+            "y": 6
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "b4048015-68ae-4d6e-9dcd-bd9053fccffd",
+          "tile": {
+            "x": -2,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "ba4ae9ca-36ef-4f43-97f0-35271b258acb",
+          "tile": {
+            "x": -2,
+            "y": 5
+          },
+          "labelHeight": 80
+        }
+      ],
+      "connectors": [
+        {
+          "id": "5ba705c5-57e6-428f-8c6c-c160430b3f24",
+          "color": "blue",
+          "style": "SOLID",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "c4ab4049-a785-431f-9169-c01dc512d99a",
+              "ref": {
+                "item": "fbb9e3b5-ac8e-4024-a76c-36de5ad632c0"
+              }
+            },
+            {
+              "id": "e5155aee-89af-4bb7-9120-073904ac7a16",
+              "ref": {
+                "item": "a428551a-6bc9-4c91-89b1-7cde633f8b48"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "b94ebd18-2e20-4a1c-b028-5b8db515acbc",
+              "text": "GET / POST",
+              "position": 50,
+              "height": 0
+            }
+          ]
+        },
+        {
+          "id": "b13395a5-0d73-4bb2-a3f3-3093ca59118b",
+          "color": "blue",
+          "style": "DOTTED",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "00b3b68f-fc75-4d09-9f54-034274446a83",
+              "ref": {
+                "item": "a428551a-6bc9-4c91-89b1-7cde633f8b48"
+              }
+            },
+            {
+              "id": "8344daeb-647f-4b4f-96c1-3c281a52be08",
+              "ref": {
+                "item": "c1713f61-9e3b-4826-8ce1-e00a1aa760cd"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "89c78ace-6a2b-4722-9456-62d6fae54def",
+              "text": "Token check",
+              "position": 72,
+              "height": 30
+            }
+          ]
+        },
+        {
+          "id": "bc4484ff-b22d-4b8f-948b-ce71a8430c50",
+          "color": "blue",
+          "style": "SOLID",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "a353619c-2dcd-41eb-bfb6-d6b8cdbc826f",
+              "ref": {
+                "item": "a428551a-6bc9-4c91-89b1-7cde633f8b48"
+              }
+            },
+            {
+              "id": "5bfb3d59-9ada-4f61-85d1-a2355b012b05",
+              "ref": {
+                "item": "3d3ceb2c-9cb8-49fe-a86a-7649a46b14f2"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "90adf0d2-84bb-4a9a-ad94-a30f307d8f73",
+              "text": "POST /orders",
+              "position": 40,
+              "height": 40
+            }
+          ]
+        },
+        {
+          "id": "99ab89a2-c7c2-4664-ad9a-e0157a7b84bc",
+          "color": "blue",
+          "style": "SOLID",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "a9886355-fa13-4112-8851-10323990adbe",
+              "ref": {
+                "item": "a428551a-6bc9-4c91-89b1-7cde633f8b48"
+              }
+            },
+            {
+              "id": "7078da90-69d3-4885-bfdc-c33dcb651dfa",
+              "ref": {
+                "item": "b38be3a3-4cd1-4343-a549-55ca26e936ca"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "70a44e73-4c0e-4699-b9a1-3be3cbace196",
+              "text": "POST /payments",
+              "position": 25,
+              "height": 0
+            }
+          ]
+        },
+        {
+          "id": "a9181760-4e08-4cc8-b796-a457e08dea1f",
+          "color": "blue",
+          "style": "DASHED",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "95ce85d3-7d39-4228-b964-4e86d4a2fcf2",
+              "ref": {
+                "item": "3d3ceb2c-9cb8-49fe-a86a-7649a46b14f2"
+              }
+            },
+            {
+              "id": "c2225097-2852-47c8-83ac-7b89598b33d3",
+              "ref": {
+                "item": "3c65fda6-160f-4b68-bb10-fc30c868bc5b"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "1ae9bfae-d239-4d92-8a40-e86c8130cb14",
+              "text": "OrderCreated",
+              "position": 50,
+              "height": -40
+            }
+          ]
+        },
+        {
+          "id": "a75d96b9-2fcd-4516-ad69-321ca8a28637",
+          "color": "blue",
+          "style": "DASHED",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "39261390-cb78-48ab-aa92-19048ce67621",
+              "ref": {
+                "item": "b38be3a3-4cd1-4343-a549-55ca26e936ca"
+              }
+            },
+            {
+              "id": "4421d611-fd0c-417f-89d4-1c6d55025cba",
+              "ref": {
+                "item": "3c65fda6-160f-4b68-bb10-fc30c868bc5b"
+              }
+            }
+          ],
+          "labels": [
+            {
+              "id": "05190d44-c0a1-401b-a91b-e07f3c769d2d",
+              "text": "PaymentCompleted",
+              "position": 50,
+              "height": 0
+            }
+          ]
+        },
+        {
+          "id": "cb1166c9-a82c-42ee-82e5-121093f1f106",
+          "color": "blue",
+          "style": "SOLID",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "6d6fedca-961c-4651-8e39-0028f946ab2c",
+              "ref": {
+                "item": "3c65fda6-160f-4b68-bb10-fc30c868bc5b"
+              }
+            },
+            {
+              "id": "74d5f28a-a04d-4896-b0b1-9107fd6cfda2",
+              "ref": {
+                "item": "07247a97-b892-4187-88a8-01dcb4c37d08"
+              }
+            }
+          ]
+        },
+        {
+          "id": "8082307d-321a-4eef-841c-dc61320794cb",
+          "color": "blue",
+          "style": "SOLID",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "9dac7850-211f-4786-bf00-5e5a87986377",
+              "ref": {
+                "item": "3d3ceb2c-9cb8-49fe-a86a-7649a46b14f2"
+              }
+            },
+            {
+              "id": "16e8b594-afda-470e-a14f-a7a56243bbbd",
+              "ref": {
+                "item": "b4048015-68ae-4d6e-9dcd-bd9053fccffd"
+              }
+            }
+          ]
+        },
+        {
+          "id": "68c5ee73-6ca3-4822-a254-6a701333256e",
+          "color": "blue",
+          "style": "SOLID",
+          "width": 12,
+          "anchors": [
+            {
+              "id": "3e0efec6-0da5-4872-bf46-4734bc309bf2",
+              "ref": {
+                "item": "b38be3a3-4cd1-4343-a549-55ca26e936ca"
+              }
+            },
+            {
+              "id": "34f4a981-95ad-4a74-b5a3-edb2489fec76",
+              "ref": {
+                "item": "ba4ae9ca-36ef-4f43-97f0-35271b258acb"
+              }
+            }
+          ]
+        }
+      ],
+      "rectangles": [
+        {
+          "id": "ee52cfc0-e9b2-472a-a419-fb16fefdf066",
+          "color": "zone-red",
+          "from": {
+            "x": 8,
+            "y": -1
+          },
+          "to": {
+            "x": 4,
+            "y": 2
+          }
+        },
+        {
+          "id": "5ed81542-ebb6-441b-9a60-864ed4d9a479",
+          "color": "zone-blue",
+          "from": {
+            "x": 6,
+            "y": 3
+          },
+          "to": {
+            "x": 0,
+            "y": 7
+          }
+        },
+        {
+          "id": "61dc86d5-4c94-45af-8ab0-4810221675d1",
+          "color": "zone-green",
+          "from": {
+            "x": -1,
+            "y": 2
+          },
+          "to": {
+            "x": -3,
+            "y": 6
+          }
+        }
+      ],
+      "textBoxes": [
+        {
+          "id": "a9dfd6bf-afd9-47a4-ade4-1ee75eb967f9",
+          "tile": {
+            "x": 8,
+            "y": -1
+          },
+          "content": "Public Zone",
+          "fontSize": 0.45,
+          "orientation": "X"
+        },
+        {
+          "id": "94bd78af-af76-4f06-83a8-2bbda9817424",
+          "tile": {
+            "x": 6,
+            "y": 7
+          },
+          "content": "Service Mesh",
+          "fontSize": 0.45,
+          "orientation": "X"
+        },
+        {
+          "id": "4acd4dd0-78ac-4fd8-a009-d2a757227432",
+          "tile": {
+            "x": -3,
+            "y": 6
+          },
+          "content": "Data Layer",
+          "fontSize": 0.45,
+          "orientation": "X"
+        }
+      ]
+    }
+  ],
+  "fitToScreen": true
+}
