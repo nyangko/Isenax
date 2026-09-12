@@ -211,6 +211,7 @@ const locale: LocaleProps = {
       toolRectangle: "四角形",
       toolConnector: "コネクタ",
       toolText: "テキスト",
+      toolMinimap: "ミニマップ",
       note: "注意: ホットキーはテキストフィールドに入力していないときに機能します"
     },
     pan: {

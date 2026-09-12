@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Prostokąt",
       toolConnector: "Połączenia",
       toolText: "Tekst",
+      toolMinimap: "Minimap",
       note: "Uwaga: Skróty klawiszowe działają, gdy nie wpisujesz tekstu w polach tekstowych."
     },
     pan: {

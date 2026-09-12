@@ -211,6 +211,7 @@ const locale: LocaleProps = {
       toolRectangle: "영역",
       toolConnector: "연결선",
       toolText: "텍스트",
+      toolMinimap: "미니맵",
       note: "참고: 단축키는 텍스트 필드에 입력 중이 아닐 때 작동합니다"
     },
     pan: {

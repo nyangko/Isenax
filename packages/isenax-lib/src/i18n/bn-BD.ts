@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "আয়তক্ষেত্র",
       toolConnector: "সংযোগকারী",
       toolText: "পাঠ্য",
+      toolMinimap: "Minimap",
       note: "নোট: টেক্সট ফিল্ডে টাইপ না করার সময় শর্টকাটগুলি কাজ করে"
     },
     pan: {

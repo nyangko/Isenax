@@ -31,7 +31,8 @@ export const HotkeySettings = () => {
     { name: t('settings.hotkeys.toolAddItem'), key: currentMapping.addItem },
     { name: t('settings.hotkeys.toolRectangle'), key: currentMapping.rectangle },
     { name: t('settings.hotkeys.toolConnector'), key: currentMapping.connector },
-    { name: t('settings.hotkeys.toolText'), key: currentMapping.text }
+    { name: t('settings.hotkeys.toolText'), key: currentMapping.text },
+    { name: t('settings.hotkeys.toolMinimap'), key: currentMapping.minimap }
   ];
 
   return (

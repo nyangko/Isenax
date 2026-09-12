@@ -1,13 +1,12 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Box, useTheme } from '@mui/material';
-import { IconMap as MinimapIcon, IconX as CloseIcon } from '@tabler/icons-react';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { UiElement } from 'src/components/UiElement/UiElement';
-import { IconButton } from 'src/components/IconButton/IconButton';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import {
   CoordsUtils,
+  connectorPathTileToGlobal,
   getTilePosition,
   getUnprojectedBounds,
   getViewportSceneBounds
@@ -19,6 +18,23 @@ import { Coords } from 'src/types';
 const MIN_ITEMS = 8;
 const WIDTH = 180;
 const HEIGHT = 120;
+// Below this the map plus its margins eats a third of the canvas and runs
+// into the top toolbar (landscape phones).
+const MIN_RENDERER_HEIGHT = 480;
+
+// One rule for both the map and its toggle in ZoomControls, so the button
+// never shows where the map can't: phone-width viewports (the same `sm`
+// breakpoint the Layers panel uses to become a bottom sheet) and short ones.
+export const useMinimapAvailable = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const rendererEl = useUiStateStore((state) => {
+    return state.rendererEl;
+  });
+  const { size } = useResizeObserver(rendererEl);
+
+  return !isMobile && size.height >= MIN_RENDERER_HEIGHT;
+};
 // Item dots are sized in screen px so they stay legible however large the
 // diagram (the viewBox spans thousands of scene units).
 const DOT_RADIUS_PX = 2.5;
@@ -32,13 +48,13 @@ const toPoints = (corners: Coords[]) => {
 };
 
 // Deliberately not a scaled-down Renderer: this only answers "where am I"
-// and "take me there", so it draws item dots, rectangle outlines and the
-// viewport -- no icons, no connectors, no store subscriptions per layer.
+// and "take me there", so it draws item dots, rectangle outlines, hairline
+// connectors and the viewport -- no icons, no labels, no store subscriptions
+// per layer. Toggled from ZoomControls / the minimap hotkey (uiState.showMinimap).
 export const Minimap = () => {
   const theme = useTheme();
-  const [hidden, setHidden] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
-  const { currentView } = useScene();
+  const { currentView, connectors } = useScene();
   const scroll = useUiStateStore((state) => {
     return state.scroll;
   });
@@ -54,6 +70,10 @@ export const Minimap = () => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
+  const showMinimap = useUiStateStore((state) => {
+    return state.showMinimap;
+  });
+  const available = useMinimapAvailable();
   const { size: rendererSize } = useResizeObserver(rendererEl);
 
   const content = useMemo(() => {
@@ -81,6 +101,30 @@ export const Minimap = () => {
       };
     });
   }, [currentView.rectangles, isFlat]);
+
+  // Paths are already routed by the scene store; just project the tiles.
+  // No arrowheads: at this scale they'd be blobs and direction can't be read.
+  const lines = useMemo(() => {
+    return connectors.flatMap((connector) => {
+      // The scene store routes paths after the model changes; a connector
+      // can exist for a render before its path does.
+      if (!connector.path) return [];
+
+      const { tiles, rectangle } = connector.path;
+
+      return [{
+        id: connector.id,
+        points: toPoints(
+          tiles.map((tile) => {
+            return getTilePosition({
+              tile: connectorPathTileToGlobal(tile, rectangle.from),
+              flat: isFlat
+            });
+          })
+        )
+      }];
+    });
+  }, [connectors, isFlat]);
 
   const centerOn = useCallback(
     (e: React.PointerEvent<SVGSVGElement>) => {
@@ -114,21 +158,7 @@ export const Minimap = () => {
     [centerOn]
   );
 
-  if (currentView.items.length < MIN_ITEMS) return null;
-
-  if (hidden) {
-    return (
-      <UiElement>
-        <IconButton
-          name="Show minimap"
-          Icon={<MinimapIcon size={20} />}
-          onClick={() => {
-            return setHidden(false);
-          }}
-        />
-      </UiElement>
-    );
-  }
+  if (!available || !showMinimap || currentView.items.length < MIN_ITEMS) return null;
 
   const viewport = getViewportSceneBounds({ scroll, zoom, rendererSize });
   // Union of content and viewport, so the viewport marker never leaves the
@@ -141,7 +171,7 @@ export const Minimap = () => {
   const unitsPerPx = Math.max((x1 - x0) / WIDTH, (y1 - y0) / HEIGHT);
 
   return (
-    <UiElement sx={{ position: 'relative' }}>
+    <UiElement>
       <Box
         component="svg"
         data-testid="minimap"
@@ -168,6 +198,19 @@ export const Minimap = () => {
             />
           );
         })}
+        {lines.map((line) => {
+          return (
+            <polyline
+              key={line.id}
+              points={line.points}
+              fill="none"
+              stroke={theme.palette.text.secondary}
+              strokeOpacity={0.5}
+              strokeWidth={1}
+              vectorEffect="non-scaling-stroke"
+            />
+          );
+        })}
         {dots.map((dot) => {
           return (
             <circle
@@ -189,15 +232,6 @@ export const Minimap = () => {
           stroke={theme.palette.primary.main}
           strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
-        />
-      </Box>
-      <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
-        <IconButton
-          name="Hide minimap"
-          Icon={<CloseIcon size={14} />}
-          onClick={() => {
-            return setHidden(true);
-          }}
         />
       </Box>
     </UiElement>

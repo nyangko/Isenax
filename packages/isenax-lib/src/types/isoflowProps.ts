@@ -219,6 +219,7 @@ export interface LocaleProps {
       toolRectangle: string;
       toolConnector: string;
       toolText: string;
+      toolMinimap: string;
       note: string;
     };
     pan: {

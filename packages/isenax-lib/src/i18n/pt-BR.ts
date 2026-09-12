@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Retângulo",
       toolConnector: "Conector",
       toolText: "Texto",
+      toolMinimap: "Minimap",
       note: "Nota: Os atalhos funcionam quando você não está digitando em campos de texto"
     },
     pan: {

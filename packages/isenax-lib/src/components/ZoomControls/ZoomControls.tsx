@@ -4,6 +4,7 @@ import {
   IconPlus as ZoomInIcon,
   IconMinus as ZoomOutIcon,
   IconMaximize as FitToScreenIcon,
+  IconMap as MinimapIcon,
   IconHelpCircle as HelpIcon
 } from '@tabler/icons-react';
 import { Stack, Box, Typography, Divider } from '@mui/material';
@@ -12,8 +13,10 @@ import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
 import { ProjectionToggle } from 'src/components/ProjectionToggle/ProjectionToggle';
 import { MAX_ZOOM, MIN_ZOOM } from 'src/config';
+import { HOTKEY_PROFILES } from 'src/config/hotkeys';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useDiagramUtils } from 'src/hooks/useDiagramUtils';
+import { useMinimapAvailable } from 'src/components/Minimap/Minimap';
 import { DialogTypeEnum } from 'src/types/ui';
 
 export const ZoomControls = () => {
@@ -26,6 +29,13 @@ export const ZoomControls = () => {
   const helpButtonPortalTarget = useUiStateStore((state) => {
     return state.helpButtonPortalTarget;
   });
+  const showMinimap = useUiStateStore((state) => {
+    return state.showMinimap;
+  });
+  const minimapHotkey = useUiStateStore((state) => {
+    return HOTKEY_PROFILES[state.hotkeyProfile].minimap;
+  });
+  const minimapAvailable = useMinimapAvailable();
   const { fitToView } = useDiagramUtils();
 
   const helpButton = (
@@ -79,6 +89,18 @@ export const ZoomControls = () => {
           onClick={fitToView}
         />
       </UiElement>
+      {minimapAvailable && (
+        <UiElement>
+          <IconButton
+            name={minimapHotkey ? `Minimap (${minimapHotkey.toUpperCase()})` : 'Minimap'}
+            Icon={<MinimapIcon size={20} />}
+            isActive={showMinimap}
+            onClick={() => {
+              return uiStateStoreActions.setShowMinimap(!showMinimap);
+            }}
+          />
+        </UiElement>
+      )}
       <ProjectionToggle />
       {!helpButtonPortalTarget && helpButton}
       {helpButtonPortalTarget && createPortal(helpButton, helpButtonPortalTarget)}

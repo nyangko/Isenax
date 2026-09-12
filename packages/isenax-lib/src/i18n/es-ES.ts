@@ -211,6 +211,7 @@ const locale: LocaleProps = {
       toolRectangle: "Rectángulo",
       toolConnector: "Conector",
       toolText: "Texto",
+      toolMinimap: "Minimap",
       note: "Nota: Los atajos funcionan cuando no estás escribiendo en campos de texto"
     },
     pan: {

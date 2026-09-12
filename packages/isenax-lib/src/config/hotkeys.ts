@@ -9,6 +9,7 @@ export interface HotkeyMapping {
   text: string | null;
   lasso: string | null;
   freehandLasso: string | null;
+  minimap: string | null;
 }
 
 export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
@@ -20,7 +21,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     connector: 't',
     text: 'y',
     lasso: 'l',
-    freehandLasso: 'f'
+    freehandLasso: 'f',
+    minimap: 'm'
   },
   smnrct: {
     select: 's',
@@ -30,7 +32,9 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     connector: 'c',
     text: 't',
     lasso: 'l',
-    freehandLasso: 'f'
+    freehandLasso: 'f',
+    // 'm' is Pan in this profile.
+    minimap: 'v'
   },
   none: {
     select: null,
@@ -40,7 +44,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     connector: null,
     text: null,
     lasso: null,
-    freehandLasso: null
+    freehandLasso: null,
+    minimap: null
   }
 };
 

@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Rectangle",
       toolConnector: "Connecteur",
       toolText: "Texte",
+      toolMinimap: "Minimap",
       note: "Remarque : Les raccourcis fonctionnent lorsque vous ne tapez pas dans des champs de texte"
     },
     pan: {

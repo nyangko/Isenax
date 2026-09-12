@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Rettangolo",
       toolConnector: "Connettore",
       toolText: "Testo",
+      toolMinimap: "Minimap",
       note: "Nota: Le scorciatoie funzionano quando non stai digitando nei campi di testo"
     },
     pan: {

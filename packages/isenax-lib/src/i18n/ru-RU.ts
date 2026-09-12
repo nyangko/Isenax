@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Прямоугольник",
       toolConnector: "Соединитель",
       toolText: "Текст",
+      toolMinimap: "Minimap",
       note: "Примечание: Горячие клавиши работают, когда вы не вводите текст в текстовых полях"
     },
     pan: {

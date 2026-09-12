@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "矩形",
       toolConnector: "连接器",
       toolText: "文本",
+      toolMinimap: "小地图",
       note: "注意：在文本输入框中输入时快捷键不生效"
     },
     pan: {

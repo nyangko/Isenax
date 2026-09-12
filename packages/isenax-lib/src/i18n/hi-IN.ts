@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "आयत",
       toolConnector: "कनेक्टर",
       toolText: "टेक्स्ट",
+      toolMinimap: "Minimap",
       note: "नोट: टेक्स्ट फ़ील्ड में टाइप न करने पर शॉर्टकट काम करते हैं"
     },
     pan: {

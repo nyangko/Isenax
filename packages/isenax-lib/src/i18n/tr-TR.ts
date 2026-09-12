@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Dikdörtgen",
       toolConnector: "Bağlayıcı",
       toolText: "Metin",
+      toolMinimap: "Minimap",
       note: "Not: Kısayol tuşları metin alanlarında yazarken çalışmaz"
     },
     pan: {

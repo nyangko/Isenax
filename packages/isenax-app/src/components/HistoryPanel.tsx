@@ -25,6 +25,15 @@ interface ChangelogGroup {
 // rather than appending to an existing one's `items`.
 const CHANGELOG_KO: ChangelogGroup[] = [
   {
+    version: 'v1.13.0',
+    date: '2026-09-12',
+    items: [
+      ['미니맵 켜기/끄기', ' — 줌 컨트롤 옆에 토글 버튼이 생기고 단축키(QWERTY 프로필 M, SMNRCT 프로필 V)로도 전환됨. 설정은 이 브라우저에 기억됨. 미니맵 모서리의 ×는 제거'],
+      ['미니맵에 커넥터가 얇은 선으로 표시', ' — 어느 노드끼리 이어져 있는지 위치 파악에 도움. 화살촉은 이 크기에서 읽히지 않아 넣지 않음'],
+      ['미니맵은 화면이 충분할 때만', ' — 폭 600px 미만(폰)이나 캔버스 높이 480px 미만(가로 모드 폰)에서는 미니맵과 토글 버튼이 함께 숨겨짐']
+    ]
+  },
+  {
     version: 'v1.12.0',
     date: '2026-09-12',
     items: [
@@ -276,6 +285,15 @@ const CHANGELOG_KO: ChangelogGroup[] = [
 ];
 
 const CHANGELOG_EN: ChangelogGroup[] = [
+  {
+    version: 'v1.13.0',
+    date: '2026-09-12',
+    items: [
+      ['Minimap on/off', ' -- a toggle button next to the zoom controls, plus a hotkey (M on the QWERTY profile, V on SMNRCT). Remembered per browser. The x in the minimap corner is gone'],
+      ['Connectors show on the minimap as hairlines', ' -- enough to see which nodes are linked. No arrowheads: unreadable at that size'],
+      ['Minimap only where there is room', ' -- below 600px wide (phones) or a canvas under 480px tall (landscape phones) both the map and its toggle stay hidden']
+    ]
+  },
   {
     version: 'v1.12.0',
     date: '2026-09-12',

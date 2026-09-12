@@ -198,6 +198,7 @@ export interface UiState {
   connectorAnimationEnabled: boolean;
   connectorAnimationSpeed: number;
   expandLabels: boolean;
+  showMinimap: boolean;
   projectionMode: keyof typeof ProjectionModeEnum;
   toolbarPosition: keyof typeof ToolbarPositionEnum;
   iconPackManager: IconPackManagerProps | null;
@@ -264,6 +265,7 @@ export interface UiStateActions {
   setConnectorAnimationEnabled: (enabled: boolean) => void;
   setConnectorAnimationSpeed: (speed: number) => void;
   setExpandLabels: (expand: boolean) => void;
+  setShowMinimap: (show: boolean) => void;
   setProjectionMode: (mode: keyof typeof ProjectionModeEnum) => void;
   setToolbarPosition: (position: keyof typeof ToolbarPositionEnum) => void;
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;

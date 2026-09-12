@@ -290,6 +290,9 @@ export const useInteractionManager = () => {
           selection: null,
           isDragging: false
         });
+      } else if (hotkeyMapping.minimap && key === hotkeyMapping.minimap) {
+        e.preventDefault();
+        uiState.actions.setShowMinimap(!uiState.showMinimap);
       }
     };
 

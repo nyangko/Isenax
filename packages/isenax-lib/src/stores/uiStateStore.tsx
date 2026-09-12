@@ -87,6 +87,7 @@ const initialState = () => {
           connectorAnimationEnabled: true, // Default to animated flow direction
           connectorAnimationSpeed: 220, // px/sec — matches the original hardcoded default
           expandLabels: false, // Default to collapsed labels
+          showMinimap: true,
           projectionMode: 'ISOMETRIC', // Default to the tilted isometric view
           toolbarPosition: 'TOP', // Default to the horizontal top-right tool menu
           iconPackManager: null, // Will be set by Isoflow if provided
@@ -238,6 +239,9 @@ const initialState = () => {
             setExpandLabels: (expandLabels) => {
               set({ expandLabels });
             },
+            setShowMinimap: (showMinimap) => {
+              set({ showMinimap });
+            },
             setProjectionMode: (projectionMode) => {
               set({ projectionMode });
             },
@@ -288,6 +292,7 @@ const initialState = () => {
             connectorAnimationEnabled: state.connectorAnimationEnabled,
             connectorAnimationSpeed: state.connectorAnimationSpeed,
             expandLabels: state.expandLabels,
+            showMinimap: state.showMinimap,
             projectionMode: state.projectionMode,
             toolbarPosition: state.toolbarPosition
           };

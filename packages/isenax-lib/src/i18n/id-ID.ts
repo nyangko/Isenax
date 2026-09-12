@@ -212,6 +212,7 @@ const locale: LocaleProps = {
       toolRectangle: "Persegi Panjang",
       toolConnector: "Konektor",
       toolText: "Teks",
+      toolMinimap: "Minimap",
       note: "Catatan: Pintasan berfungsi saat tidak mengetik di bidang teks"
     },
     pan: {

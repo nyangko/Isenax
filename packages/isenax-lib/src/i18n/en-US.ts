@@ -211,6 +211,7 @@ const locale: LocaleProps = {
       toolRectangle: "Rectangle",
       toolConnector: "Connector",
       toolText: "Text",
+      toolMinimap: "Minimap",
       note: "Note: Hotkeys work when not typing in text fields"
     },
     pan: {
